@@ -2,8 +2,10 @@
 apply from: "config.gradle"
 
 buildscript {
+
     ext.kotlin_version = '1.2.10'
     ext.android_gradle_tool_version = '3.0.1'
+
     repositories {
         google()
         jcenter()
