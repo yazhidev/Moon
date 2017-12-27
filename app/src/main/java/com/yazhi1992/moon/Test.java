@@ -1,5 +1,8 @@
 package com.yazhi1992.moon;
 
+import android.view.View;
+import android.widget.TextView;
+
 /**
  * Created by zengyazhi on 2017/12/27.
  */
@@ -12,6 +15,11 @@ public class Test {
     }
 
     private void test() {
-
+        TextView textView = new TextView(BaseApplication.instance);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
     }
 }

@@ -9,9 +9,20 @@
         tools:context="com.yazhi1992.moon.MainActivity">
 
         <TextView
+            android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textSize="30sp"
+            android:text="Hello World!"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textSize="30sp"
             android:text="Hello World!"/>
 
         <Button
@@ -21,6 +32,13 @@
             android:layout_margin="50dp"
             android:layout_width="70dp"
             android:layout_height="70dp"/>
+
+        <RelativeLayout
+            android:id="@+id/outRl"
+            android:elevation="2dp"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></RelativeLayout>
 
     </RelativeLayout>
 </layout>

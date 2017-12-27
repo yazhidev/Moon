@@ -66,8 +66,8 @@ dependencies {
     testImplementation "org.robolectric:robolectric:$rootProject.ext.robolectricVersion"
 
     //dagger
-    implementation "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
-    kapt "com.google.dagger:dagger:$rootProject.ext.dagger2CompilerVersion"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2CompilerVersion"
+    implementation "com.google.dagger:dagger:$rootProject.ext.dagger2Version"
 
     //解决 kotlin 和 databinding 共用问题
     kapt "com.android.databinding:compiler:$android_gradle_tool_version"
