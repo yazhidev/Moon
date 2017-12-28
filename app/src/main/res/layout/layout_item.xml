@@ -7,8 +7,10 @@
     android:layout_height="100dp">
 
     <TextView
+        android:id="@+id/text"
         android:layout_width="match_parent"
-        android:text="ceshi"
+        android:textSize="30sp"
+        android:gravity="center"
         android:layout_height="100dp"/>
 
 </RelativeLayout>
