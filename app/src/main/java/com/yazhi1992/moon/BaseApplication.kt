@@ -3,6 +3,8 @@ package com.yazhi1992.moon
 import android.app.Application
 import android.content.Context
 import com.alibaba.android.arouter.launcher.ARouter
+import com.orhanobut.logger.AndroidLogAdapter
+import com.orhanobut.logger.Logger
 
 /**
  * Created by zengyazhi on 2017/12/27.
@@ -21,6 +23,9 @@ class BaseApplication : Application() {
             ARouter.openDebug();   // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
         }
         ARouter.init(this)
+
+        //logger
+        Logger.addLogAdapter(AndroidLogAdapter())
     }
 
 

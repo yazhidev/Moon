@@ -11,6 +11,11 @@ ext {
     dagger2Version = '2.9'
 
     supportDesignVersion = '27.0.2'
+
+    loggerVersion = '2.1.1'
+
+    rxjavaVersion = '2.1.6'
+    rxandroidVersion = '2.0.1'
 }
 
 
