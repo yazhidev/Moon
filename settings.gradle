@@ -1,1 +1,3 @@
 include ':app'
+include ':yazhilib'
+project(':yazhilib').projectDir = new File('../LibraryProject/yazhilib')

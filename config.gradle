@@ -6,7 +6,9 @@ ext {
 
     arouterApiVersion = '1.3.0'
     arouterCompilerVersion = '1.1.4'
+
     robolectricVersion = "3.6.1"
+
     dagger2CompilerVersion = "2.9"
     dagger2Version = '2.9'
 
@@ -16,6 +18,11 @@ ext {
 
     rxjavaVersion = '2.1.6'
     rxandroidVersion = '2.0.1'
+
+    okhttpVersion = '3.9.1'
+
+    appcompatV7Version = '26.1.0'
+
 }
 
 
