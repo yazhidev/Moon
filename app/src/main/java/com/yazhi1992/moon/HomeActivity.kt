@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.LinearLayout
 import com.yazhi1992.yazhilib.utils.StatusBarUtils
 import kotlinx.android.synthetic.main.activity_home.*
@@ -29,14 +30,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            ActivityRouter.gotoMain2(this@HomeActivity)
-//
-//
+            ActivityRouter.gotoMain3(this@HomeActivity)
+
+
 //            parent = content.parent as LinearLayout
-//            parent.setBackgroundColor(Color.BLUE)
+//            outRl.visibility = View.VISIBLE
 //            val centerX = fab.left + fab.width / 2
 //            val centerY = fab.top + fab.width / 2
-//            val createCircularReveal = ViewAnimationUtils.createCircularReveal(parent, centerX, centerY, 0F, Math.sqrt(Math.pow(centerX.toDouble(), 2.0) + Math.pow(centerY.toDouble(), 2.0)).toFloat())
+//            val createCircularReveal = ViewAnimationUtils.createCircularReveal(outRl, centerX, centerY, 0F, Math.sqrt(Math.pow(centerX.toDouble(), 2.0) + Math.pow(centerY.toDouble(), 2.0)).toFloat())
 //            createCircularReveal.setDuration(1000).start()
 //            createCircularReveal.addListener(object : Animator.AnimatorListener {
 //                override fun onAnimationRepeat(animation: Animator?) {
@@ -70,7 +71,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onStop() {
         super.onStop()
-        parent.setBackgroundColor(Color.TRANSPARENT)
+        outRl.visibility = View.GONE
+        outRl.setBackgroundColor(Color.TRANSPARENT)
     }
 
     override fun onBackPressed() {

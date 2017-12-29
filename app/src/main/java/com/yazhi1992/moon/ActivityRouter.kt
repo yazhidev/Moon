@@ -19,6 +19,14 @@ class ActivityRouter {
         fun gotoMain2(context: Context) {
             val compat = ActivityOptionsCompat.makeCustomAnimation(context, R.anim.empty, R.anim.empty)
             ARouter.getInstance()
+                    .build(MAIN2)
+                    .withOptionsCompat(compat)
+                    .navigation()
+        }
+
+        fun gotoMain3(context: Context) {
+            val compat = ActivityOptionsCompat.makeCustomAnimation(context, R.anim.empty, R.anim.empty)
+            ARouter.getInstance()
                     .build(MAIN3)
                     .withOptionsCompat(compat)
                     .navigation()
