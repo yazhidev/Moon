@@ -15,14 +15,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity">
-
+        <activity android:name=".MainActivity">
         </activity>
         <activity android:name=".Main2Activity">
         </activity>
-        <activity android:name=".Main3Activity"
-                  android:theme="@style/TransparentTheme">
+        <activity
+            android:name=".Main3Activity"
+            android:theme="@style/TransparentTheme">
         </activity>
         <activity android:name=".Main4Activity">
         </activity>
@@ -40,6 +39,22 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".widget.ChooseDataForWidgetActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+
+        <!--桌面小部件-->
+        <receiver android:name=".widget.YazhiWidgetProvider">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.yazhi1992.moon.click_widget" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

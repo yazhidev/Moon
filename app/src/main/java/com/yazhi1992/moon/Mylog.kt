@@ -9,7 +9,7 @@ import java.util.*
 class Mylog {
 
     companion object {
-        fun d(objects: Objects) {
+        fun d(objects: String) {
             Logger.d(objects)
         }
     }
