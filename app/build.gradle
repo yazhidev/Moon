@@ -9,7 +9,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.yazhi1992.androidunittest"
+        applicationId "com.yazhi1992.moon"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -23,6 +23,19 @@ android {
         }
     }
 
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+    signingConfigs {
+        release {
+            storeFile file("../moon.keystore")
+            storePassword "zyz123456"
+            keyAlias "lina"
+            keyPassword properties.getProperty("pwd")
+            v2SigningEnabled true
+        }
+    }
+
     dataBinding {
         enabled true
     }
@@ -31,6 +44,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
