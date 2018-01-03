@@ -13,7 +13,9 @@ import android.widget.LinearLayout
 import com.yazhi1992.yazhilib.utils.StatusBarUtils
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
+import permissions.dispatcher.RuntimePermissions
 
+@RuntimePermissions
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var parent:LinearLayout
@@ -31,33 +33,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         fab.setOnClickListener { view ->
             ActivityRouter.gotoMain3(this@HomeActivity)
-
-
-//            parent = content.parent as LinearLayout
-//            outRl.visibility = View.VISIBLE
-//            val centerX = fab.left + fab.width / 2
-//            val centerY = fab.top + fab.width / 2
-//            val createCircularReveal = ViewAnimationUtils.createCircularReveal(outRl, centerX, centerY, 0F, Math.sqrt(Math.pow(centerX.toDouble(), 2.0) + Math.pow(centerY.toDouble(), 2.0)).toFloat())
-//            createCircularReveal.setDuration(1000).start()
-//            createCircularReveal.addListener(object : Animator.AnimatorListener {
-//                override fun onAnimationRepeat(animation: Animator?) {
-//                }
-//
-//                override fun onAnimationEnd(animation: Animator?) {
-//                    ActivityRouter.gotoMain2(this@HomeActivity)
-//
-//                }
-//
-//                override fun onAnimationCancel(animation: Animator?) {
-//                }
-//
-//                override fun onAnimationStart(animation: Animator?) {
-//                }
-//
-//            })
-//
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -68,6 +43,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Mylog.d("onDestroy")
+    }
 
     override fun onStop() {
         super.onStop()

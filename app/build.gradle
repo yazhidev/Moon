@@ -21,6 +21,12 @@ android {
                 arguments = [moduleName: project.getName()]
             }
         }
+
+        //bugly 升级
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
 
     Properties properties = new Properties()
@@ -94,6 +100,16 @@ dependencies {
 
     //okhttp
     implementation "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttpVersion"
+
+    compile("com.github.hotchemi:permissionsdispatcher:$rootProject.ext.permissionsDispatcherVersion") {
+        // if you don't use android.app.Fragment you can exclude support for them
+        exclude module: "support-v13"
+    }
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$rootProject.ext.permissionsDispatcherVersion"
+
+    //bugly
+    compile "com.tencent.bugly:crashreport_upgrade:$rootProject.ext.buglyCrashVersion"
+    compile "com.tencent.bugly:nativecrashreport:$rootProject.ext.buglyNativeCrashVersion"
 
     compile project(":yazhilib")
 }
