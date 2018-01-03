@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -41,6 +42,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        checkUpgradeInfo()
+    }
+
+    //检测更新
+    private fun checkUpgradeInfo() {
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.upgrade_title))
+                .setMessage("test")
+                .setPositiveButton(getString(R.string.upgrade_comfirm), null)
+                .setNegativeButton(getString(R.string.upgrade_cancel), null)
+                .show()
     }
 
     override fun onResume() {

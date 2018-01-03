@@ -17,4 +17,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="upgrade_title">别来无恙</string>
+    <string name="upgrade_cancel">取消</string>
+    <string name="upgrade_comfirm">更新</string>
 </resources>
