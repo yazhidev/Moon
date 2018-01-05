@@ -27,6 +27,8 @@ ext {
     buglyNativeCrashVersion = '3.3.1'
 
     permissionsDispatcherVersion = '3.1.0'
+
+    eventbusVersion = '3.1.1'
 }
 
 

@@ -11,19 +11,24 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import com.tencent.bugly.beta.Beta
+import com.yazhi1992.moon.event.BuglyUpgrate
 import com.yazhi1992.yazhilib.utils.StatusBarUtils
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.app_bar_home.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import permissions.dispatcher.RuntimePermissions
+
 
 @RuntimePermissions
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    lateinit var parent:LinearLayout
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        EventBus.getDefault().register(this@HomeActivity)
 
         StatusBarUtils.with(this)
                 .setDrawerLayoutContentId(true, R.id.content)
@@ -42,18 +47,20 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
-
-        checkUpgradeInfo()
     }
 
-    //检测更新
-    private fun checkUpgradeInfo() {
+    //版本更新
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun upgrade(event: BuglyUpgrate) {
+        val upgradeInfo = Beta.getUpgradeInfo()
         AlertDialog.Builder(this)
-                .setTitle(getString(R.string.upgrade_title))
-                .setMessage("test")
-                .setPositiveButton(getString(R.string.upgrade_comfirm), null)
-                .setNegativeButton(getString(R.string.upgrade_cancel), null)
-                .show()
+                .setTitle(upgradeInfo.title)
+                .setMessage(upgradeInfo.newFeature)
+                .setPositiveButton(getString(R.string.upgrade_comfirm), {dialog, which ->
+                    Beta.startDownload()
+                    dialog.dismiss()
+                })
+                .setNegativeButton(getString(R.string.upgrade_cancel)) { dialog, which -> dialog.dismiss()}.show()
     }
 
     override fun onResume() {
@@ -62,7 +69,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onDestroy() {
         super.onDestroy()
-        Mylog.d("onDestroy")
+        EventBus.getDefault().unregister(this@HomeActivity)
     }
 
     override fun onStop() {
