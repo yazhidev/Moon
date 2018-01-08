@@ -1,5 +1,7 @@
 package com.yazhi1992.moon
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -38,7 +40,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            ActivityRouter.gotoMain3(this@HomeActivity)
+            startActivity(Intent(this@HomeActivity, UpgradeActivity::class.java)
+                    , ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity).toBundle())
+//            ActivityRouter.gotoMain3(this@HomeActivity)
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -47,6 +51,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
     }
 
     //版本更新
