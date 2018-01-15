@@ -4,6 +4,8 @@
 
 ### schedule
 
+- 一本日记的搜索按钮效果
+-
 - FloatingActionButton 滑动隐藏动画
 - ShortCuts
 - 仿酷安的下载按钮
