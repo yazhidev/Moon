@@ -1,5 +1,6 @@
 package com.yazhi1992.moon.ui;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,8 +15,11 @@ import android.view.ViewGroup;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.MemorialDayViewBinder;
 import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
-import com.yazhi1992.moon.viewmodel.MemorialDay;
+import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.moon.widget.PageRouter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import me.drakeet.multitype.Items;
 import me.drakeet.multitype.MultiTypeAdapter;
@@ -42,14 +46,10 @@ public class HistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mMultiTypeAdapter = new MultiTypeAdapter();
-        mMultiTypeAdapter.register(MemorialDay.class, new MemorialDayViewBinder());
+        mMultiTypeAdapter.register(MemorialDayBean.class, new MemorialDayViewBinder());
 //        mItems.add();
 
         mItems = new Items();
-
-        for (int i = 0; i < 20; i++) {
-            mItems.add(new MemorialDay());
-        }
 
         mMultiTypeAdapter.setItems(mItems);
         mBinding.ryHistory.setAdapter(mMultiTypeAdapter);
@@ -78,5 +78,24 @@ public class HistoryFragment extends Fragment {
                 PageRouter.gotoAddMemorial();
             }
         });
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void addMemorial(MemorialDayBean bean) {
+        mItems.add(0, bean);
+        mMultiTypeAdapter.notifyItemInserted(0);
+        mBinding.ryHistory.smoothScrollToPosition(0);
     }
 }

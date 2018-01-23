@@ -69,7 +69,8 @@
         <activity android:name=".ui.Home2Activity">
 
         </activity>
-        <activity android:name=".ui.HomeActivity">
+        <activity android:name=".ui.HomeActivity"
+                  android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

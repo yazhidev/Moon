@@ -18,7 +18,7 @@
 
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottomNavigation"
-            app:itemTextColor="@color/colorAccent"
+            app:itemTextColor="@color/bottom_nav_color"
             app:menu="@menu/bottom_menu"
             android:layout_alignParentBottom="true"
             android:elevation="8dp"

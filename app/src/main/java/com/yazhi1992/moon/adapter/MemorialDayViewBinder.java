@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.viewmodel.MemorialDay;
+import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 
 import me.drakeet.multitype.ItemViewBinder;
 
 /**
  * Created by zengyazhi on 2018/1/23.
  */
-public class MemorialDayViewBinder extends ItemViewBinder<MemorialDay, MemorialDayViewBinder.ViewHolder> {
+public class MemorialDayViewBinder extends ItemViewBinder<MemorialDayBean, MemorialDayViewBinder.ViewHolder> {
 
     @NonNull
     @Override
@@ -25,8 +25,8 @@ public class MemorialDayViewBinder extends ItemViewBinder<MemorialDay, MemorialD
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ViewHolder holder, @NonNull MemorialDay memorialDay) {
-        holder.mTv.setText(memorialDay.getTitle());
+    protected void onBindViewHolder(@NonNull ViewHolder holder, @NonNull MemorialDayBean memorialDayBean) {
+        holder.mTv.setText(memorialDayBean.getTitle());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -35,7 +35,7 @@ public class MemorialDayViewBinder extends ItemViewBinder<MemorialDay, MemorialD
 
         ViewHolder(View itemView) {
             super(itemView);
-            mTv = itemView.findViewById(R.id.tv_memorial_day);
+            mTv = itemView.findViewById(R.id.tv_memorial_day_title);
         }
     }
 }

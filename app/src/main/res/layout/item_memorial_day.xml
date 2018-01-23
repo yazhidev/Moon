@@ -1,18 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+        android:padding="15dp"
         android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tv_memorial_day"
-            android:layout_width="match_parent"
+        
+        <ImageView
+            android:id="@+id/ig_user"
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:textSize="40sp"
-            android:gravity="center"
+            android:src="@mipmap/ic_launcher"
             />
 
-    </android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="小智哥"
+            android:textColor="@color/gray"
+            android:layout_alignTop="@+id/ig_user"
+            android:layout_toRightOf="@+id/ig_user"
+            android:layout_marginLeft="10dp"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/tv_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加了纪念日"
+            android:layout_below="@+id/tv_name"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/ig_user"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="15sp"
+            />
+       <com.yazhi1992.yazhilib.widget.RoundView.RoundTextView
+           android:id="@+id/tv_memorial_day_title"
+           android:layout_below="@+id/tv_type"
+           android:layout_alignLeft="@+id/tv_type"
+           android:layout_marginTop="10dp"
+           app:rv_cornerRadius="5dp"
+           app:rv_strokeWidth="1dp"
+           app:rv_strokeColor="@color/theme_color"
+           android:paddingLeft="10dp"
+           android:paddingRight="10dp"
+           android:paddingTop="5dp"
+           android:paddingBottom="5dp"
+           android:textColor="@color/gray"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
 </layout>

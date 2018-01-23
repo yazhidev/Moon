@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.DialogDatePickerBinding;
 
+import java.util.Date;
+
 /**
  * Created by zengyazhi on 2018/1/23.
  */
@@ -48,15 +50,28 @@ public class DatePickerDialog extends DialogFragment {
         mBinding.tvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                dismiss();
             }
         });
 
         mBinding.tvComfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (mComfirmlistener != null) {
+                    mComfirmlistener.comfirm(mBinding.datePicker.getYear() + "-" + (mBinding.datePicker.getMonth() + 1) + "-" + mBinding.datePicker.getDayOfMonth());
+                }
+                dismiss();
             }
         });
+    }
+
+    Comfirmlistener mComfirmlistener;
+
+    public void setComfirmlistener(Comfirmlistener comfirmlistener) {
+        mComfirmlistener = comfirmlistener;
+    }
+
+    public interface Comfirmlistener {
+        void comfirm(String timeStr);
     }
 }
