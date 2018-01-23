@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="10dp"
+            android:layout_centerInParent="true">
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></DatePicker>
+
+            <TextView
+                android:id="@+id/tv_comfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:layout_marginRight="20dp"
+                android:layout_alignRight="@+id/datePicker"
+                android:layout_below="@+id/datePicker"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="确定"/>
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:padding="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/tv_comfirm"
+                android:layout_alignBottom="@+id/tv_comfirm"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="取消"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>

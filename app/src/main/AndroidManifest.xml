@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.HomeActivity"
+            android:name=".ui.OldHomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/NoActionBarTheme">
         </activity>
@@ -63,13 +63,18 @@
             android:theme="@style/PlayerSheet">
         </activity>
         <activity android:name=".ui.MemorialDayActivity">
+        </activity>
+        <activity android:name=".ui.AddMemorialDayActivity">
+        </activity>
+        <activity android:name=".ui.Home2Activity">
+
+        </activity>
+        <activity android:name=".ui.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity android:name=".adapter.AddMemorialDayActivity">
         </activity>
     </application>
 

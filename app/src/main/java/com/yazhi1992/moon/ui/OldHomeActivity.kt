@@ -19,7 +19,7 @@ import com.yazhi1992.moon.ActivityRouter
 import com.yazhi1992.moon.R
 import com.yazhi1992.moon.event.BuglyUpgrate
 import com.yazhi1992.yazhilib.utils.StatusBarUtils
-import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_home_old.*
 import kotlinx.android.synthetic.main.app_bar_home.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -28,12 +28,12 @@ import permissions.dispatcher.RuntimePermissions
 
 
 @RuntimePermissions
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class OldHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        EventBus.getDefault().register(this@HomeActivity)
+        setContentView(R.layout.activity_home_old)
+        EventBus.getDefault().register(this@OldHomeActivity)
 
         StatusBarUtils.with(this)
                 .setDrawerLayoutContentId(true, R.id.content)
@@ -43,9 +43,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-//            startActivity(Intent(this@HomeActivity, UpgradeActivity::class.java)
-//                    , ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity).toBundle())
-//            ActivityRouter.gotoMain3(this@HomeActivity)
+//            startActivity(Intent(this@OldHomeActivity, UpgradeActivity::class.java)
+//                    , ActivityOptions.makeSceneTransitionAnimation(this@OldHomeActivity).toBundle())
+//            ActivityRouter.gotoMain3(this@OldHomeActivity)
 
             // 测试 SDK 是否正常工作的代码
             val testObject = AVObject("TestObject")
@@ -88,7 +88,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onDestroy() {
         super.onDestroy()
-        EventBus.getDefault().unregister(this@HomeActivity)
+        EventBus.getDefault().unregister(this@OldHomeActivity)
     }
 
     override fun onStop() {
@@ -125,7 +125,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_camera -> {
-                ActivityRouter.gotoMemorialDay(this@HomeActivity)
+                ActivityRouter.gotoMemorialDay(this@OldHomeActivity)
             }
             R.id.nav_gallery -> {
 
