@@ -1,4 +1,4 @@
-package com.yazhi1992.moon
+package com.yazhi1992.moon.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -18,6 +18,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import com.yazhi1992.moon.R
 import com.yazhi1992.yazhilib.utils.LibUtils
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*

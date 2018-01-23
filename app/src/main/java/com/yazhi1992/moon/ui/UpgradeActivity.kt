@@ -1,8 +1,8 @@
-package com.yazhi1992.moon
+package com.yazhi1992.moon.ui
 
 import android.app.Activity
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.yazhi1992.moon.R
 
 class UpgradeActivity : Activity() {
 

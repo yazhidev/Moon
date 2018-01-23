@@ -47,7 +47,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "LEAN_CLOUD_ID", properties.getProperty("leanCloudId")
+            buildConfigField "String", "LEAN_CLOUD_KEY", properties.getProperty("leanCloudKey")
+        }
         release {
+            buildConfigField "String", "LEAN_CLOUD_ID", properties.getProperty("leanCloudId")
+            buildConfigField "String", "LEAN_CLOUD_KEY", properties.getProperty("leanCloudKey")
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
@@ -114,4 +121,8 @@ dependencies {
     compile "org.greenrobot:eventbus:$rootProject.ext.eventbusVersion"
 
     compile project(":yazhilib")
+
+    //LeanCould
+    compile "cn.leancloud.android:avoscloud-sdk:v$rootProject.ext.leancloudAvoscloudSdk"
+
 }

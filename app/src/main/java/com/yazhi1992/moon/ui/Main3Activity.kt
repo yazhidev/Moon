@@ -1,10 +1,12 @@
-package com.yazhi1992.moon
+package com.yazhi1992.moon.ui
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewAnimationUtils
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.yazhi1992.moon.ActivityRouter
+import com.yazhi1992.moon.R
 import com.yazhi1992.yazhilib.utils.StatusBarUtils
 import kotlinx.android.synthetic.main.activity_main3.*
 

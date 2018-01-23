@@ -1,61 +1,54 @@
-package com.yazhi1992.moon
+package com.yazhi1992.moon.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_main4.*
+import com.yazhi1992.moon.R
+import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.layout_item.view.*
 
-class Main4Activity : AppCompatActivity() {
+class Main2Activity : AppCompatActivity() {
 
     public var data = ArrayList<String>()
 
-    public var oldData = ArrayList<String>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main4)
+        setContentView(R.layout.activity_main2)
+        floatingBtn.setOnClickListener { }
 
+        for (i in 0..20) {
+            data.add("第" + i)
+        }
 
         ry.layoutManager = LinearLayoutManager(this)
         val myAdapter = MyAdapter()
         myAdapter.datalist = data
         ry.adapter = myAdapter
-
-        button.setOnClickListener {
-            Observable.just(1)
-                    .subscribeOn(Schedulers.io())
-                    .doOnNext {
-                        if (data.size == 0) {
-                            for (i in 0..20) {
-                                data.add("第" + i)
-                            }
-                        } else {
-                            data.add(0, "test")
-                        }
-
-
-                        calculateDiff = DiffUtil.calculateDiff(MyDiffUtil(oldData, data))
-
-                        oldData.clear()
-                        oldData.addAll(data)
+        ry.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    // Scroll Down
+                    if (floatingBtn.isShown()) {
+                        floatingBtn.hide();
                     }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        calculateDiff.dispatchUpdatesTo(myAdapter)
+                } else if (dy < 0) {
+                    // Scroll Up
+                    if (!floatingBtn.isShown()) {
+                        floatingBtn.show();
                     }
-        }
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
     }
-
-    lateinit var calculateDiff: DiffUtil.DiffResult
 
     class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
         var datalist = ArrayList<String>()
@@ -70,7 +63,7 @@ class Main4Activity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder?, position: Int) {
-            holder!!.text.text = datalist.get(position)
+            holder!!.text.setText(datalist.get(position))
         }
 
     }

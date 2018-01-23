@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.Toast
-import com.yazhi1992.moon.Mylog
+import com.yazhi1992.moon.util.Mylog
 import com.yazhi1992.moon.R
 
 /**

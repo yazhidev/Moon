@@ -1,7 +1,5 @@
-package com.yazhi1992.moon
+package com.yazhi1992.moon.ui
 
-import android.app.ActivityOptions
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -9,11 +7,15 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
+import com.avos.avoscloud.AVException
+import com.avos.avoscloud.AVObject
+import com.avos.avoscloud.SaveCallback
 import com.tencent.bugly.beta.Beta
+import com.yazhi1992.moon.R
 import com.yazhi1992.moon.event.BuglyUpgrate
 import com.yazhi1992.yazhilib.utils.StatusBarUtils
 import kotlinx.android.synthetic.main.activity_home.*
@@ -40,9 +42,20 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            startActivity(Intent(this@HomeActivity, UpgradeActivity::class.java)
-                    , ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity).toBundle())
+//            startActivity(Intent(this@HomeActivity, UpgradeActivity::class.java)
+//                    , ActivityOptions.makeSceneTransitionAnimation(this@HomeActivity).toBundle())
 //            ActivityRouter.gotoMain3(this@HomeActivity)
+
+            // 测试 SDK 是否正常工作的代码
+            val testObject = AVObject("TestObject")
+            testObject.put("words", "Hello World!")
+            testObject.saveInBackground(object : SaveCallback() {
+                override fun done(e: AVException?) {
+                    if (e == null) {
+                        Log.d("saved", "success!")
+                    }
+                }
+            })
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -61,7 +74,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         AlertDialog.Builder(this)
                 .setTitle(upgradeInfo.title)
                 .setMessage(upgradeInfo.newFeature)
-                .setPositiveButton(getString(R.string.upgrade_comfirm), {dialog, which ->
+                .setPositiveButton(getString(R.string.upgrade_comfirm), { dialog, which ->
                     Beta.startDownload()
                     dialog.dismiss()
                 })

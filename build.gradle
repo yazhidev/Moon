@@ -9,6 +9,9 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/public" // LeanCloud 的包仓库
+        }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$android_gradle_tool_version"
@@ -20,7 +23,9 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url "https://raw.githubusercontent.com/Pgyer/mvn_repo_pgyer/master" }
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/public" // LeanCloud 的包仓库
+        }
     }
 }
 

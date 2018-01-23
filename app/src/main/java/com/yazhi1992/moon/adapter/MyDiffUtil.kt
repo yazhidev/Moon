@@ -1,4 +1,4 @@
-package com.yazhi1992.moon
+package com.yazhi1992.moon.adapter
 
 import android.support.v7.util.DiffUtil
 

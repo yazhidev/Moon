@@ -1,4 +1,4 @@
-package com.yazhi1992.moon
+package com.yazhi1992.moon.ui
 
 import android.animation.Animator
 import android.databinding.DataBindingUtil
@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewAnimationUtils
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.yazhi1992.moon.ActivityRouter
+import com.yazhi1992.moon.R
 import com.yazhi1992.moon.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 

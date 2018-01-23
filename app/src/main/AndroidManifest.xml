@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_LOGS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".BaseApplication"
@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".HomeActivity"
+            android:name=".ui.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/NoActionBarTheme">
             <intent-filter>
@@ -27,18 +27,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
         </activity>
-        <activity android:name=".Main2Activity">
+        <activity android:name=".ui.Main2Activity">
         </activity>
         <activity
-            android:name=".Main3Activity"
+            android:name=".ui.Main3Activity"
             android:theme="@style/TransparentTheme">
         </activity>
-        <activity android:name=".Main4Activity">
+        <activity android:name=".ui.Main4Activity">
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.LoginActivity"
             android:label="@string/title_activity_login">
         </activity>
         <activity android:name=".widget.ChooseDataForWidgetActivity">
@@ -63,7 +63,7 @@
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent"/>
-        <activity android:name=".UpgradeActivity"
+        <activity android:name=".ui.UpgradeActivity"
             android:theme="@style/PlayerSheet"
             >
         </activity>

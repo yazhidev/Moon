@@ -2,10 +2,8 @@ package com.yazhi1992.moon
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
-import android.support.v7.app.AlertDialog
-import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
+import com.avos.avoscloud.AVOSCloud
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import com.tencent.bugly.Bugly
@@ -43,6 +41,11 @@ class BaseApplication : Application() {
             }
         }
         Bugly.init(applicationContext, "5d768fb313", BuildConfig.DEBUG)
+
+        //leancloud
+        AVOSCloud.initialize(this, BuildConfig.LEAN_CLOUD_ID, BuildConfig.LEAN_CLOUD_KEY)
+        // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
+        AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG)
     }
 
     fun getContext() : Context{

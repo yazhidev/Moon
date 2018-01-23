@@ -29,6 +29,8 @@ ext {
     permissionsDispatcherVersion = '3.1.0'
 
     eventbusVersion = '3.1.1'
+
+    leancloudAvoscloudSdk = '4.6.1'
 }
 
 

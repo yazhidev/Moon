@@ -1,7 +1,6 @@
-package com.yazhi1992.moon
+package com.yazhi1992.moon.util
 
 import com.orhanobut.logger.Logger
-import java.util.*
 
 /**
  * Created by zengyazhi on 2017/12/28.
