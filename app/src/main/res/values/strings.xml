@@ -21,4 +21,7 @@
     <string name="upgrade_title">别来无恙</string>
     <string name="upgrade_cancel">取消</string>
     <string name="upgrade_comfirm">更新</string>
+
+    <string name="add_memorial">请输入标题</string>
+
 </resources>

@@ -125,4 +125,11 @@ dependencies {
     //LeanCould
     compile "cn.leancloud.android:avoscloud-sdk:v$rootProject.ext.leancloudAvoscloudSdk"
 
+    //recyclerview 多布局
+    implementation("me.drakeet.multitype:multitype:$rootProject.ext.multitype", {
+        exclude group: 'com.android.support'
+    })
+
+    implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+    annotationProcessor 'com.github.bumptech.glide:compiler:$rootProject.ext.glideVersion'
 }

@@ -15,6 +15,7 @@ import com.avos.avoscloud.AVException
 import com.avos.avoscloud.AVObject
 import com.avos.avoscloud.SaveCallback
 import com.tencent.bugly.beta.Beta
+import com.yazhi1992.moon.ActivityRouter
 import com.yazhi1992.moon.R
 import com.yazhi1992.moon.event.BuglyUpgrate
 import com.yazhi1992.yazhilib.utils.StatusBarUtils
@@ -124,7 +125,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_camera -> {
-                // Handle the camera action
+                ActivityRouter.gotoMemorialDay(this@HomeActivity)
             }
             R.id.nav_gallery -> {
 

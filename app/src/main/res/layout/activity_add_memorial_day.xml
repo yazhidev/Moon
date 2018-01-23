@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yazhi1992.moon.adapter.AddMemorialDayActivity">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_memorial"
+            android:imeActionId="6"
+            android:imeActionLabel="@string/action_sign_in_short"
+            android:imeOptions="actionUnspecified"
+            android:maxLines="1"
+            android:singleLine="true"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <DatePicker
+        android:id="@+id/datePicker"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/titleLayout"
+        android:layout_width="match_parent"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"
+        android:layout_height="wrap_content"></DatePicker>
+
+    <Button
+        android:id="@+id/btn_ok"
+        app:layout_constraintTop_toBottomOf="@+id/datePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</android.support.constraint.ConstraintLayout>
