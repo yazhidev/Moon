@@ -1,6 +1,5 @@
 package com.yazhi1992.moon.ui;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -76,8 +75,14 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 PageRouter.gotoAddMemorial();
+
+                sendMsg();
             }
         });
+    }
+
+    private void sendMsg() {
+
     }
 
     @Override

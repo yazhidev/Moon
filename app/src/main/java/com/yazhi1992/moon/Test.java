@@ -15,7 +15,7 @@ public class Test {
     }
 
     private void test() {
-        TextView textView = new TextView(BaseApplication.instance);
+        TextView textView = new TextView(AppApplication.getContext());
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
