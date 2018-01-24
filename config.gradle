@@ -35,6 +35,10 @@ ext {
     multitype = '3.4.2'
 
     glideVersion = '4.5.0'
+
+    multiDexVersion = '1.0.1'
+
+    smartRefreshVersion = '1.0.4-7'
 }
 
 

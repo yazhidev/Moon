@@ -25,8 +25,8 @@ public class MemorialDayViewBinder extends ItemViewBinder<MemorialDayBean, Memor
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ViewHolder holder, @NonNull MemorialDayBean memorialDayBean) {
-        holder.mTv.setText(memorialDayBean.getTitle());
+    protected void onBindViewHolder(@NonNull ViewHolder holder, @NonNull MemorialDayBean memorialDayBean2) {
+        holder.mTv.setText(memorialDayBean2.getTitle());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

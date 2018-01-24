@@ -52,18 +52,21 @@
             android:gravity="center_vertical"
             android:layout_height="50dp"/>
 
-        <Button
-            android:id="@+id/btn_ok"
-            android:text="添加"
-            android:textSize="18sp"
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
+            android:id="@+id/btn_comfirm"
             android:layout_marginTop="20dp"
             android:textColor="@color/white"
             android:padding="10dp"
-            android:background="@drawable/theme_color_selector"
+            app:rv_cornerRadius="10dp"
+            app:rv_textSize="18"
+            app:rv_text="添加"
+            app:rv_textColor="@color/white"
+            app:rv_backgroundColor="@color/theme_color"
+            app:rv_backgroundPressColor="@color/theme_color_pressed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/datePicker"/>
-
+            app:layout_constraintTop_toBottomOf="@+id/datePicker"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+        
     </LinearLayout>
 
 </RelativeLayout>

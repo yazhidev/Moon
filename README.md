@@ -4,8 +4,11 @@
 
 ### schedule
 
+- 空页面状态
+- 网络层设计
+- QQ授权登录
+- IM 通知
 - 一本日记的搜索按钮效果
--
 - FloatingActionButton 滑动隐藏动画
 - ShortCuts
 - 仿酷安的下载按钮

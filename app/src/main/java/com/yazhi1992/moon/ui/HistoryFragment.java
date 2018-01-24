@@ -7,18 +7,28 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.MemorialDayViewBinder;
+import com.yazhi1992.moon.constant.NameContant;
 import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.moon.widget.PageRouter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import me.drakeet.multitype.Items;
 import me.drakeet.multitype.MultiTypeAdapter;
@@ -48,8 +58,14 @@ public class HistoryFragment extends Fragment {
         mMultiTypeAdapter.register(MemorialDayBean.class, new MemorialDayViewBinder());
 //        mItems.add();
 
-        mItems = new Items();
+        mBinding.smartRefresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                getDatas(false);
+            }
+        });
 
+        mItems = new Items();
         mMultiTypeAdapter.setItems(mItems);
         mBinding.ryHistory.setAdapter(mMultiTypeAdapter);
         mBinding.ryHistory.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -79,6 +95,40 @@ public class HistoryFragment extends Fragment {
                 sendMsg();
             }
         });
+        mBinding.smartRefresh.autoRefresh();
+    }
+
+    private void getDatas(boolean loadMore) {
+        if(loadMore) {
+
+        } else {
+            AVQuery<AVObject> query = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
+            query.include(NameContant.MemorialDay.CLAZZ_NAME);
+            query.findInBackground(new FindCallback<AVObject>() {
+                @Override
+                public void done(List<AVObject> list, AVException e) {
+                    Log.e("zyz", "");
+                    mBinding.smartRefresh.finishRefresh();
+
+                    mItems.clear();
+                    transformeData(list);
+                }
+            });
+        }
+    }
+
+    private void transformeData(List<AVObject> list) {
+        if(list.size() > 0) {
+            for(AVObject data:list) {
+                int anInt = data.getInt(NameContant.LoveHistory.TYPE);
+                if(anInt == NameContant.LoveHistory.TYPE_MEMORIAL_DAY) {
+                    AVObject avObject = data.getAVObject(NameContant.LoveHistory.MEMORIAL_DAY);
+                    MemorialDayBean memorialDayBean = new MemorialDayBean(avObject.getString(NameContant.MemorialDay.TITLE), avObject.getLong(NameContant.MemorialDay.TIME));
+                    mItems.add(memorialDayBean);
+                }
+            }
+            mMultiTypeAdapter.notifyDataSetChanged();
+        }
     }
 
     private void sendMsg() {
