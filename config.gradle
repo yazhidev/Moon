@@ -39,6 +39,8 @@ ext {
     multiDexVersion = '1.0.1'
 
     smartRefreshVersion = '1.0.4-7'
+
+    daggerVersion ='2.14.1'
 }
 
 

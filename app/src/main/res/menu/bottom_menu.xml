@@ -3,11 +3,11 @@
     <item
         android:id="@+id/item_main"
         android:icon="@mipmap/bottom_nav_home"
-        android:title="首页"/>
+        android:title="此刻"/>
     <item
         android:id="@+id/item_history"
         android:icon="@mipmap/bottom_nav_love"
-        android:title="往昔"/>
+        android:title="回忆"/>
     <item
         android:id="@+id/item_more"
         android:icon="@mipmap/bottom_nav_me"

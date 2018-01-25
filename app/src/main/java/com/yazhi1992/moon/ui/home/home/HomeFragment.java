@@ -1,4 +1,4 @@
-package com.yazhi1992.moon.ui;
+package com.yazhi1992.moon.ui.home.home;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.avos.sns.SNSType;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
 
@@ -20,7 +19,6 @@ import com.yazhi1992.moon.databinding.FragmentHomeBinding;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding mBinding;
-    private SNSType type = null;
 
     @Nullable
     @Override
@@ -33,11 +31,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mBinding.tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
     }
 
 }

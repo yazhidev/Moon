@@ -1,4 +1,4 @@
-package com.yazhi1992.moon.ui
+package com.yazhi1992.moon.activity
 
 import android.graphics.Color
 import android.os.Bundle

@@ -6,7 +6,7 @@
     android:id="@+id/my_rl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yazhi1992.moon.ui.UpgradeActivity">
+    tools:context="com.yazhi1992.moon.activity.UpgradeActivity">
 
     <TextView
         android:id="@+id/my_tv"

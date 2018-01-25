@@ -1,6 +1,5 @@
 package com.yazhi1992.moon;
 
-import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -12,6 +11,8 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
 import com.yazhi1992.moon.event.BuglyUpgrate;
+import com.yazhi1992.moon.sql.DatabaseManager;
+import com.yazhi1992.yazhilib.utils.LibSPUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -21,16 +22,18 @@ import org.greenrobot.eventbus.EventBus;
 
 public class AppApplication extends MultiDexApplication {
 
-    public static Context context;
-
-    public static Context getContext() {
-        return context;
-    }
+    public static AppApplication context;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = this;
+
+        //数据库初始化
+        DatabaseManager.getInstance().init(this);
+
+        LibSPUtils.init(this);
+
         if (BuildConfig.DEBUG) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
             ARouter.openLog();    // 打印日志
             ARouter.openDebug();  // 开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！线上版本需要关闭,否则有安全风险)
@@ -57,4 +60,9 @@ public class AppApplication extends MultiDexApplication {
         // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
         AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
     }
+
+    public static AppApplication getInstance() {
+        return context;
+    }
+
 }

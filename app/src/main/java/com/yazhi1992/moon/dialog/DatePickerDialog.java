@@ -1,6 +1,7 @@
 package com.yazhi1992.moon.dialog;
 
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,10 +15,10 @@ import android.view.WindowManager;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.DialogDatePickerBinding;
 
-import java.util.Date;
-
 /**
  * Created by zengyazhi on 2018/1/23.
+ *
+ * 日期选择弹窗
  */
 
 public class DatePickerDialog extends DialogFragment {
@@ -65,6 +66,13 @@ public class DatePickerDialog extends DialogFragment {
         });
     }
 
+    public void show(FragmentManager manager) {
+        manager.executePendingTransactions();
+        if (!isAdded()) {
+            show(manager, "datePicker");
+        }
+    }
+
     Comfirmlistener mComfirmlistener;
 
     public void setComfirmlistener(Comfirmlistener comfirmlistener) {
@@ -72,6 +80,10 @@ public class DatePickerDialog extends DialogFragment {
     }
 
     public interface Comfirmlistener {
+        /**
+         * 点击确定
+         * @param timeStr 返回日期字符串格式 yyyy-MM-dd
+         */
         void comfirm(String timeStr);
     }
 }

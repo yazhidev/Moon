@@ -1,4 +1,4 @@
-package com.yazhi1992.moon.ui;
+package com.yazhi1992.moon.ui.home;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -7,16 +7,22 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.databinding.ActivityHomeBinding;
+import com.yazhi1992.moon.ui.home.history.HistoryFragment;
+import com.yazhi1992.moon.ui.home.home.HomeFragment;
+import com.yazhi1992.moon.ui.home.set.SetFragment;
+import com.yazhi1992.moon.widget.PageRouter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+@Route(path = PageRouter.HOME_PAGE)
+public class HomeActivity extends AbsUpgrateActivity {
 
     private ActivityHomeBinding mBinding;
     private List<Fragment> mFragments = new ArrayList<>();

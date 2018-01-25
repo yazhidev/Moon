@@ -1,7 +1,6 @@
 package com.yazhi1992.moon.viewmodel;
 
 import com.yazhi1992.moon.util.AppUtils;
-import com.yazhi1992.yazhilib.utils.LibTimeUtils;
 
 import java.util.Date;
 
@@ -9,8 +8,7 @@ import java.util.Date;
  * Created by zengyazhi on 2018/1/24.
  */
 
-public class MemorialDayBean {
-
+public class MemorialDayBean extends HistoryBean{
 
     private String title;
     private long time;

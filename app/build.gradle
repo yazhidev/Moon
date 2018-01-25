@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 //solve kotlin and databinding problem
+apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -51,10 +52,17 @@ android {
         debug {
             buildConfigField "String", "LEAN_CLOUD_ID", properties.getProperty("leanCloudId")
             buildConfigField "String", "LEAN_CLOUD_KEY", properties.getProperty("leanCloudKey")
+            buildConfigField "String", "QQ_ID", "\"1106624697\""
+            buildConfigField "String", "QQ_KEY", "\"IeOM0d7nzg2uIAps\""
+            buildConfigField "String", "LEANCLOUD_QQ_LOGIN_URL", "\"https://leancloud.cn/1.1/sns/callback/ypt2m1s8xla33l8o\""
+
         }
         release {
             buildConfigField "String", "LEAN_CLOUD_ID", properties.getProperty("leanCloudId")
             buildConfigField "String", "LEAN_CLOUD_KEY", properties.getProperty("leanCloudKey")
+            buildConfigField "String", "QQ_ID", "\"1106624697\""
+            buildConfigField "String", "QQ_KEY", "\"IeOM0d7nzg2uIAps\""
+            buildConfigField "String", "LEANCLOUD_QQ_LOGIN_URL", "\"https://leancloud.cn/1.1/sns/callback/ypt2m1s8xla33l8o\""
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -68,6 +76,20 @@ android {
             includeAndroidResources = true
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'build/generated/source/greendao'
+    }
+}
+
+//greendao配置
+greendao {
+    schemaVersion 1  //版本号，升级时可配置
 }
 
 //解决 arouter 无法跳转问题
@@ -143,4 +165,11 @@ dependencies {
     //下拉刷新
     compile "com.scwang.smartrefresh:SmartRefreshLayout:$rootProject.ext.smartRefreshVersion"
 
+    compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
+    compile "com.google.dagger:dagger-android:$rootProject.ext.daggerVersion"
+    compile "com.google.dagger:dagger-android-support:$rootProject.ext.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.ext.daggerVersion"
+
+    compile "org.greenrobot:greendao:$rootProject.green_dao_version"
 }

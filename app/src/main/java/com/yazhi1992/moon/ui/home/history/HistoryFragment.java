@@ -1,4 +1,4 @@
-package com.yazhi1992.moon.ui;
+package com.yazhi1992.moon.ui.home.history;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -7,21 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.FindCallback;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.MemorialDayViewBinder;
+import com.yazhi1992.moon.api.Api;
+import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.NameContant;
 import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
+import com.yazhi1992.moon.viewmodel.HistoryBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.moon.widget.PageRouter;
 
@@ -42,6 +39,9 @@ public class HistoryFragment extends Fragment {
     private FragmentHistoryBinding mBinding;
     private MultiTypeAdapter mMultiTypeAdapter;
     private Items mItems;
+    private final int SIZE = 20;
+    private int lastItemId = -1;
+    private HistoryPresenter mPresenter = new HistoryPresenter();
 
     @Nullable
     @Override
@@ -56,14 +56,9 @@ public class HistoryFragment extends Fragment {
 
         mMultiTypeAdapter = new MultiTypeAdapter();
         mMultiTypeAdapter.register(MemorialDayBean.class, new MemorialDayViewBinder());
-//        mItems.add();
 
-        mBinding.smartRefresh.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(RefreshLayout refreshlayout) {
-                getDatas(false);
-            }
-        });
+        mBinding.smartRefresh.setOnRefreshListener(refreshlayout -> getDatas(false));
+        mBinding.smartRefresh.setOnLoadmoreListener(refreshlayout -> getDatas(true));
 
         mItems = new Items();
         mMultiTypeAdapter.setItems(mItems);
@@ -98,32 +93,47 @@ public class HistoryFragment extends Fragment {
         mBinding.smartRefresh.autoRefresh();
     }
 
-    private void getDatas(boolean loadMore) {
-        if(loadMore) {
-
-        } else {
-            AVQuery<AVObject> query = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
-            query.include(NameContant.MemorialDay.CLAZZ_NAME);
-            query.findInBackground(new FindCallback<AVObject>() {
-                @Override
-                public void done(List<AVObject> list, AVException e) {
-                    Log.e("zyz", "");
-                    mBinding.smartRefresh.finishRefresh();
-
-                    mItems.clear();
-                    transformeData(list);
+    // TODO: 2018/1/25 使用 dagger 分层
+    private void getDatas(final boolean loadMore) {
+        if (loadMore) {
+            //获取末尾id
+            if(mItems.size() > 0) {
+                Object item = mItems.get(mItems.size() - 1);
+                if(item != null && item instanceof HistoryBean) {
+                    lastItemId = ((HistoryBean) item).getId();
                 }
-            });
+            }
+        } else {
+            lastItemId = -1;
         }
+        Api.getInstance().getLoveHistory(lastItemId, SIZE, new DataCallback<List<AVObject>>() {
+            @Override
+            public void onSuccess(List<AVObject> data) {
+                if(loadMore) {
+                    mBinding.smartRefresh.finishLoadmore();
+                } else {
+                    mItems.clear();
+                    mBinding.smartRefresh.finishRefresh();
+                }
+                transformeData(data);
+                mBinding.smartRefresh.setEnableLoadmore(data != null && data.size() == SIZE);
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+
+            }
+        });
     }
 
     private void transformeData(List<AVObject> list) {
-        if(list.size() > 0) {
-            for(AVObject data:list) {
+        if (list.size() > 0) {
+            for (AVObject data : list) {
                 int anInt = data.getInt(NameContant.LoveHistory.TYPE);
-                if(anInt == NameContant.LoveHistory.TYPE_MEMORIAL_DAY) {
+                if (anInt == NameContant.LoveHistory.TYPE_MEMORIAL_DAY) {
                     AVObject avObject = data.getAVObject(NameContant.LoveHistory.MEMORIAL_DAY);
                     MemorialDayBean memorialDayBean = new MemorialDayBean(avObject.getString(NameContant.MemorialDay.TITLE), avObject.getLong(NameContant.MemorialDay.TIME));
+                    memorialDayBean.setId(data.getInt(NameContant.LoveHistory.ID));
                     mItems.add(memorialDayBean);
                 }
             }

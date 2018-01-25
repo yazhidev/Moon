@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.yazhi1992.moon.ui.Home2Activity">
+        tools:context="com.yazhi1992.moon.ui.startup.StartUpActivity">
 
         <com.yazhi1992.yazhilib.widget.NoScrollViewPager
             android:id="@+id/viewPager"

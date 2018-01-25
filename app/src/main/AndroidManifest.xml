@@ -18,23 +18,30 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.startup.StartUpActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity
-            android:name=".ui.OldHomeActivity"
+            android:name=".activity.OldHomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/NoActionBarTheme">
         </activity>
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".activity.MainActivity">
         </activity>
-        <activity android:name=".ui.Main2Activity">
+        <activity android:name=".activity.Main2Activity">
         </activity>
         <activity
-            android:name=".ui.Main3Activity"
+            android:name=".activity.Main3Activity"
             android:theme="@style/TransparentTheme">
         </activity>
-        <activity android:name=".ui.Main4Activity">
+        <activity android:name=".activity.Main4Activity">
         </activity>
         <activity
-            android:name=".ui.OldLoginActivity"
+            android:name=".activity.OldLoginActivity"
             android:label="@string/title_activity_login">
         </activity>
         <activity android:name=".widget.ChooseDataForWidgetActivity">
@@ -60,23 +67,17 @@
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent"/>
         <activity
-            android:name=".ui.UpgradeActivity"
+            android:name=".activity.UpgradeActivity"
             android:theme="@style/PlayerSheet">
         </activity>
-        <activity android:name=".ui.MemorialDayActivity">
+        <activity android:name=".activity.MemorialDayActivity">
         </activity>
-        <activity android:name=".ui.AddMemorialDayActivity">
-        </activity>
-        <activity android:name=".ui.Home2Activity">
+        <activity android:name="com.yazhi1992.moon.ui.addmemorialday.AddMemorialDayActivity">
         </activity>
         <activity
-            android:name=".ui.HomeActivity"
+            android:name=".ui.home.HomeActivity"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <!-- QQ SSO 登录 -->
@@ -108,7 +109,7 @@
             </intent-filter>
         </receiver>
         <!-- 实时通信模块、推送 END -->
-        <activity android:name=".ui.LoginActivity">
+        <activity android:name=".ui.login.LoginActivity">
 
         </activity>
     </application>

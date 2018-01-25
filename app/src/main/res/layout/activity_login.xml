@@ -7,7 +7,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.yazhi1992.moon.ui.LoginActivity">
+        tools:context=".ui.login.LoginActivity">
 
         <ImageView
             android:id="@+id/ig_qq_login"
@@ -16,6 +16,13 @@
             android:layout_width="80dp"
             android:layout_height="80dp"/>
 
+        <Button
+            android:id="@+id/btn"
+            android:text="test"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 </layout>
 

@@ -6,7 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.yazhi1992.moon.ui.Main2Activity">
+        tools:context="com.yazhi1992.moon.activity.Main2Activity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"

@@ -1,14 +1,12 @@
-package com.yazhi1992.moon.ui
+package com.yazhi1992.moon.ui.addmemorialday
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.avos.avoscloud.AVException
-import com.avos.avoscloud.AVObject
-import com.avos.avoscloud.SaveCallback
 import com.yazhi1992.moon.ActivityRouter
 import com.yazhi1992.moon.R
-import com.yazhi1992.moon.constant.NameContant
+import com.yazhi1992.moon.api.Api
+import com.yazhi1992.moon.api.DataCallback
 import com.yazhi1992.moon.dialog.DatePickerDialog
 import com.yazhi1992.moon.util.AppUtils
 import com.yazhi1992.moon.viewmodel.MemorialDayBean
@@ -62,32 +60,22 @@ class AddMemorialDayActivity : AppCompatActivity() {
             }
             val memorialDayBean = MemorialDayBean(title, chooseDate.time)
 
-
             btn_comfirm.isLoading = true
 
-            //存到纪念日表 + 首页历史列表
-            val memorialDayObj = AVObject(NameContant.MemorialDay.CLAZZ_NAME)
-            memorialDayObj.put(NameContant.MemorialDay.TITLE, memorialDayBean.title)
-            memorialDayObj.put(NameContant.MemorialDay.TIME, memorialDayBean.time)
-
-            val loveHistoryObj = AVObject(NameContant.LoveHistory.CLAZZ_NAME)
-            loveHistoryObj.put(NameContant.LoveHistory.MEMORIAL_DAY, memorialDayObj)
-            loveHistoryObj.put(NameContant.LoveHistory.TYPE, NameContant.LoveHistory.TYPE_MEMORIAL_DAY)
-
-            //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-            loveHistoryObj.saveInBackground(object : SaveCallback() {
-                override fun done(e: AVException?) {
+            Api.getInstance().addMemorialDay(memorialDayBean.title, memorialDayBean.time, object : DataCallback<Boolean> {
+                override fun onSuccess(data: Boolean?) {
+                    EventBus.getDefault().post(memorialDayBean)
+                    LibUtils.hideKeyboard(et_title)
                     btn_comfirm.isLoading = false
-                    if (e == null) {
-                        EventBus.getDefault().post(memorialDayBean)
-                        LibUtils.hideKeyboard(et_title)
-                        finish()
-                    } else {
-                        LibUtils.showToast(this@AddMemorialDayActivity, e.message)
-                    }
+                    finish()
                 }
-            })
 
+                override fun onFailed(code: Int, msg: String?) {
+                    LibUtils.showToast(this@AddMemorialDayActivity, msg)
+                    btn_comfirm.isLoading = false
+                }
+
+            })
         }
     }
 }

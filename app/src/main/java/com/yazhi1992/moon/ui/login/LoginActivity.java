@@ -1,24 +1,24 @@
-package com.yazhi1992.moon.ui;
+package com.yazhi1992.moon.ui.login;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.LogInCallback;
 import com.avos.sns.SNS;
 import com.avos.sns.SNSBase;
 import com.avos.sns.SNSCallback;
 import com.avos.sns.SNSException;
 import com.avos.sns.SNSType;
+import com.yazhi1992.moon.BuildConfig;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.databinding.ActivityLoginBinding;
+import com.yazhi1992.moon.widget.PageRouter;
 
-public class LoginActivity extends AppCompatActivity {
+@Route(path = PageRouter.LOGIN)
+public class LoginActivity extends AbsUpgrateActivity {
 
     private ActivityLoginBinding mBinding;
 
@@ -27,28 +27,33 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
-        mBinding.igQqLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginWithQQ();
-            }
-        });
+        mBinding.igQqLogin.setOnClickListener(v -> loginWithQQ());
     }
 
-    // 1、定义一个 ThirdPartyType 变量
     private SNSType ThirdPartyType;
-    // 2、定义一个 callback，用来接收授权后的数据
     final SNSCallback myCallback = new SNSCallback() {
         @Override
         public void done(SNSBase object, SNSException e) {
             if (e == null) {
-                SNS.loginWithAuthData(object.userInfo(), new LogInCallback<AVUser>() {
-                    @Override
-                    public void done(AVUser avUser, AVException e) {
-                        // 5、关联成功，已在 _User 表新增一条用户数据
-                        Log.e("zyz", "done");
-                    }
-                });
+//                try {
+//                    String nickname = object.authorizedData().getString("nickname");
+//                    SNS.loginWithAuthData(object.userInfo(), new LogInCallback<AVUser>() {
+//                        @Override
+//                        public void done(AVUser avUser, AVException e) {
+//                            //关联成功，已在 _User 表新增一条用户数据
+//                            //插入数据库
+//                            User user = new User();
+//                            user.setName(nickname);
+//                            user.setObjectId(avUser.getObjectId());
+//                            DatabaseManager.getInstance().getDaoSession().getUserDao().insert(user);
+//
+//                            PageRouter.gotoHomePage();
+//                            finish();
+//                        }
+//                    });
+//                } catch (JSONException e1) {
+//                    e1.printStackTrace();
+//                }
             } else {
                 e.printStackTrace();
             }
@@ -58,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginWithQQ() {
         try {
             ThirdPartyType = SNSType.AVOSCloudSNSQQ;
-            SNS.setupPlatform(this, SNSType.AVOSCloudSNSQQ, "1106624697", "IeOM0d7nzg2uIAps", "https://leancloud.cn/1.1/sns/callback/ypt2m1s8xla33l8o");
+            SNS.setupPlatform(this, SNSType.AVOSCloudSNSQQ, BuildConfig.QQ_ID, BuildConfig.QQ_KEY, BuildConfig.LEANCLOUD_QQ_LOGIN_URL);
             SNS.loginWithCallback(this, SNSType.AVOSCloudSNSQQ, myCallback);
         } catch (AVException e) {
             e.printStackTrace();

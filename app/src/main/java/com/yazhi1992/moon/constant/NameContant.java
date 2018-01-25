@@ -19,5 +19,6 @@ public class NameContant {
         public static final String CLAZZ_NAME = "love_history";
         public static final String MEMORIAL_DAY = "memorial_day";
         public static final String TYPE = "type";
+        public static final String ID = "id";
     }
 }
