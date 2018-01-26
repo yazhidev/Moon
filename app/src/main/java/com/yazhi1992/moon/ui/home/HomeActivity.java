@@ -63,6 +63,8 @@ public class HomeActivity extends AbsUpgrateActivity {
 
     }
 
+
+
     class HomeAdapter extends FragmentPagerAdapter {
 
         public HomeAdapter(FragmentManager fm) {

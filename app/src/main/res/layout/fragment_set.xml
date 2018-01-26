@@ -1,26 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <RelativeLayout
 
+    <data>
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.ui.home.set.SetViewModel"></variable>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/ig_me"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="50dp"
+            app:url="@{item.myHeadUrl}"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/ig_lover"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="50dp"
+            app:url="@{item.loverHeadUrl}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <TextView
             android:id="@+id/tv_name"
-            android:text="3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ig_me"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
+            android:padding="15dp"
+            android:text="@{item.myName}"
             android:textSize="30sp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ig_me"/>
+
+        <TextView
+            android:id="@+id/tv_lover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ig_me"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@{item.loverName}"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/ig_lover"/>
 
         <Button
             android:id="@+id/btn_logout"
-            android:text="退出登录"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_margin="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_marginBottom="8dp"
+            android:text="退出登录"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="15dp"/>
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/btn_sendMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_logout"
+            android:layout_margin="15dp"
+            android:layout_marginBottom="8dp"
+            android:text="发消息"
+            app:layout_constraintBottom_toTopOf="@+id/btn_logout"
+            tools:layout_editor_absoluteX="15dp"/>
+
+        <Button
+            android:id="@+id/btn_bind"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_logout"
+            android:layout_margin="15dp"
+            android:layout_marginBottom="8dp"
+            android:text="连理"
+            app:layout_constraintBottom_toTopOf="@+id/btn_sendMsg"
+            tools:layout_editor_absoluteX="15dp"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="180dp"/>
+
+    </android.support.constraint.ConstraintLayout>
 </layout>

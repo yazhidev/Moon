@@ -67,8 +67,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent"/>
         <activity
-            android:name=".activity.UpgradeActivity"
-            android:theme="@style/PlayerSheet">
+            android:name=".ui.bindlover.BindLoverActivity">
         </activity>
         <activity android:name=".activity.MemorialDayActivity">
         </activity>

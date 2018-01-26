@@ -43,7 +43,7 @@ class OldHomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-//            startActivity(Intent(this@OldHomeActivity, UpgradeActivity::class.java)
+//            startActivity(Intent(this@OldHomeActivity, BindLoverActivity::class.java)
 //                    , ActivityOptions.makeSceneTransitionAnimation(this@OldHomeActivity).toBundle())
 //            ActivityRouter.gotoMain3(this@OldHomeActivity)
 

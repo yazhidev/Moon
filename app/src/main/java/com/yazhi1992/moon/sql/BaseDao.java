@@ -1,7 +1,9 @@
 package com.yazhi1992.moon.sql;
 
+import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.async.AsyncSession;
 import org.greenrobot.greendao.query.Query;
+import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class BaseDao<T>{
     protected void insert(T obj, IDaoOperationListener.IOperationistener listener) {
         AsyncSession asyncSession = mDaoSession.startAsyncSession();
         setOperation(asyncSession, listener);
-        asyncSession.runInTx(() -> mDaoSession.insert(obj));
+        asyncSession.insert(obj);
     }
 
     private void setOperation(AsyncSession asyncSession, IDaoOperationListener.IOperationistener listener) {
@@ -37,7 +39,20 @@ public class BaseDao<T>{
         });
     }
 
-    protected void queryAll(Class obj, Query<T> query, IDaoOperationListener.IQueryAllListener<T> listener) {
+    protected void updateSingle(T entity) {
+        mDaoSession.update(entity);
+    }
+
+    protected List<T> queryAll(Class obj, WhereCondition whereCondition) {
+        AbstractDao dao = mDaoSession.getDao(obj);
+        if(whereCondition == null) {
+            return dao.loadAll();
+        } else {
+            return dao.queryBuilder().where(whereCondition).list();
+        }
+    }
+
+    protected void queryAllAsyn(Class obj, Query<T> query, IDaoOperationListener.IQueryAllListener<T> listener) {
         AsyncSession asyncSession = mDaoSession.startAsyncSession();
         asyncSession.setListenerMainThread(operation -> {
             if(listener != null) {
@@ -45,13 +60,11 @@ public class BaseDao<T>{
                 listener.onQueryAll(result);
             }
         });
-        asyncSession.runInTx(() -> {
-            if(query == null) {
-                asyncSession.loadAll(obj);
-            } else {
-                asyncSession.queryList(query);
-            }
-        });
+        if(query == null) {
+            asyncSession.loadAll(obj);
+        } else {
+            asyncSession.queryList(query);
+        }
     }
 
     protected void deleteAll(Class obj, IDaoOperationListener.IOperationistener listener) {

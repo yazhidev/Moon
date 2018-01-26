@@ -5,7 +5,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
 
-/**
+/**\
  * Created by zengyazhi on 2018/1/25.
  */
 
@@ -21,11 +21,20 @@ public class User {
     @Property(nameInDb = "objectId")
     private String objectId; //leancloud 中的 objectId
 
-    @Generated(hash = 1651978490)
-    public User(Long id, String name, String objectId) {
+    @Property(nameInDb = "headUrl")
+    private String headUrl;
+
+    @Property(nameInDb = "inviteNumber")
+    private String inviteNumber; //用于绑定另一半的号码
+
+    @Generated(hash = 831244146)
+    public User(Long id, String name, String objectId, String headUrl,
+            String inviteNumber) {
         this.id = id;
         this.name = name;
         this.objectId = objectId;
+        this.headUrl = headUrl;
+        this.inviteNumber = inviteNumber;
     }
 
     @Generated(hash = 586692638)
@@ -54,5 +63,21 @@ public class User {
 
     public void setObjectId(String objectId) {
         this.objectId = objectId;
+    }
+
+    public String getHeadUrl() {
+        return this.headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
+    public String getInviteNumber() {
+        return this.inviteNumber;
+    }
+
+    public void setInviteNumber(String inviteNumber) {
+        this.inviteNumber = inviteNumber;
     }
 }
