@@ -1,9 +1,11 @@
 package com.yazhi1992.moon.ui.startup
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.yazhi1992.moon.R
 import com.yazhi1992.moon.sql.DatabaseManager
+import com.yazhi1992.moon.ui.home.HomeActivity
 import com.yazhi1992.moon.widget.PageRouter
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
@@ -24,7 +26,8 @@ class StartUpActivity : AppCompatActivity() {
             //未登录
             PageRouter.gotoLogin()
         } else {
-            PageRouter.gotoHomePage()
+//            startActivity(Intent(this, HomeActivity::class.java))
+            PageRouter.gotoHomePage(this)
         }
         finish()
     }

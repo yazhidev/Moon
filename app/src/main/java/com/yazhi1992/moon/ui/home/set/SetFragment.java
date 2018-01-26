@@ -52,14 +52,10 @@ public class SetFragment extends Fragment {
         });
 
         mBinding.btnLogout.setOnClickListener(v -> {
-            SNS.logout(AVUser.getCurrentUser(), SNSType.AVOSCloudSNSQQ, new SaveCallback() {
-                @Override
-                public void done(AVException e) {
-                    DatabaseManager.getInstance().getDaoSession().getUserDao().deleteAll();
-                    PageRouter.gotoLogin();
-                    getActivity().finish();
-                }
-            });
+            //清除本地QQ授权记录
+            DatabaseManager.getInstance().getDaoSession().getUserDao().deleteAll();
+            PageRouter.gotoLogin();
+            getActivity().finish();
         });
     }
 }

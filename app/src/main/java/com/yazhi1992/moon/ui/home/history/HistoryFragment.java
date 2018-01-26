@@ -86,6 +86,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 PageRouter.gotoAddMemorial();
+                getActivity().finish();
 
                 sendMsg();
             }

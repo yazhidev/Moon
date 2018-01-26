@@ -11,5 +11,5 @@
     <item
         android:id="@+id/item_more"
         android:icon="@mipmap/bottom_nav_me"
-        android:title="更多"/>
+        android:title="我们"/>
 </menu>

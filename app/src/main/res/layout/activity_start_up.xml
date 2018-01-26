@@ -6,12 +6,14 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         tools:context="com.yazhi1992.moon.ui.startup.StartUpActivity">
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:src="@mipmap/app_icon"
+            android:scaleType="center"
             android:layout_centerInParent="true"
             />
 

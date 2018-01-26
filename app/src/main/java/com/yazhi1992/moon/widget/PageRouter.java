@@ -1,6 +1,11 @@
 package com.yazhi1992.moon.widget;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
+
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.yazhi1992.moon.R;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -20,10 +25,10 @@ public class PageRouter {
                 .navigation();
     }
 
-    public static void gotoHomePage() {
+    public static void gotoHomePage(Context context) {
         ARouter.getInstance()
                 .build(HOME_PAGE)
-                .navigation();
+                .navigation(context);
     }
 
     public static void gotoLogin() {
