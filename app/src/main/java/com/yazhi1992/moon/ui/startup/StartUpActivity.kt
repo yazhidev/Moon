@@ -1,11 +1,9 @@
 package com.yazhi1992.moon.ui.startup
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.yazhi1992.moon.R
-import com.yazhi1992.moon.sql.DatabaseManager
-import com.yazhi1992.moon.ui.home.HomeActivity
+import com.yazhi1992.moon.sql.DaoManager
 import com.yazhi1992.moon.widget.PageRouter
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
@@ -21,7 +19,7 @@ class StartUpActivity : AppCompatActivity() {
     }
 
     private fun start() {
-        val userDao = DatabaseManager.getInstance().userDao
+        val userDao = DaoManager.getInstance().userDao
         if (userDao.size == 0) {
             //未登录
             PageRouter.gotoLogin()

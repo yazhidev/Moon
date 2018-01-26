@@ -8,6 +8,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.sns.SNS;
 import com.avos.sns.SNSBase;
 import com.avos.sns.SNSCallback;
@@ -17,8 +18,10 @@ import com.yazhi1992.moon.BuildConfig;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.databinding.ActivityLoginBinding;
-import com.yazhi1992.moon.sql.DatabaseManager;
+import com.yazhi1992.moon.dialog.LoadingDialog;
+import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.sql.User;
+import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.widget.PageRouter;
 
 import org.json.JSONException;
@@ -28,6 +31,7 @@ import org.json.JSONObject;
 public class LoginActivity extends AbsUpgrateActivity {
 
     private ActivityLoginBinding mBinding;
+    private SNSType ThirdPartyType = SNSType.AVOSCloudSNSQQ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +41,12 @@ public class LoginActivity extends AbsUpgrateActivity {
         mBinding.igQqLogin.setOnClickListener(v -> loginWithQQ());
 
         mBinding.btn.setOnClickListener(v -> {
+            new LoadingDialog().show(getFragmentManager());
         });
+
+        SNS.logout(this, ThirdPartyType);
     }
 
-    private SNSType ThirdPartyType;
     final SNSCallback myCallback = new SNSCallback() {
         @Override
         public void done(SNSBase object, SNSException e) {
@@ -57,13 +63,21 @@ public class LoginActivity extends AbsUpgrateActivity {
                                 User user = new User();
                                 user.setName(nickname);
                                 user.setObjectId(avUser.getObjectId());
-                                DatabaseManager.getInstance().getDaoSession().getUserDao().insert(user);
+                                new UserDaoUtil().insert(user);
+                                //修改用户名为QQ名
 
                                 avUser.setUsername(nickname);
-                                avUser.saveInBackground();
+                                avUser.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(AVException e) {
+                                        if(e == null) {
+                                            PageRouter.gotoHomePage(LoginActivity.this);
+                                            LoadingHelper.getInstance().closeLoading();
+                                            finish();
+                                        }
+                                    }
+                                });
 
-                                PageRouter.gotoHomePage(LoginActivity.this);
-                                finish();
                             }
                         });
                     } catch (JSONException e1) {
@@ -72,15 +86,14 @@ public class LoginActivity extends AbsUpgrateActivity {
 
                 }
             } else {
-                e.printStackTrace();
+                LoadingHelper.getInstance().closeLoading();
             }
         }
     };
 
     private void loginWithQQ() {
         try {
-            ThirdPartyType = SNSType.AVOSCloudSNSQQ;
-            SNS.logout(this, SNSType.AVOSCloudSNSQQ);
+            LoadingHelper.getInstance().showLoading(this);
             SNS.setupPlatform(this, SNSType.AVOSCloudSNSQQ, BuildConfig.QQ_ID, BuildConfig.QQ_KEY, "");
             SNS.loginWithCallback(this, SNSType.AVOSCloudSNSQQ, myCallback);
         } catch (AVException e) {
@@ -88,13 +101,14 @@ public class LoginActivity extends AbsUpgrateActivity {
         }
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // 4、在页面 activity 回调里填写 ThirdPartyType
         if (resultCode == RESULT_OK) {
             SNS.onActivityResult(requestCode, resultCode, data, ThirdPartyType);
+        } else {
+            LoadingHelper.getInstance().closeLoading();
         }
     }
 }

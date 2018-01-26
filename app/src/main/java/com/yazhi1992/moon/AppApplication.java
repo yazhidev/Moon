@@ -11,7 +11,6 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
 import com.yazhi1992.moon.event.BuglyUpgrate;
-import com.yazhi1992.moon.sql.DatabaseManager;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,9 +27,6 @@ public class AppApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         context = this;
-
-        //数据库初始化
-        DatabaseManager.getInstance().init(this);
 
         LibSPUtils.init(this);
 

@@ -9,15 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.SaveCallback;
-import com.avos.sns.SNS;
-import com.avos.sns.SNSType;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
-import com.yazhi1992.moon.sql.DatabaseManager;
-import com.yazhi1992.moon.sql.User;
+import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.widget.PageRouter;
 
 /**
@@ -27,6 +21,7 @@ import com.yazhi1992.moon.widget.PageRouter;
 public class SetFragment extends Fragment {
 
     private FragmentSetBinding mBinding;
+    private UserDaoUtil mUserDaoUtil;
 
     @Nullable
     @Override
@@ -39,21 +34,20 @@ public class SetFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        User users = DatabaseManager.getInstance().getUser();
-        if(users != null) {
-            mBinding.tvName.setText(users.getName());
-        }
-
-        mBinding.tvName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+        mUserDaoUtil = new UserDaoUtil();
+        mUserDaoUtil.getUserDao(user -> {
+            if(user != null) {
+                mBinding.tvName.setText(user.getName());
             }
         });
 
+
+        mBinding.tvName.setOnClickListener(v -> {
+
+        });
+
         mBinding.btnLogout.setOnClickListener(v -> {
-            //清除本地QQ授权记录
-            DatabaseManager.getInstance().getDaoSession().getUserDao().deleteAll();
+            mUserDaoUtil.clear();
             PageRouter.gotoLogin();
             getActivity().finish();
         });
