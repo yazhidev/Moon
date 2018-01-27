@@ -19,6 +19,7 @@
         <Button
             android:id="@+id/btn"
             android:text="test"
+            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:layout_margin="15dp"
             android:layout_width="match_parent"

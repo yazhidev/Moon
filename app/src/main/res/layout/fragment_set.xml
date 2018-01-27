@@ -52,7 +52,7 @@
             android:gravity="center"
             android:padding="15dp"
             android:text="@{item.myName}"
-            android:textSize="30sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ig_me"/>
@@ -69,7 +69,7 @@
             android:gravity="center"
             android:padding="15dp"
             android:text="@{item.loverName}"
-            android:textSize="30sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/ig_lover"/>
@@ -94,17 +94,6 @@
             android:layout_marginBottom="8dp"
             android:text="发消息"
             app:layout_constraintBottom_toTopOf="@+id/btn_logout"
-            tools:layout_editor_absoluteX="15dp"/>
-
-        <Button
-            android:id="@+id/btn_bind"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/btn_logout"
-            android:layout_margin="15dp"
-            android:layout_marginBottom="8dp"
-            android:text="连理"
-            app:layout_constraintBottom_toTopOf="@+id/btn_sendMsg"
             tools:layout_editor_absoluteX="15dp"/>
 
         <android.support.constraint.Guideline

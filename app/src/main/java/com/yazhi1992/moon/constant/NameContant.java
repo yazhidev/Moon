@@ -25,15 +25,22 @@ public class NameContant {
     }
 
     public static class AVUserClass {
+        public static final String CLAZZ_NAME = "_User";
         public static final String HEAD_URL = "head_img_url";
+        public static final String USER_NAME = "username";
         public static final String INVITE_NUMBER = "invite_number";
-        public static final String LOVER = "lover";
+        public static final String HAVE_LOVER = "have_lover";
+        public static final String LOVER_ID = "lover_id";
+        public static final String LOVER_NAME = "lover_name";
+        public static final String LOVER_HEAD_URL = "lover_head_url";
     }
 
     public static class BindLover {
         public static final String CLAZZ_NAME = "bind_lover";
         public static final String INVITE_NUMBER = "invite_number";
         public static final String USER_ID = "user_id";
+        public static final String LOVER_ID = "lover_id";
+        public static final String USER_NAME = "user_name";
 
     }
 }

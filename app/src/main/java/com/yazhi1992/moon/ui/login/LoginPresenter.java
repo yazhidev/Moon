@@ -18,6 +18,7 @@ import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.PresenterCallback;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +35,7 @@ public class LoginPresenter {
         public void done(SNSBase object, SNSException e) {
             if (e == null) {
                 JSONObject jsonObject = object.authorizedData();
-                if(jsonObject != null) {
+                if (jsonObject != null) {
                     try {
                         String nickname = object.authorizedData().getString("nickname");
                         String headUrl = object.authorizedData().getString("figureurl_qq_2");
@@ -42,23 +43,29 @@ public class LoginPresenter {
                             @Override
                             public void done(AVUser avUser, AVException e) {
                                 //关联成功，已在 _User 表新增一条用户数据
-                                //插入数据库
-                                User user = new User();
-                                user.setName(nickname);
-                                user.setHeadUrl(headUrl);
-                                user.setInviteNumber(avUser.getString(NameContant.AVUserClass.INVITE_NUMBER));
-                                user.setObjectId(avUser.getObjectId());
-                                new UserDaoUtil().insert(user);
-
                                 //修改用户名为QQ名，头像为QQ头像
                                 avUser.setUsername(nickname);
                                 avUser.put(NameContant.AVUserClass.HEAD_URL, headUrl);
                                 avUser.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(AVException e) {
-                                        if(e == null) {
-                                            if(mPresenterCallback != null) {
-                                                mPresenterCallback.onCallback(true);
+                                        if (e == null) {
+                                            //插入数据库
+                                            User user = new User();
+                                            user.setName(nickname);
+                                            user.setHeadUrl(headUrl);
+                                            user.setInviteNumber(avUser.getString(NameContant.AVUserClass.INVITE_NUMBER));
+                                            user.setObjectId(avUser.getObjectId());
+                                            if (LibUtils.notNullNorEmpty(avUser.getString(NameContant.AVUserClass.LOVER_ID))) {
+                                                user.setHaveLover(true);
+                                                user.setLoverId(avUser.getString(NameContant.AVUserClass.LOVER_ID));
+                                                user.setLoverName(avUser.getString(NameContant.AVUserClass.LOVER_NAME));
+                                                user.setLoverHeadUrl(avUser.getString(NameContant.AVUserClass.LOVER_HEAD_URL));
+                                            }
+                                            new UserDaoUtil().insert(user);
+
+                                            if (mPresenterCallback != null) {
+                                                mPresenterCallback.onCallback(user.getHaveLover());
                                             }
                                         }
                                     }
@@ -79,11 +86,18 @@ public class LoginPresenter {
 
     void init(Activity activity) {
         SNS.logout(activity, ThirdPartyType);
+        new UserDaoUtil().clear();
     }
 
+    /**
+     * qq授权登录
+     *
+     * @param activity
+     * @param callback true 已绑定另一半，false 未绑定
+     */
     void loginWithQQ(Activity activity, PresenterCallback<Boolean> callback) {
         try {
-            if(callback != null) {
+            if (callback != null) {
                 mPresenterCallback = callback;
             }
             LoadingHelper.getInstance().showLoading(activity);

@@ -9,8 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.GetCallback;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
+import com.yazhi1992.moon.util.MyLogger;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -31,6 +36,20 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mBinding.tvLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AVUser currentUser = AVUser.getCurrentUser();
+                currentUser.fetchInBackground(new GetCallback<AVObject>() {
+                    @Override
+                    public void done(AVObject avObject, AVException e) {
+                        if(e == null) {
+                            MyLogger.log("");
+                        }
+                    }
+                });
+                MyLogger.log("");
+            }
+        });
     }
-
 }

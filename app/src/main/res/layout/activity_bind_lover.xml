@@ -1,46 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.constraint.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/my_rl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.yazhi1992.moon.ui.bindlover.BindLoverActivity">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorAccent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:title="连理"
+            app:titleTextColor="@color/white"></android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:text="你的心意："
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+
         <TextView
             android:id="@+id/tv_invite_num"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:text=""
             android:textSize="20sp"
-            android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="50dp"
-            android:layout_height="50dp"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
-        <EditText
-            android:id="@+id/et_input"
-            android:layout_marginTop="30dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_invite_num"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/inputLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="15dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv">
+
+            <EditText
+                android:id="@+id/et_input"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:hint="输入 ta 的心意"
+                android:textSize="18sp"/>
+
+        </android.support.design.widget.TextInputLayout>
 
         <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
             android:id="@+id/tv_bind"
-            app:layout_constraintTop_toBottomOf="@+id/et_input"
-            app:rv_text="永结同心"
-            app:rv_cornerRadius="10dp"
-            app:rv_textSize="18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:rv_backgroundColor="@color/theme_color"
             app:rv_backgroundPressColor="@color/theme_color_pressed"
+            app:rv_cornerRadius="10dp"
+            app:rv_text="添加心上人"
             app:rv_textColor="@color/white"
+            app:rv_textPressColor="@color/white"
+            app:rv_textSize="18"
+            tools:layout_editor_absoluteX="15dp"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+
+        <TextView
+            android:id="@+id/tv_state"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="30dp"
+            android:paddingTop="8dp"
+            android:lineSpacingExtra="5dp"
+            android:paddingBottom="8dp"
             android:gravity="center"
-            android:layout_margin="15dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+            android:text=""
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inputLayout"/>
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
+            android:id="@+id/btn_check_state"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:rv_text="更新状态"
+            android:gravity="center"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_state"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/tv_state"
+            app:rv_circleColor="@color/theme_color"
+            app:rv_textColor="@color/theme_color"
+            app:rv_textPressColor="@color/theme_color_pressed"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="242dp"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

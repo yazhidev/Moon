@@ -19,7 +19,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.bumptech.glide.Glide;
 import com.yazhi1992.moon.AppApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
@@ -58,8 +57,9 @@ public class SetFragment extends Fragment {
         if(user != null) {
             mViewModel.myName.set(user.getName());
             mViewModel.myHeadUrl.set(user.getHeadUrl());
+            mViewModel.loverHeadUrl.set(user.getLoverHeadUrl());
+            mViewModel.loverName.set(user.getLoverName());
 
-            Glide.with(this).load(user.getHeadUrl()).into(mBinding.igMe);
             jerryReceiveMsgFromTom();
         }
 
@@ -68,10 +68,6 @@ public class SetFragment extends Fragment {
 
         mBinding.tvName.setOnClickListener(v -> {
 
-        });
-
-        mBinding.btnBind.setOnClickListener(v -> {
-            PageRouter.gotoBindLover();
         });
 
         mBinding.btnSendMsg.setOnClickListener(v -> {

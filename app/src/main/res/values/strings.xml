@@ -23,5 +23,6 @@
     <string name="upgrade_comfirm">更新</string>
 
     <string name="add_memorial">请输入标题</string>
+    <string name="error_invite_num">请确认邀请码是否正确</string>
 
 </resources>

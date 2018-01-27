@@ -35,6 +35,15 @@ public class UserDaoUtil extends BaseDao<User> {
         }
     }
 
+    public void updateLoveInfo(String loverId, String loverName, String loverHeadurl) {
+        User userDao = getUserDao();
+        userDao.setHaveLover(true);
+        userDao.setLoverId(loverId);
+        userDao.setLoverName(loverName);
+        userDao.setLoverHeadUrl(loverHeadurl);
+        update(userDao);
+    }
+
     public void update(User user) {
         updateSingle(user);
     }

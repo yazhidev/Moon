@@ -23,9 +23,13 @@ public class LoginActivity extends AbsUpgrateActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
-        mBinding.igQqLogin.setOnClickListener(v -> mPresenter.loginWithQQ(this, obj -> {
-            PageRouter.gotoHomePage(LoginActivity.this);
+        mBinding.igQqLogin.setOnClickListener(v -> mPresenter.loginWithQQ(this, haveLover -> {
             LoadingHelper.getInstance().closeLoading();
+            if(haveLover) {
+                PageRouter.gotoHomePage();
+            } else {
+                PageRouter.gotoBindLover();
+            }
             finish();
         }));
 

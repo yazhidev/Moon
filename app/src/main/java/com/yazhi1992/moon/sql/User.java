@@ -27,14 +27,32 @@ public class User {
     @Property(nameInDb = "inviteNumber")
     private String inviteNumber; //用于绑定另一半的号码
 
-    @Generated(hash = 831244146)
+    @Property(nameInDb = "haveLover")
+    private boolean haveLover;
+
+    @Property(nameInDb = "loverId")
+    private String loverId;
+
+    @Property(nameInDb = "loverHeadUrl")
+    private String loverHeadUrl;
+
+    @Property(nameInDb = "loverName")
+    private String loverName;
+
+
+    @Generated(hash = 289403547)
     public User(Long id, String name, String objectId, String headUrl,
-            String inviteNumber) {
+            String inviteNumber, boolean haveLover, String loverId,
+            String loverHeadUrl, String loverName) {
         this.id = id;
         this.name = name;
         this.objectId = objectId;
         this.headUrl = headUrl;
         this.inviteNumber = inviteNumber;
+        this.haveLover = haveLover;
+        this.loverId = loverId;
+        this.loverHeadUrl = loverHeadUrl;
+        this.loverName = loverName;
     }
 
     @Generated(hash = 586692638)
@@ -79,5 +97,37 @@ public class User {
 
     public void setInviteNumber(String inviteNumber) {
         this.inviteNumber = inviteNumber;
+    }
+
+    public boolean getHaveLover() {
+        return this.haveLover;
+    }
+
+    public void setHaveLover(boolean haveLover) {
+        this.haveLover = haveLover;
+    }
+
+    public String getLoverId() {
+        return this.loverId;
+    }
+
+    public void setLoverId(String loverId) {
+        this.loverId = loverId;
+    }
+
+    public String getLoverHeadUrl() {
+        return this.loverHeadUrl;
+    }
+
+    public void setLoverHeadUrl(String loverHeadUrl) {
+        this.loverHeadUrl = loverHeadUrl;
+    }
+
+    public String getLoverName() {
+        return this.loverName;
+    }
+
+    public void setLoverName(String loverName) {
+        this.loverName = loverName;
     }
 }
