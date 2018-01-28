@@ -91,14 +91,19 @@ public class Api {
      * @param dataCallback
      */
     public void addMemorialDay(String title, long time, final DataCallback<Boolean> dataCallback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
         //存到纪念日表 + 首页历史列表
         AVObject memorialDayObj = new AVObject(NameContant.MemorialDay.CLAZZ_NAME);
         memorialDayObj.put(NameContant.MemorialDay.TITLE, title);
         memorialDayObj.put(NameContant.MemorialDay.TIME, time);
+        memorialDayObj.put(NameContant.MemorialDay.USER_ID, currentUser.getObjectId());
 
         AVObject loveHistoryObj = new AVObject(NameContant.LoveHistory.CLAZZ_NAME);
         loveHistoryObj.put(NameContant.LoveHistory.MEMORIAL_DAY, memorialDayObj);
         loveHistoryObj.put(NameContant.LoveHistory.TYPE, NameContant.LoveHistory.TYPE_MEMORIAL_DAY);
+        loveHistoryObj.put(NameContant.LoveHistory.USER_NAME, currentUser.getUsername());
+        loveHistoryObj.put(NameContant.LoveHistory.USER_HEAD_URL, currentUser.getString(NameContant.LoveHistory.USER_HEAD_URL));
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
         loveHistoryObj.saveInBackground(new SaveCallback() {

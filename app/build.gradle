@@ -13,8 +13,8 @@ android {
         applicationId "com.yazhi1992.moon"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.2"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -48,6 +48,8 @@ android {
         enabled true
     }
 
+    def gitCommitCount = "git rev-list HEAD --count".execute().text.trim()
+
     buildTypes {
         debug {
             buildConfigField "String", "LEAN_CLOUD_ID", properties.getProperty("leanCloudId")
@@ -56,6 +58,8 @@ android {
             buildConfigField "String", "QQ_KEY", "\"IeOM0d7nzg2uIAps\""
             buildConfigField "String", "LEANCLOUD_QQ_LOGIN_URL", "\"https://leancloud.cn/1.1/sns/callback/ypt2m1s8xla33l8o\""
 
+            applicationIdSuffix '.debug'
+            versionNameSuffix ".${gitCommitCount}"
         }
         release {
             buildConfigField "String", "LEAN_CLOUD_ID", properties.getProperty("leanCloudId")
@@ -64,6 +68,7 @@ android {
             buildConfigField "String", "QQ_KEY", "\"IeOM0d7nzg2uIAps\""
             buildConfigField "String", "LEANCLOUD_QQ_LOGIN_URL", "\"https://leancloud.cn/1.1/sns/callback/ypt2m1s8xla33l8o\""
 
+            versionNameSuffix ".${gitCommitCount}"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
@@ -84,6 +89,10 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'build/generated/source/greendao'
+
+        debug {
+            res.srcDirs = ['src/debug/res']
+        }
     }
 }
 

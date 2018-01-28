@@ -11,6 +11,7 @@ public class NameContant {
         public static final String CLAZZ_NAME = "memorial_day";
         public static final String TITLE = "title";
         public static final String TIME = "time";
+        public static final String USER_ID = "user_id";
     }
 
     //首页列表
@@ -22,6 +23,8 @@ public class NameContant {
         public static final String MEMORIAL_DAY = "memorial_day";
         public static final String TYPE = "type";
         public static final String ID = "id";
+        public static final String USER_HEAD_URL = "user_head_url";
+        public static final String USER_NAME = "username";
     }
 
     public static class AVUserClass {

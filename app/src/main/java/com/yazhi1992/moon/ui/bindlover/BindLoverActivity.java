@@ -4,10 +4,14 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.avos.avoscloud.AVUser;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.databinding.ActivityBindLoverBinding;
@@ -20,11 +24,18 @@ import com.yazhi1992.yazhilib.utils.LibUtils;
  */
 
 @Route(path = PageRouter.BIND_LOVER)
-public class BindLoverActivity extends AppCompatActivity {
+public class BindLoverActivity extends AbsUpgrateActivity {
 
     private ActivityBindLoverBinding mBinding;
     private BindLoverPresenter mPresenter = new BindLoverPresenter();
     private UserDaoUtil mUserDaoUtil;
+    private String myInviteNum;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.bind_lover, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,11 +43,23 @@ public class BindLoverActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_bind_lover);
 
         setSupportActionBar(mBinding.toolbar);
+        mBinding.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.log_out) {
+                    new UserDaoUtil().clear();
+                    PageRouter.gotoLogin();
+                    finish();
+                }
+                return true;
+            }
+        });
 
         mPresenter.getInviteNum(new DataCallback<String>() {
             @Override
             public void onSuccess(String data) {
                 mBinding.tvInviteNum.setText(data);
+                myInviteNum = data;
             }
 
             @Override
@@ -49,6 +72,10 @@ public class BindLoverActivity extends AppCompatActivity {
             String inviteNum = mBinding.etInput.getText().toString();
             if (LibUtils.isNullOrEmpty(inviteNum) || inviteNum.length() != 6) {
                 mBinding.inputLayout.setError("请输入正确的邀请码");
+                return;
+            }
+            if(LibUtils.notNullNorEmpty(myInviteNum) && inviteNum.equals(myInviteNum)) {
+                mBinding.inputLayout.setError("请输入对方的邀请码");
                 return;
             }
             mBinding.tvBind.setLoading(true);
@@ -114,7 +141,7 @@ public class BindLoverActivity extends AppCompatActivity {
                         break;
                 }
                 mBinding.btnCheckState.setLoading(false);
-                if(showToast) {
+                if (showToast) {
                     LibUtils.showToast(BindLoverActivity.this, "状态已更新");
                 }
             }
