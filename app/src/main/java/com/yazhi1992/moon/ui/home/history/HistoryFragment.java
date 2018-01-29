@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,8 +19,9 @@ import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.NameContant;
 import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
-import com.yazhi1992.moon.viewmodel.HistoryBean;
-import com.yazhi1992.moon.viewmodel.MemorialDayBean;
+import com.yazhi1992.moon.event.AddHistoryData;
+import com.yazhi1992.moon.viewmodel.IHistoryBean;
+import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
 import com.yazhi1992.moon.widget.PageRouter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,13 +57,35 @@ public class HistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mMultiTypeAdapter = new MultiTypeAdapter();
-        mMultiTypeAdapter.register(MemorialDayBean.class, new MemorialDayViewBinder());
+        //纪念日
+        mMultiTypeAdapter.register(MemorialBeanWrapper.class, new MemorialDayViewBinder(new MemorialDayViewBinder.MemorialDayViewListener() {
+            @Override
+            public void onClick(int id, int position) {
+                if(id == R.id.delete) {
+                    //删除
+                    MemorialBeanWrapper data = (MemorialBeanWrapper) mItems.get(position);
+                    mPresenter.delete(data.getObjectId(), data.getData().getObjId(), new DataCallback<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean data) {
+                            mMultiTypeAdapter.notifyItemRemoved(position);
+                        }
+
+                        @Override
+                        public void onFailed(int code, String msg) {
+
+                        }
+                    });
+                }
+            }
+        }));
+        //愿望清单
 
         mBinding.smartRefresh.setOnRefreshListener(refreshlayout -> getDatas(false));
         mBinding.smartRefresh.setOnLoadmoreListener(refreshlayout -> getDatas(true));
 
         mItems = new Items();
         mMultiTypeAdapter.setItems(mItems);
+        mBinding.ryHistory.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         mBinding.ryHistory.setAdapter(mMultiTypeAdapter);
         mBinding.ryHistory.setLayoutManager(new LinearLayoutManager(view.getContext()));
         mBinding.ryHistory.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -86,12 +110,24 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 PageRouter.gotoAddMemorial();
-                getActivity().finish();
 
                 sendMsg();
             }
         });
         mBinding.smartRefresh.autoRefresh();
+
+    }
+
+    private Object transformData(int type, AVObject itemData) {
+        Object data = null;
+        switch (type) {
+            case NameContant.LoveHistory.TYPE_MEMORIAL_DAY:
+                data = new MemorialBeanWrapper(itemData);
+                break;
+            default:
+                break;
+        }
+        return data;
     }
 
     // TODO: 2018/1/25 使用 dagger 分层
@@ -100,8 +136,8 @@ public class HistoryFragment extends Fragment {
             //获取末尾id
             if(mItems.size() > 0) {
                 Object item = mItems.get(mItems.size() - 1);
-                if(item != null && item instanceof HistoryBean) {
-                    lastItemId = ((HistoryBean) item).getId();
+                if(item != null && item instanceof IHistoryBean) {
+                    lastItemId = ((IHistoryBean) item).getId();
                 }
             }
         } else {
@@ -116,7 +152,12 @@ public class HistoryFragment extends Fragment {
                     mItems.clear();
                     mBinding.smartRefresh.finishRefresh();
                 }
-                transformeData(data);
+                if (data.size() > 0) {
+                    for (AVObject loveHistoryItemData : data) {
+                        mItems.add(transformData(loveHistoryItemData.getInt(NameContant.LoveHistory.TYPE), loveHistoryItemData));
+                    }
+                    mMultiTypeAdapter.notifyDataSetChanged();
+                }
                 mBinding.smartRefresh.setEnableLoadmore(data != null && data.size() == SIZE);
             }
 
@@ -125,25 +166,6 @@ public class HistoryFragment extends Fragment {
 
             }
         });
-    }
-
-    private void transformeData(List<AVObject> list) {
-        if (list.size() > 0) {
-            for (AVObject data : list) {
-                int type = data.getInt(NameContant.LoveHistory.TYPE);
-                if (type == NameContant.LoveHistory.TYPE_MEMORIAL_DAY) {
-                    //纪念日类型
-                    AVObject avObject = data.getAVObject(NameContant.LoveHistory.MEMORIAL_DAY);
-                    MemorialDayBean memorialDayBean = new MemorialDayBean(avObject.getString(NameContant.MemorialDay.TITLE), avObject.getLong(NameContant.MemorialDay.TIME));
-                    memorialDayBean.setId(data.getInt(NameContant.LoveHistory.ID));
-
-                    memorialDayBean.setUserName(data.getString(NameContant.LoveHistory.USER_NAME));
-                    memorialDayBean.setUserHeadUrl(data.getString(NameContant.LoveHistory.USER_HEAD_URL));
-                    mItems.add(memorialDayBean);
-                }
-            }
-            mMultiTypeAdapter.notifyDataSetChanged();
-        }
     }
 
     private void sendMsg() {
@@ -163,9 +185,8 @@ public class HistoryFragment extends Fragment {
     }
 
     @Subscribe
-    public void addMemorial(MemorialDayBean bean) {
-        mItems.add(0, bean);
-        mMultiTypeAdapter.notifyItemInserted(0);
-        mBinding.ryHistory.smoothScrollToPosition(0);
+    public void addMemorial(AddHistoryData bean) {
+        // TODO: 2018/1/29 传递过来丢失父类属性 userName userHeadUrl
+        mBinding.smartRefresh.autoRefresh();
     }
 }

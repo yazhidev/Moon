@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tool="http://schemas.android.com/tools">
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:padding="15dp"
+        android:paddingLeft="15dp"
+        android:paddingBottom="15dp"
         android:layout_height="wrap_content">
         
         <ImageView
             android:id="@+id/ig_user"
+            android:layout_marginTop="15dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@mipmap/ic_launcher"
+            tool:src="@mipmap/ic_launcher"
             />
 
         <TextView
@@ -38,6 +41,7 @@
             android:layout_marginLeft="10dp"
             android:textSize="15sp"
             />
+
        <com.yazhi1992.yazhilib.widget.RoundView.RoundTextView
            android:id="@+id/tv_memorial_day_title"
            android:layout_below="@+id/tv_type"
@@ -53,6 +57,17 @@
            android:textColor="@color/gray"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/ig_delete"
+            android:src="@mipmap/history_item_btn"
+            android:padding="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+
+
 
     </RelativeLayout>
 </layout>

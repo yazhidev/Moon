@@ -4,6 +4,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
@@ -79,7 +80,7 @@ public class Api {
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
         query.include(NameContant.MemorialDay.CLAZZ_NAME);
-        query.orderByDescending(NameContant.LoveHistory.ID);
+        query.orderByDescending(NameContant.Common.CREATE_TIME);
         query.limit(size);
         if (lastItemId != -1) {
             query.whereLessThan(NameContant.LoveHistory.ID, lastItemId);
@@ -113,7 +114,7 @@ public class Api {
         loveHistoryObj.put(NameContant.LoveHistory.USER_ID, currentUser.getObjectId());
         loveHistoryObj.put(NameContant.LoveHistory.TYPE, NameContant.LoveHistory.TYPE_MEMORIAL_DAY);
         loveHistoryObj.put(NameContant.LoveHistory.USER_NAME, currentUser.getUsername());
-        loveHistoryObj.put(NameContant.LoveHistory.USER_HEAD_URL, currentUser.getString(NameContant.LoveHistory.USER_HEAD_URL));
+        loveHistoryObj.put(NameContant.LoveHistory.USER_HEAD_URL, currentUser.getString(NameContant.AVUserClass.HEAD_URL));
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
         loveHistoryObj.saveInBackground(new SaveCallback() {
@@ -383,4 +384,24 @@ public class Api {
         });
     }
 
+    /**
+     * 删除纪念日数据
+     * @param objId
+     * @param callback
+     */
+    public void deleteMemorialDay(String objId, String dayObjId, DataCallback<Boolean> callback) {
+        final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
+        loveHistoryQuery.whereEqualTo(NameContant.Common.OBJECT_ID, objId);
+
+        final AVQuery<AVObject> dayQuery = new AVQuery<>(NameContant.MemorialDay.CLAZZ_NAME);
+        dayQuery.whereEqualTo(NameContant.Common.OBJECT_ID, dayObjId);
+
+        AVQuery<AVObject> query = AVQuery.and(Arrays.asList(loveHistoryQuery, dayQuery));
+        query.deleteAllInBackground(new DeleteCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, () -> callback.onSuccess(true));
+            }
+        });
+    }
 }

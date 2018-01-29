@@ -15,4 +15,8 @@ public class HistoryPresenter {
     public void getLoveHistory(int lastItemId, int size, final DataCallback<List<AVObject>> dataCallback) {
         Api.getInstance().getLoveHistory(lastItemId, size, dataCallback);
     }
+
+    public void delete(String objId, String dayObjId, DataCallback<Boolean> callback) {
+        Api.getInstance().deleteMemorialDay(objId, dayObjId, callback);
+    }
 }
