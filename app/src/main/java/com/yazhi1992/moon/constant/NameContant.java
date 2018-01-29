@@ -25,6 +25,7 @@ public class NameContant {
         public static final String ID = "id";
         public static final String USER_HEAD_URL = "user_head_url";
         public static final String USER_NAME = "username";
+        public static final String USER_ID = "user_id";
     }
 
     public static class AVUserClass {

@@ -130,11 +130,15 @@ public class HistoryFragment extends Fragment {
     private void transformeData(List<AVObject> list) {
         if (list.size() > 0) {
             for (AVObject data : list) {
-                int anInt = data.getInt(NameContant.LoveHistory.TYPE);
-                if (anInt == NameContant.LoveHistory.TYPE_MEMORIAL_DAY) {
+                int type = data.getInt(NameContant.LoveHistory.TYPE);
+                if (type == NameContant.LoveHistory.TYPE_MEMORIAL_DAY) {
+                    //纪念日类型
                     AVObject avObject = data.getAVObject(NameContant.LoveHistory.MEMORIAL_DAY);
                     MemorialDayBean memorialDayBean = new MemorialDayBean(avObject.getString(NameContant.MemorialDay.TITLE), avObject.getLong(NameContant.MemorialDay.TIME));
                     memorialDayBean.setId(data.getInt(NameContant.LoveHistory.ID));
+
+                    memorialDayBean.setUserName(data.getString(NameContant.LoveHistory.USER_NAME));
+                    memorialDayBean.setUserHeadUrl(data.getString(NameContant.LoveHistory.USER_HEAD_URL));
                     mItems.add(memorialDayBean);
                 }
             }

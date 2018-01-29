@@ -18,7 +18,7 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="小智哥"
+            android:text=""
             android:textColor="@color/gray"
             android:layout_alignTop="@+id/ig_user"
             android:layout_toRightOf="@+id/ig_user"

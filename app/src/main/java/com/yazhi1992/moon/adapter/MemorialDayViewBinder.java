@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.ui.ViewBindingUtils;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 
 import me.drakeet.multitype.ItemViewBinder;
@@ -26,16 +28,22 @@ public class MemorialDayViewBinder extends ItemViewBinder<MemorialDayBean, Memor
 
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder holder, @NonNull MemorialDayBean memorialDayBean2) {
-        holder.mTv.setText(memorialDayBean2.getTitle());
+        holder.mTvTitle.setText(memorialDayBean2.getTitle());
+        holder.mTvName.setText(memorialDayBean2.getUserName());
+        ViewBindingUtils.imgUrl(holder.mIgUser, memorialDayBean2.getUserHeadUrl());
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mTv;
+        private TextView mTvTitle;
+        private final TextView mTvName;
+        private final ImageView mIgUser;
 
         ViewHolder(View itemView) {
             super(itemView);
-            mTv = itemView.findViewById(R.id.tv_memorial_day_title);
+            mTvTitle = itemView.findViewById(R.id.tv_memorial_day_title);
+            mTvName = itemView.findViewById(R.id.tv_name);
+            mIgUser = itemView.findViewById(R.id.ig_user);
         }
     }
 }

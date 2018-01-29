@@ -17,6 +17,7 @@ import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -67,7 +68,16 @@ public class Api {
      * @param dataCallback
      */
     public void getLoveHistory(int lastItemId, int size, final DataCallback<List<AVObject>> dataCallback) {
-        AVQuery<AVObject> query = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        //查询自己或另一半的
+        final AVQuery<AVObject> meQuery = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
+        meQuery.whereEqualTo(NameContant.LoveHistory.USER_ID, currentUser.getObjectId());
+
+        final AVQuery<AVObject> loverQuery = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
+        loverQuery.whereEqualTo(NameContant.LoveHistory.USER_ID, currentUser.getString(NameContant.AVUserClass.LOVER_ID));
+
+        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
         query.include(NameContant.MemorialDay.CLAZZ_NAME);
         query.orderByDescending(NameContant.LoveHistory.ID);
         query.limit(size);
@@ -76,8 +86,7 @@ public class Api {
         }
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
-            public void done(final List<AVObject> list, AVException e) {
-                // TODO: 2018/1/25 多列表返回数据模型优化
+            public void done(List<AVObject> list, AVException e) {
                 handleResult(e, dataCallback, () -> dataCallback.onSuccess(list));
             }
         });
@@ -101,6 +110,7 @@ public class Api {
 
         AVObject loveHistoryObj = new AVObject(NameContant.LoveHistory.CLAZZ_NAME);
         loveHistoryObj.put(NameContant.LoveHistory.MEMORIAL_DAY, memorialDayObj);
+        loveHistoryObj.put(NameContant.LoveHistory.USER_ID, currentUser.getObjectId());
         loveHistoryObj.put(NameContant.LoveHistory.TYPE, NameContant.LoveHistory.TYPE_MEMORIAL_DAY);
         loveHistoryObj.put(NameContant.LoveHistory.USER_NAME, currentUser.getUsername());
         loveHistoryObj.put(NameContant.LoveHistory.USER_HEAD_URL, currentUser.getString(NameContant.LoveHistory.USER_HEAD_URL));
