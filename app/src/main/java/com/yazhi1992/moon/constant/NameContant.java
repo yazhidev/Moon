@@ -6,6 +6,12 @@ package com.yazhi1992.moon.constant;
 
 public class NameContant {
 
+    public static class Common {
+        public static final String CREATE_TIME = "createdAt";
+        public static final String ID = "id";
+        public static final String OBJECT_ID = "objectId";
+    }
+
     //纪念日
     public static class MemorialDay {
         public static final String CLAZZ_NAME = "memorial_day";

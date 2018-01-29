@@ -8,6 +8,7 @@ import com.yazhi1992.moon.R
 import com.yazhi1992.moon.api.Api
 import com.yazhi1992.moon.api.DataCallback
 import com.yazhi1992.moon.dialog.DatePickerDialog
+import com.yazhi1992.moon.event.AddHistoryData
 import com.yazhi1992.moon.util.AppUtils
 import com.yazhi1992.moon.viewmodel.MemorialDayBean
 import com.yazhi1992.yazhilib.utils.LibUtils
@@ -64,7 +65,7 @@ class AddMemorialDayActivity : AppCompatActivity() {
 
             Api.getInstance().addMemorialDay(memorialDayBean.title, memorialDayBean.time, object : DataCallback<Boolean> {
                 override fun onSuccess(data: Boolean?) {
-                    EventBus.getDefault().post(memorialDayBean)
+                    EventBus.getDefault().post(AddHistoryData())
                     LibUtils.hideKeyboard(et_title)
                     btn_comfirm.isLoading = false
                     finish()
