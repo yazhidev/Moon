@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.adapter.HistoryMultitypeAdapter;
 import com.yazhi1992.moon.adapter.MemorialDayViewBinder;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
@@ -23,6 +24,7 @@ import com.yazhi1992.moon.event.AddHistoryData;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
 import com.yazhi1992.moon.widget.PageRouter;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,7 +41,7 @@ import me.drakeet.multitype.MultiTypeAdapter;
 public class HistoryFragment extends Fragment {
 
     private FragmentHistoryBinding mBinding;
-    private MultiTypeAdapter mMultiTypeAdapter;
+    private HistoryMultitypeAdapter mMultiTypeAdapter;
     private Items mItems;
     private final int SIZE = 20;
     private int lastItemId = -1;
@@ -56,7 +58,7 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mMultiTypeAdapter = new MultiTypeAdapter();
+        mMultiTypeAdapter = new HistoryMultitypeAdapter();
         //纪念日
         mMultiTypeAdapter.register(MemorialBeanWrapper.class, new MemorialDayViewBinder(new MemorialDayViewBinder.MemorialDayViewListener() {
             @Override
@@ -67,12 +69,12 @@ public class HistoryFragment extends Fragment {
                     mPresenter.delete(data.getObjectId(), data.getData().getObjId(), new DataCallback<Boolean>() {
                         @Override
                         public void onSuccess(Boolean data) {
-                            mMultiTypeAdapter.notifyItemRemoved(position);
+                            mMultiTypeAdapter.remove(position);
                         }
 
                         @Override
                         public void onFailed(int code, String msg) {
-
+                            LibUtils.showToast(getActivity(), msg);
                         }
                     });
                 }

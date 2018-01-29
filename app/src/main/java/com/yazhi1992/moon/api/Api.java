@@ -390,17 +390,30 @@ public class Api {
      * @param callback
      */
     public void deleteMemorialDay(String objId, String dayObjId, DataCallback<Boolean> callback) {
+
+        final int[] num = {2};
+
         final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
         loveHistoryQuery.whereEqualTo(NameContant.Common.OBJECT_ID, objId);
+        loveHistoryQuery.deleteAllInBackground(new DeleteCallback() {
+            @Override
+            public void done(AVException e) {
+                num[0]--;
+                if(num[0] == 0) {
+                    handleResult(e, callback, () -> callback.onSuccess(true));
+                }
+            }
+        });
 
         final AVQuery<AVObject> dayQuery = new AVQuery<>(NameContant.MemorialDay.CLAZZ_NAME);
         dayQuery.whereEqualTo(NameContant.Common.OBJECT_ID, dayObjId);
-
-        AVQuery<AVObject> query = AVQuery.and(Arrays.asList(loveHistoryQuery, dayQuery));
-        query.deleteAllInBackground(new DeleteCallback() {
+        dayQuery.deleteAllInBackground(new DeleteCallback() {
             @Override
             public void done(AVException e) {
-                handleResult(e, callback, () -> callback.onSuccess(true));
+                num[0]--;
+                if(num[0] == 0) {
+                    handleResult(e, callback, () -> callback.onSuccess(true));
+                }
             }
         });
     }
