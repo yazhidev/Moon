@@ -80,6 +80,8 @@ public class SetFragment extends Fragment {
             getActivity().finish();
         });
 
+        mBinding.btnMemorialDay.setOnClickListener(v -> PageRouter.gotoMemorialList());
+
         AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
     }
 

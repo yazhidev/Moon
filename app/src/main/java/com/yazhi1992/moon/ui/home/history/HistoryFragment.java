@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.adapter.HistoryMultitypeAdapter;
+import com.yazhi1992.moon.adapter.CustomMultitypeAdapter;
 import com.yazhi1992.moon.adapter.MemorialDayViewBinder;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
@@ -32,7 +32,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.List;
 
 import me.drakeet.multitype.Items;
-import me.drakeet.multitype.MultiTypeAdapter;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -41,7 +40,7 @@ import me.drakeet.multitype.MultiTypeAdapter;
 public class HistoryFragment extends Fragment {
 
     private FragmentHistoryBinding mBinding;
-    private HistoryMultitypeAdapter mMultiTypeAdapter;
+    private CustomMultitypeAdapter mMultiTypeAdapter;
     private Items mItems;
     private final int SIZE = 20;
     private int lastItemId = -1;
@@ -58,7 +57,7 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mMultiTypeAdapter = new HistoryMultitypeAdapter();
+        mMultiTypeAdapter = new CustomMultitypeAdapter();
         //纪念日
         mMultiTypeAdapter.register(MemorialBeanWrapper.class, new MemorialDayViewBinder(new MemorialDayViewBinder.MemorialDayViewListener() {
             @Override
@@ -165,7 +164,11 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public void onFailed(int code, String msg) {
-
+                if(loadMore) {
+                    mBinding.smartRefresh.finishLoadmore();
+                } else {
+                    mBinding.smartRefresh.finishRefresh();
+                }
             }
         });
     }
@@ -188,7 +191,6 @@ public class HistoryFragment extends Fragment {
 
     @Subscribe
     public void addMemorial(AddHistoryData bean) {
-        // TODO: 2018/1/29 传递过来丢失父类属性 userName userHeadUrl
         mBinding.smartRefresh.autoRefresh();
     }
 }

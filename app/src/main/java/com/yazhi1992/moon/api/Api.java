@@ -14,10 +14,12 @@ import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
 import com.yazhi1992.moon.constant.NameContant;
 import com.yazhi1992.moon.util.MyLogger;
+import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -335,10 +337,10 @@ public class Api {
                             @Override
                             public void done(List<AVObject> list, AVException e) {
                                 if (e == null) {
-                                    if(list != null && list.size() > 0) {
+                                    if (list != null && list.size() > 0) {
                                         AVObject bindLoverItemData = list.get(0);
                                         String loverId = bindLoverItemData.getString(NameContant.BindLover.LOVER_ID);
-                                        if(LibUtils.isNullOrEmpty(loverId)) {
+                                        if (LibUtils.isNullOrEmpty(loverId)) {
                                             callback.onSuccess(new CheckBindStateBean(2));
                                         } else {
                                             //查询对方是否绑定你
@@ -347,15 +349,15 @@ public class Api {
                                             query.findInBackground(new FindCallback<AVObject>() {
                                                 @Override
                                                 public void done(List<AVObject> list, AVException e) {
-                                                    if(e == null) {
-                                                        if(list != null && list.size() > 0) {
+                                                    if (e == null) {
+                                                        if (list != null && list.size() > 0) {
                                                             AVObject bindLoverItemData = list.get(0);
                                                             String loverId = bindLoverItemData.getString(NameContant.BindLover.LOVER_ID);
-                                                            if(LibUtils.notNullNorEmpty(loverId) && loverId.equals(userId)) {
+                                                            if (LibUtils.notNullNorEmpty(loverId) && loverId.equals(userId)) {
                                                                 CheckBindStateBean checkBindStateBean = new CheckBindStateBean(0);
                                                                 checkBindStateBean.setPeerObjId(bindLoverItemData.getString(NameContant.BindLover.USER_ID));
                                                                 callback.onSuccess(checkBindStateBean);
-                                                            } else{
+                                                            } else {
                                                                 callback.onSuccess(new CheckBindStateBean(1));
                                                             }
                                                         } else {
@@ -386,6 +388,7 @@ public class Api {
 
     /**
      * 删除纪念日数据
+     *
      * @param objId
      * @param callback
      */
@@ -399,7 +402,7 @@ public class Api {
             @Override
             public void done(AVException e) {
                 num[0]--;
-                if(num[0] == 0) {
+                if (num[0] == 0) {
                     handleResult(e, callback, () -> callback.onSuccess(true));
                 }
             }
@@ -411,8 +414,46 @@ public class Api {
             @Override
             public void done(AVException e) {
                 num[0]--;
-                if(num[0] == 0) {
+                if (num[0] == 0) {
                     handleResult(e, callback, () -> callback.onSuccess(true));
+                }
+            }
+        });
+    }
+
+    /**
+     * 获取纪念日列表
+     *
+     * @param callback
+     */
+    public void getMemorialDayList(int lastItemId, int size, DataCallback<List<MemorialDayBean>> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        //查询自己或另一半的
+        final AVQuery<AVObject> meQuery = new AVQuery<>(NameContant.MemorialDay.CLAZZ_NAME);
+        meQuery.whereEqualTo(NameContant.MemorialDay.USER_ID, currentUser.getObjectId());
+
+        final AVQuery<AVObject> loverQuery = new AVQuery<>(NameContant.MemorialDay.CLAZZ_NAME);
+        loverQuery.whereEqualTo(NameContant.MemorialDay.USER_ID, currentUser.getString(NameContant.AVUserClass.LOVER_ID));
+
+        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
+        query.orderByAscending(NameContant.MemorialDay.TIME);
+        query.limit(size);
+        if (lastItemId != -1) {
+            query.whereLessThan(NameContant.LoveHistory.ID, lastItemId);
+        }
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    List<MemorialDayBean> dataList = new ArrayList<>();
+                    for (AVObject object : list) {
+                        MemorialDayBean memorialDayBean = new MemorialDayBean(object.getString(NameContant.MemorialDay.TITLE), object.getLong(NameContant.MemorialDay.TIME));
+                        dataList.add(memorialDayBean);
+                    }
+                    callback.onSuccess(dataList);
+                } else {
+                    callback.onFailed(e.getCode(), e.getMessage());
                 }
             }
         });

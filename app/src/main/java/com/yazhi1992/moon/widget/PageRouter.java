@@ -11,6 +11,8 @@ public class PageRouter {
     public static final String HOME_PAGE = "/app/home_page";
     //添加纪念日
     public static final String ADD_MEMORIAL = "/app/add_memorial";
+    //纪念日列表
+    public static final String MEMORIAL_LIST = "/app/memorial_list";
     //登录
     public static final String LOGIN = "/app/login";
     //绑定另一半
@@ -37,6 +39,12 @@ public class PageRouter {
     public static void gotoBindLover() {
         ARouter.getInstance()
                 .build(BIND_LOVER)
+                .navigation();
+    }
+
+    public static void gotoMemorialList() {
+        ARouter.getInstance()
+                .build(MEMORIAL_LIST)
                 .navigation();
     }
 

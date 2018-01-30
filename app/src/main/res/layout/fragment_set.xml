@@ -86,6 +86,16 @@
             tools:layout_editor_absoluteX="15dp"/>
 
         <Button
+            android:id="@+id/btn_memorial_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_marginBottom="8dp"
+            android:text="纪念日列表"
+            app:layout_constraintBottom_toTopOf="@+id/btn_logout"
+            tools:layout_editor_absoluteX="15dp"/>
+
+        <Button
             android:id="@+id/btn_sendMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,7 +103,7 @@
             android:layout_margin="15dp"
             android:layout_marginBottom="8dp"
             android:text="发消息"
-            app:layout_constraintBottom_toTopOf="@+id/btn_logout"
+            app:layout_constraintBottom_toTopOf="@+id/btn_memorial_day"
             tools:layout_editor_absoluteX="15dp"/>
 
         <android.support.constraint.Guideline

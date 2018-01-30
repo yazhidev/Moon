@@ -14,10 +14,10 @@
             android:id="@+id/toolbar"
             android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorAccent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:title="连理"
+            android:background="@color/colorAccent"
             app:titleTextColor="@color/white"></android.support.v7.widget.Toolbar>
 
         <TextView

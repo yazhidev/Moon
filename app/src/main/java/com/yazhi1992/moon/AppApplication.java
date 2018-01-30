@@ -55,6 +55,7 @@ public class AppApplication extends MultiDexApplication {
         AVOSCloud.initialize(this, BuildConfig.LEAN_CLOUD_ID, BuildConfig.LEAN_CLOUD_KEY);
         // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
         AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
+
     }
 
     public static AppApplication getInstance() {
