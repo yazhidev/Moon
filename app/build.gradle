@@ -16,6 +16,7 @@ android {
         versionCode 4
         versionName "1.0.3"
         multiDexEnabled true
+        multiDexKeepProguard file("./tinker.pro")
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -56,8 +57,10 @@ android {
             buildConfigField "String", "LEAN_CLOUD_KEY", properties.getProperty("leanCloudKey")
             buildConfigField "String", "QQ_ID", "\"1106624697\""
             buildConfigField "String", "QQ_KEY", "\"IeOM0d7nzg2uIAps\""
+            buildConfigField "String", "BUGLY_ID", "\"5d768fb313\""
             buildConfigField "String", "LEANCLOUD_QQ_LOGIN_URL", "\"https://leancloud.cn/1.1/sns/callback/ypt2m1s8xla33l8o\""
 
+            minifyEnabled false // 是否进行混淆
             applicationIdSuffix '.debug'
             versionNameSuffix ".${gitCommitCount}"
         }
@@ -66,6 +69,7 @@ android {
             buildConfigField "String", "LEAN_CLOUD_KEY", properties.getProperty("leanCloudKey")
             buildConfigField "String", "QQ_ID", "\"1106624697\""
             buildConfigField "String", "QQ_KEY", "\"IeOM0d7nzg2uIAps\""
+            buildConfigField "String", "BUGLY_ID", "\"5d768fb313\""
             buildConfigField "String", "LEANCLOUD_QQ_LOGIN_URL", "\"https://leancloud.cn/1.1/sns/callback/ypt2m1s8xla33l8o\""
 
             versionNameSuffix ".${gitCommitCount}"
@@ -182,3 +186,5 @@ dependencies {
 
     compile "org.greenrobot:greendao:$rootProject.green_dao_version"
 }
+
+apply from: 'tinker-support.gradle'

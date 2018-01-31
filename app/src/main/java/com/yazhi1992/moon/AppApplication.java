@@ -1,6 +1,8 @@
 package com.yazhi1992.moon;
 
-import android.support.multidex.MultiDexApplication;
+import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.avos.avoscloud.AVOSCloud;
@@ -19,7 +21,7 @@ import org.greenrobot.eventbus.EventBus;
  * Created by zengyazhi on 2018/1/24.
  */
 
-public class AppApplication extends MultiDexApplication {
+public class AppApplication extends Application {
 
     public static AppApplication context;
 
@@ -49,7 +51,7 @@ public class AppApplication extends MultiDexApplication {
                 }
             }
         };
-        Bugly.init(getApplicationContext(), "5d768fb313", BuildConfig.DEBUG);
+        Bugly.init(getApplicationContext(), BuildConfig.BUGLY_ID, BuildConfig.DEBUG);
 
         //leancloud
         AVOSCloud.initialize(this, BuildConfig.LEAN_CLOUD_ID, BuildConfig.LEAN_CLOUD_KEY);
@@ -60,6 +62,15 @@ public class AppApplication extends MultiDexApplication {
 
     public static AppApplication getInstance() {
         return context;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        // you must install multiDex whatever tinker is installed!
+        MultiDex.install(base);
+        // 安装tinker
+        Beta.installTinker();
     }
 
 }

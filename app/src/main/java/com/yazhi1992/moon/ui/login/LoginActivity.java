@@ -40,7 +40,7 @@ public class LoginActivity extends AbsUpgrateActivity {
 
         mPresenter.init(this);
 
-        mBinding.tvVersion.setText(String.format(getString(R.string.version_name), BuildConfig.VERSION_NAME));
+        mBinding.tvVersion.setText("test tinker " + String.format(getString(R.string.version_name), BuildConfig.VERSION_NAME));
     }
 
     @Override
