@@ -33,7 +33,7 @@ public class BaseActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Observable.timer(500, TimeUnit.MILLISECONDS)
+                Observable.timer(300, TimeUnit.MILLISECONDS)
                         .subscribe(aLong -> finish());
             }
         });

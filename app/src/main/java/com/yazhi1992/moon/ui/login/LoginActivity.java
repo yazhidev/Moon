@@ -5,12 +5,13 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.yazhi1992.moon.BuildConfig;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.databinding.ActivityLoginBinding;
 import com.yazhi1992.moon.dialog.LoadingDialog;
 import com.yazhi1992.moon.dialog.LoadingHelper;
-import com.yazhi1992.moon.widget.PageRouter;
+import com.yazhi1992.moon.PageRouter;
 
 @Route(path = PageRouter.LOGIN)
 public class LoginActivity extends AbsUpgrateActivity {
@@ -38,6 +39,8 @@ public class LoginActivity extends AbsUpgrateActivity {
         });
 
         mPresenter.init(this);
+
+        mBinding.tvVersion.setText(String.format(getString(R.string.version_name), BuildConfig.VERSION_NAME));
     }
 
     @Override

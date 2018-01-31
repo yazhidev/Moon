@@ -18,7 +18,7 @@ import com.yazhi1992.moon.event.AddHistoryData;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
-import com.yazhi1992.moon.widget.PageRouter;
+import com.yazhi1992.moon.PageRouter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

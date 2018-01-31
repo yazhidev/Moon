@@ -23,7 +23,7 @@ import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
 import com.yazhi1992.moon.event.AddHistoryData;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
-import com.yazhi1992.moon.widget.PageRouter;
+import com.yazhi1992.moon.PageRouter;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;

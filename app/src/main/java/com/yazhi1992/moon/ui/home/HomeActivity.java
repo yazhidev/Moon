@@ -16,7 +16,7 @@ import com.yazhi1992.moon.databinding.ActivityHomeBinding;
 import com.yazhi1992.moon.ui.home.history.HistoryFragment;
 import com.yazhi1992.moon.ui.home.home.HomeFragment;
 import com.yazhi1992.moon.ui.home.set.SetFragment;
-import com.yazhi1992.moon.widget.PageRouter;
+import com.yazhi1992.moon.PageRouter;
 
 import java.util.ArrayList;
 import java.util.List;

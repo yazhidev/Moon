@@ -24,5 +24,8 @@
 
     <string name="add_memorial">请输入标题</string>
     <string name="error_invite_num">请确认邀请码是否正确</string>
+    <string name="about_us">关于小本本</string>
+    <string name="log_out">退出登录</string>
+    <string name="version_name">小本本 %s</string>
 
 </resources>

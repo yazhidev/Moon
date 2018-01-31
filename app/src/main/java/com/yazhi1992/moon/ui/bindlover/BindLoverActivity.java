@@ -3,7 +3,6 @@ package com.yazhi1992.moon.ui.bindlover;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +15,7 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.databinding.ActivityBindLoverBinding;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.widget.PageRouter;
+import com.yazhi1992.moon.PageRouter;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 /**
@@ -50,6 +49,8 @@ public class BindLoverActivity extends AbsUpgrateActivity {
                     new UserDaoUtil().clear();
                     PageRouter.gotoLogin();
                     finish();
+                } else if(item.getItemId() == R.id.about_us) {
+                    PageRouter.gotoAboutUs();
                 }
                 return true;
             }

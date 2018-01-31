@@ -97,6 +97,7 @@ public class LoginPresenter {
      * @param callback true 已绑定另一半，false 未绑定
      */
     void loginWithQQ(Activity activity, PresenterCallback<Boolean> callback) {
+        SNS.logout(activity, ThirdPartyType);
         try {
             if (callback != null) {
                 mPresenterCallback = callback;

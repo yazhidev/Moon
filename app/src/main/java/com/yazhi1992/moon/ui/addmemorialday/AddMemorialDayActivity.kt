@@ -35,7 +35,7 @@ class AddMemorialDayActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
-            Observable.timer(500, TimeUnit.MILLISECONDS)
+            Observable.timer(300, TimeUnit.MILLISECONDS)
                     .subscribe { finish() }
         }
 

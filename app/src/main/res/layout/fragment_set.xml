@@ -86,13 +86,23 @@
             tools:layout_editor_absoluteX="15dp"/>
 
         <Button
+            android:id="@+id/btn_about_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_marginBottom="8dp"
+            android:text="关于我们"
+            app:layout_constraintBottom_toTopOf="@+id/btn_logout"
+            tools:layout_editor_absoluteX="15dp"/>
+
+        <Button
             android:id="@+id/btn_memorial_day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:layout_marginBottom="8dp"
             android:text="纪念日列表"
-            app:layout_constraintBottom_toTopOf="@+id/btn_logout"
+            app:layout_constraintBottom_toTopOf="@+id/btn_about_us"
             tools:layout_editor_absoluteX="15dp"/>
 
         <Button

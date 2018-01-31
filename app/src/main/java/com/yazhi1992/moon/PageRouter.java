@@ -1,4 +1,4 @@
-package com.yazhi1992.moon.widget;
+package com.yazhi1992.moon;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 
@@ -17,6 +17,8 @@ public class PageRouter {
     public static final String LOGIN = "/app/login";
     //绑定另一半
     public static final String BIND_LOVER = "/app/bind_lover";
+    //关于我们
+    public static final String ABOUT_US = "/app/about_us";
 
     public static void gotoAddMemorial() {
         ARouter.getInstance()
@@ -45,6 +47,12 @@ public class PageRouter {
     public static void gotoMemorialList() {
         ARouter.getInstance()
                 .build(MEMORIAL_LIST)
+                .navigation();
+    }
+
+    public static void gotoAboutUs() {
+        ARouter.getInstance()
+                .build(ABOUT_US)
                 .navigation();
     }
 

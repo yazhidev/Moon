@@ -9,7 +9,7 @@ import com.avos.avoscloud.GetCallback
 import com.yazhi1992.moon.R
 import com.yazhi1992.moon.constant.NameContant
 import com.yazhi1992.moon.sql.UserDaoUtil
-import com.yazhi1992.moon.widget.PageRouter
+import com.yazhi1992.moon.PageRouter
 import io.reactivex.Observable
 import java.util.concurrent.TimeUnit
 

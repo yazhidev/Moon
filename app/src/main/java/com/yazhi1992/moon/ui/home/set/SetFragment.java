@@ -24,7 +24,7 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.widget.PageRouter;
+import com.yazhi1992.moon.PageRouter;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import java.util.Arrays;
@@ -78,6 +78,10 @@ public class SetFragment extends Fragment {
             mUserDaoUtil.clear();
             PageRouter.gotoLogin();
             getActivity().finish();
+        });
+
+        mBinding.btnAboutUs.setOnClickListener(v -> {
+            PageRouter.gotoAboutUs();
         });
 
         mBinding.btnMemorialDay.setOnClickListener(v -> PageRouter.gotoMemorialList());
