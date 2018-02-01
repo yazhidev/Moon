@@ -4,7 +4,7 @@
                     android:minHeight="40dp"
                     android:minWidth="40dp"
                     android:updatePeriodMillis="3000"
-                    android:configure="com.yazhi1992.moon.widget.ChooseDataForWidgetActivity"
+                    android:configure="com.yazhi1992.moon.widget.WidgetDataActivity"
     >
 
 </appwidget-provider>

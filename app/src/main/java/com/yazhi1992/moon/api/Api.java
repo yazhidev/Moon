@@ -13,7 +13,7 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
 import com.yazhi1992.moon.constant.NameContant;
-import com.yazhi1992.moon.util.MyLogger;
+import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
@@ -303,7 +303,7 @@ public class Api {
                 .subscribe(new Consumer<BindLoverBean>() {
                     @Override
                     public void accept(BindLoverBean bindLoverBean) throws Exception {
-                        MyLogger.log("updateUserLoverInfo accept");
+                        MyLog.log("updateUserLoverInfo accept");
                         callback.onSuccess(bindLoverBean);
                     }
                 }, new Consumer<Throwable>() {

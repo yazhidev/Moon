@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
     <application
         android:name=".AppApplication"
@@ -19,40 +19,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.startup.StartUpActivity">
+        <activity android:name=".ui.startup.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.OldHomeActivity"
-            android:label="@string/title_activity_home"
-            android:theme="@style/NoActionBarTheme">
-        </activity>
-        <activity android:name=".activity.MainActivity">
-        </activity>
-        <activity android:name=".activity.Main2Activity">
-        </activity>
-        <activity
-            android:name=".activity.Main3Activity"
-            android:theme="@style/TransparentTheme">
-        </activity>
-        <activity android:name=".activity.Main4Activity">
-        </activity>
-        <activity
-            android:name=".activity.OldLoginActivity"
-            android:label="@string/title_activity_login">
-        </activity>
-        <activity android:name=".widget.ChooseDataForWidgetActivity">
+
+        <!-- 桌面小部件数据提供页 -->
+        <activity android:name=".widget.WidgetDataActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
-
+        <!-- 桌面小部件数据提供页 -->
         <!-- 桌面小部件 -->
-        <receiver android:name=".widget.YazhiWidgetProvider">
+        <receiver android:name=".widget.MyWidgetProvider">
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info"/>
@@ -62,18 +45,16 @@
                 <action android:name="com.yazhi1992.moon.click_widget"/>
             </intent-filter>
         </receiver>
+        <!-- 桌面小部件 -->
+
         <!-- bugly -->
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent"/>
         <!-- bugly -->
-        
+
         <activity android:name=".ui.bindlover.BindLoverActivity">
-        </activity>
-        <activity android:name=".activity.MemorialDayActivity">
-        </activity>
-        <activity android:name=".ui.addmemorialday.AddMemorialDayActivity">
         </activity>
         <activity
             android:name=".ui.home.HomeActivity"
@@ -96,7 +77,6 @@
         </activity>
         <!-- QQ SSO 登录 -->
 
-
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
         <!-- 实时通信模块、推送都要使用 PushService -->
         <service android:name="com.avos.avoscloud.PushService"/>
@@ -115,8 +95,11 @@
             android:name=".ui.memoriallist.MemorialListActivity"
             android:label="纪念日">
         </activity>
-        <activity android:name=".ui.aboutus.AboutUsActivity"
+        <activity
+            android:name=".ui.aboutus.AboutUsActivity"
             android:label="@string/about_us">
+        </activity>
+        <activity android:name=".ui.addmemorialday.AddMemorialActivity">
         </activity>
     </application>
 

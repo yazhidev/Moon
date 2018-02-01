@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
-import com.yazhi1992.moon.ui.addmemorialday.AddMemorialDayActivity;
+import com.yazhi1992.moon.ui.addmemorialday.AddMemorialActivity;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -53,10 +53,10 @@ public class HomeFragment extends Fragment {
                         .setContentTitle("My notification")
                         .setContentText("Hello World!");
 
-        Intent resultIntent = new Intent(getActivity(), AddMemorialDayActivity.class);
+        Intent resultIntent = new Intent(getActivity(), AddMemorialActivity.class);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
-        stackBuilder.addParentStack(AddMemorialDayActivity.class);
+        stackBuilder.addParentStack(AddMemorialActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        tools:context="com.yazhi1992.moon.ui.startup.StartUpActivity">
+        tools:context="com.yazhi1992.moon.ui.startup.StartActivity">
 
         <ImageView
             android:layout_width="match_parent"

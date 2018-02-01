@@ -3,7 +3,6 @@ apply from: "config.gradle"
 
 buildscript {
 
-    ext.kotlin_version = '1.2.10'
     ext.android_gradle_tool_version = '3.0.1'
     ext.green_dao_version = '3.2.2'
     ext.tinker_support = '1.1.1'
@@ -18,7 +17,6 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$android_gradle_tool_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.greenrobot:greendao-gradle-plugin:$green_dao_version"
         classpath "com.tencent.bugly:tinker-support:$tinker_support"
     }

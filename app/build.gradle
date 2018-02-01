@@ -1,9 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-//solve kotlin and databinding problem
 apply plugin: 'org.greenrobot.greendao'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -105,13 +101,6 @@ greendao {
     schemaVersion 1  //版本号，升级时可配置
 }
 
-//解决 arouter 无法跳转问题
-kapt {
-    arguments {
-        arg("moduleName", project.getName())
-    }
-}
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -122,21 +111,14 @@ dependencies {
 
     //arouter
     compile "com.alibaba:arouter-api:$rootProject.ext.arouterApiVersion"
-    kapt "com.alibaba:arouter-compiler:$rootProject.ext.arouterCompilerVersion"
+    annotationProcessor "com.alibaba:arouter-compiler:$rootProject.ext.arouterCompilerVersion"
 
     //robolectric
     testImplementation "org.robolectric:robolectric:$rootProject.ext.robolectricVersion"
 
     //dagger
-    kapt "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2CompilerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2CompilerVersion"
     implementation "com.google.dagger:dagger:$rootProject.ext.dagger2Version"
-
-    //解决 kotlin 和 databinding 共用问题
-    kapt "com.android.databinding:compiler:$android_gradle_tool_version"
-
-    //kotlin
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
     //logger
     implementation "com.orhanobut:logger:$rootProject.ext.loggerVersion"

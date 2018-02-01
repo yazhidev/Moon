@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
-import com.yazhi1992.moon.util.MyLogger;
+import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 
@@ -50,7 +50,7 @@ public class MemorialDayViewBinder extends ItemViewBinder<MemorialBeanWrapper, M
         holder.mIgDelete.setOnClickListener(v -> {
             int[] location = new int[2];
             v.getLocationOnScreen(location);
-            MyLogger.log(location[0] + " - " + location[1]);
+            MyLog.log(location[0] + " - " + location[1]);
             PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
             popupMenu.getMenuInflater().inflate(R.menu.history_memorial_day, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
