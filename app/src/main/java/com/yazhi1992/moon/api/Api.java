@@ -17,8 +17,6 @@ import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -134,7 +132,7 @@ public class Api {
      * @param userObjId    自己的id
      * @param dataCallback
      */
-    public void invite(String inviteNum, String userObjId, @NotNull DataCallback<BindLoverBean> dataCallback) {
+    public void invite(String inviteNum, String userObjId, DataCallback<BindLoverBean> dataCallback) {
         final String[] peerUserId = new String[1];
         Observable.just(inviteNum)
                 .observeOn(Schedulers.io())
@@ -320,7 +318,7 @@ public class Api {
      * @param userId
      * @param callback
      */
-    public void checkBindState(String userId, @NotNull DataCallback<CheckBindStateBean> callback) {
+    public void checkBindState(String userId, DataCallback<CheckBindStateBean> callback) {
         AVUser.getCurrentUser().fetchInBackground(new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {

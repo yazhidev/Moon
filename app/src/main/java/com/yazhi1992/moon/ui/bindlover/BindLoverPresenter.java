@@ -13,8 +13,6 @@ import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,7 +23,7 @@ import java.util.Random;
 
 public class BindLoverPresenter {
 
-    public void getInviteNum(@NotNull DataCallback<String> callback) {
+    public void getInviteNum(DataCallback<String> callback) {
         //1. 生成6位随机数，插入云端
         //存入本地
         User user = new UserDaoUtil().getUserDao();
