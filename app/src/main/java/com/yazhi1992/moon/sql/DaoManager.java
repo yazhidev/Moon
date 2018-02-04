@@ -1,6 +1,6 @@
 package com.yazhi1992.moon.sql;
 
-import com.yazhi1992.moon.AppApplication;
+import com.yazhi1992.moon.BaseApplication;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class DaoManager {
 
     public DaoSession getDaoSession() {
         if(mDaoSession == null) {
-            mDaoSession = new DaoMaster(new DaoMaster.DevOpenHelper(AppApplication.getInstance(), "greendao_moon.db").getWritableDb()).newSession();
+            mDaoSession = new DaoMaster(new DaoMaster.DevOpenHelper(BaseApplication.getInstance(), "greendao_moon.db").getWritableDb()).newSession();
         }
         return mDaoSession;
     }

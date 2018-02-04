@@ -21,9 +21,9 @@ import org.greenrobot.eventbus.EventBus;
  * Created by zengyazhi on 2018/1/24.
  */
 
-public class AppApplication extends Application {
+public class BaseApplication extends Application {
 
-    public static AppApplication context;
+    public static BaseApplication context;
 
     @Override
     public void onCreate() {
@@ -60,7 +60,7 @@ public class AppApplication extends Application {
 
     }
 
-    public static AppApplication getInstance() {
+    public static BaseApplication getInstance() {
         return context;
     }
 

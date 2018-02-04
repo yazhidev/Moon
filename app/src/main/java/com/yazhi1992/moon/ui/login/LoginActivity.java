@@ -34,13 +34,13 @@ public class LoginActivity extends AbsUpgrateActivity {
             finish();
         }));
 
-        mBinding.btn.setOnClickListener(v -> {
+        mBinding.btn.setOnClickLis1tener(v -> {
             new LoadingDialog().show(getFragmentManager());
         });
 
         mPresenter.init(this);
 
-        mBinding.tvVersion.setText("test tinker " + String.format(getString(R.string.version_name), BuildConfig.VERSION_NAME));
+        mBinding.tvVersion.setText("2333 " + String.format(getString(R.string.version_name), BuildConfig.VERSION_NAME));
     }
 
     @Override

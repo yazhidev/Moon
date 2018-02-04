@@ -8,9 +8,8 @@
     <init>();
 }
 
--keep public class * extends android.app.Application {
-     <init>();
-     void attachBaseContext(android.content.Context);
+-keep class tinker.sample.android.app.SampleApplication {
+    *;
 }
 
 -keep class com.tencent.tinker.loader.TinkerTestAndroidNClassLoader {
@@ -18,10 +17,19 @@
 }
 
 #your dex.loader patterns here
--keep class com.yazhi1992.moon.AppApplication {
+-keep class com.yazhi1992.moon.BaseApplication {
     <init>();
 }
 
 -keep class com.tencent.tinker.loader.** {
     <init>();
 }
+
+-keep public class * extends android.app.Application {
+     <init>();
+     void attachBaseContext(android.content.Context);
+}
+
+-keep class com.yazhi1992.moon.BaseApplication.{*;}
+-keep class com.tencent.bugly.**{*;}
+-keep class com.tencent.tinker.**{*;}

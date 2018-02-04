@@ -12,7 +12,7 @@ public class Test {
     }
 
     private void test() {
-//        TextView textView = new TextView(AppApplication.getContext());
+//        TextView textView = new TextView(BaseApplication.getContext());
 //        textView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

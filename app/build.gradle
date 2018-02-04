@@ -12,7 +12,6 @@ android {
         versionCode 4
         versionName "1.0.3"
         multiDexEnabled true
-        multiDexKeepProguard file("./tinker.pro")
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -68,8 +67,8 @@ android {
             buildConfigField "String", "BUGLY_ID", "\"5d768fb313\""
             buildConfigField "String", "LEANCLOUD_QQ_LOGIN_URL", "\"https://leancloud.cn/1.1/sns/callback/ypt2m1s8xla33l8o\""
 
-            versionNameSuffix ".${gitCommitCount}"
             minifyEnabled false
+            versionNameSuffix ".${gitCommitCount}"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -88,8 +87,6 @@ android {
     }
 
     sourceSets {
-        main.java.srcDirs += 'build/generated/source/greendao'
-
         debug {
             res.srcDirs = ['src/debug/res']
         }
@@ -98,7 +95,7 @@ android {
 
 //greendao配置
 greendao {
-    schemaVersion 1  //版本号，升级时可配置
+    schemaVersion 1  //版本号
 }
 
 dependencies {
@@ -169,4 +166,4 @@ dependencies {
     compile "org.greenrobot:greendao:$rootProject.green_dao_version"
 }
 
-apply from: 'tinker-support.gradle'
+//apply from: 'tinker-support.gradle'

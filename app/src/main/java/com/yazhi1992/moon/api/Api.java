@@ -8,7 +8,7 @@ import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
-import com.yazhi1992.moon.AppApplication;
+import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
@@ -208,10 +208,10 @@ public class Api {
                                 if (LibUtils.isNullOrEmpty(loverId) || loverId.equals(userObjId)) {
                                     e.onNext(bindLoverItemData);
                                 } else {
-                                    e.onError(new Throwable(AppApplication.getInstance().getString(R.string.error_invite_num)));
+                                    e.onError(new Throwable(BaseApplication.getInstance().getString(R.string.error_invite_num)));
                                 }
                             } else {
-                                e.onError(new Throwable(AppApplication.getInstance().getString(R.string.error_invite_num)));
+                                e.onError(new Throwable(BaseApplication.getInstance().getString(R.string.error_invite_num)));
 
                             }
                         } else {

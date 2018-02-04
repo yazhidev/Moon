@@ -19,7 +19,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.yazhi1992.moon.AppApplication;
+import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
 import com.yazhi1992.moon.sql.User;
@@ -142,7 +142,7 @@ public class SetFragment extends Fragment {
         @Override
         public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client){
             if(message instanceof AVIMTextMessage){
-                LibUtils.showToast(AppApplication.getInstance(), ((AVIMTextMessage)message).getText());
+                LibUtils.showToast(BaseApplication.getInstance(), ((AVIMTextMessage)message).getText());
             }
         }
 
