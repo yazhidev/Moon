@@ -58,6 +58,7 @@
         </activity>
         <activity
             android:name=".ui.home.HomeActivity"
+            android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
         </activity>
 

@@ -1,5 +1,6 @@
 package com.yazhi1992.moon.ui.home.set;
 
+import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 
 /**
@@ -8,6 +9,10 @@ import com.yazhi1992.moon.sql.UserDaoUtil;
 
 public class SetPresenter {
 
+    public void logout(DataCallback<Boolean> callback) {
+        new UserDaoUtil().clear();
+        callback.onSuccess(true);
+    }
 
     public boolean checkLover() {
         new UserDaoUtil().getUserDao().getHaveLover();

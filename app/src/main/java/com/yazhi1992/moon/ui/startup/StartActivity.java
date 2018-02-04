@@ -11,6 +11,7 @@ import com.yazhi1992.moon.PageRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.NameContant;
 import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.moon.util.PushManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -40,6 +41,7 @@ public class StartActivity extends AppCompatActivity {
             PageRouter.gotoLogin();
             finish();
         } else {
+            PushManager.getInstance().init();
             if(userDaoUtil.getUserDao().getHaveLover()) {
                 //已绑定
                 PageRouter.gotoHomePage();

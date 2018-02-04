@@ -1,10 +1,12 @@
 package com.yazhi1992.moon.ui.home.set;
 
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
@@ -59,8 +62,6 @@ public class SetFragment extends Fragment {
             mViewModel.myHeadUrl.set(user.getHeadUrl());
             mViewModel.loverHeadUrl.set(user.getLoverHeadUrl());
             mViewModel.loverName.set(user.getLoverName());
-
-            jerryReceiveMsgFromTom();
         }
 
         mBinding.igLover.setOnClickListener(v -> {
@@ -71,13 +72,30 @@ public class SetFragment extends Fragment {
         });
 
         mBinding.btnSendMsg.setOnClickListener(v -> {
-            sendMessageToJerryFromTom();
         });
 
         mBinding.btnLogout.setOnClickListener(v -> {
-            mUserDaoUtil.clear();
-            PageRouter.gotoLogin();
-            getActivity().finish();
+            new AlertDialog.Builder(getContext())
+                    .setMessage(getString(R.string.logout))
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .setPositiveButton(getString(R.string.comfirm), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mPresenter.logout(new DataCallback<Boolean>() {
+                                @Override
+                                public void onSuccess(Boolean data) {
+                                    PageRouter.gotoLogin();
+                                    getActivity().finish();
+                                }
+
+                                @Override
+                                public void onFailed(int code, String msg) {
+
+                                }
+                            });
+                        }
+                    })
+                    .show();
         });
 
         mBinding.btnAboutUs.setOnClickListener(v -> {
@@ -86,68 +104,6 @@ public class SetFragment extends Fragment {
 
         mBinding.btnMemorialDay.setOnClickListener(v -> PageRouter.gotoMemorialList());
 
-        AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
     }
 
-    public void sendMessageToJerryFromTom() {
-        // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
-        AVIMClient tom = AVIMClient.getInstance(mViewModel.myName.get());
-        // 与服务器连接
-        tom.open(new AVIMClientCallback() {
-            @Override
-            public void done(AVIMClient client, AVIMException e) {
-                if (e == null) {
-                    // 创建与Jerry之间的对话
-                    client.createConversation(Arrays.asList("兰德里"), "Tom & Jerry", null,
-                            new AVIMConversationCreatedCallback() {
-
-                                @Override
-                                public void done(AVIMConversation conversation, AVIMException e) {
-                                    if (e == null) {
-                                        AVIMTextMessage msg = new AVIMTextMessage();
-                                        msg.setText("耗子，起床！");
-                                        // 发送消息
-                                        conversation.sendMessage(msg, new AVIMConversationCallback() {
-
-                                            @Override
-                                            public void done(AVIMException e) {
-                                                if (e == null) {
-                                                    LibUtils.showToast(getActivity(), "发送成功");
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                }
-            }
-        });
-    }
-
-    public void jerryReceiveMsgFromTom(){
-        //Jerry登录
-        AVIMClient jerry = AVIMClient.getInstance(mViewModel.myName.get());
-        jerry.open(new AVIMClientCallback(){
-
-            @Override
-            public void done(AVIMClient client,AVIMException e){
-                if(e==null){
-                }
-            }
-        });
-    }
-
-    public static class CustomMessageHandler extends AVIMMessageHandler {
-        //接收到消息后的处理逻辑
-        @Override
-        public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client){
-            if(message instanceof AVIMTextMessage){
-                LibUtils.showToast(BaseApplication.getInstance(), ((AVIMTextMessage)message).getText());
-            }
-        }
-
-        public void onMessageReceipt(AVIMMessage message,AVIMConversation conversation,AVIMClient client){
-
-        }
-    }
 }

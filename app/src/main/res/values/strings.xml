@@ -28,4 +28,9 @@
     <string name="log_out">退出登录</string>
     <string name="version_name">小本本 %s</string>
 
+    <string name="logout">是否要退出登录？</string>
+    <string name="cancel">取消</string>
+    <string name="comfirm">确定</string>
+
+
 </resources>

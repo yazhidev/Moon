@@ -1,5 +1,6 @@
 package com.yazhi1992.moon.ui.home;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.yazhi1992.moon.ui.home.history.HistoryFragment;
 import com.yazhi1992.moon.ui.home.home.HomeFragment;
 import com.yazhi1992.moon.ui.home.set.SetFragment;
 import com.yazhi1992.moon.PageRouter;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,17 @@ public class HomeActivity extends AbsUpgrateActivity {
             }
         });
 
+        Intent intent = getIntent();
+        if(intent != null) {
+            String action = intent.getStringExtra("action");
+            if(LibUtils.notNullNorEmpty(action)) {
+                if(action.equals("add")) {
+                    //跳转到回忆页
+                    mBinding.viewPager.setCurrentItem(1);
+                    mBinding.bottomNavigation.setSelectedItemId(R.id.item_history);
+                }
+            }
+        }
     }
 
 

@@ -13,6 +13,7 @@ import com.yazhi1992.moon.dialog.DatePickerDialog;
 import com.yazhi1992.moon.event.AddHistoryData;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
@@ -72,6 +73,7 @@ public class AddMemorialActivity extends BaseActivity {
                     LibUtils.hideKeyboard(mBinding.etTitle);
                     mBinding.btnComfirm.setLoading(false);
                     finish();
+                    PushManager.getInstance().pushAction(PushManager.ADD_MEMORIAL);
                 }
 
                 @Override
