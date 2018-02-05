@@ -29,6 +29,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void initToolBar(Toolbar toolbar) {
         setSupportActionBar(toolbar);
+        //显示返回键
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

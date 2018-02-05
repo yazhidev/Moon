@@ -8,12 +8,11 @@ import java.util.Date;
  * Created by zengyazhi on 2018/1/24.
  */
 
-public class MemorialDayBean {
+public class MemorialDayBean extends IDataBean{
 
     private String title;
     private long time; //纪念日的时间
     private String timeStr; //纪念日时间格式化后字符串
-    private String objId;
 
     public MemorialDayBean(String title, long time) {
         this.title = title;
@@ -42,11 +41,4 @@ public class MemorialDayBean {
         return timeStr;
     }
 
-    public String getObjId() {
-        return objId;
-    }
-
-    public void setObjId(String objId) {
-        this.objId = objId;
-    }
 }

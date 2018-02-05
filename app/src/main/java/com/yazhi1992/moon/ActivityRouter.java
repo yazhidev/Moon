@@ -6,7 +6,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
  * Created by zengyazhi on 2018/1/23.
  */
 
-public class PageRouter {
+public class ActivityRouter {
     //主页
     public static final String HOME_PAGE = "/app/home_page";
     //添加纪念日
@@ -19,6 +19,10 @@ public class PageRouter {
     public static final String BIND_LOVER = "/app/bind_lover";
     //关于我们
     public static final String ABOUT_US = "/app/about_us";
+    //添加愿望
+    public static final String ADD_HOPE = "/app/add_hope";
+    //愿望列表
+    public static final String HOPE_LIST = "/app/hope_list";
 
     public static void gotoAddMemorial() {
         ARouter.getInstance()
@@ -53,6 +57,18 @@ public class PageRouter {
     public static void gotoAboutUs() {
         ARouter.getInstance()
                 .build(ABOUT_US)
+                .navigation();
+    }
+
+    public static void gotoAddHope() {
+        ARouter.getInstance()
+                .build(ADD_HOPE)
+                .navigation();
+    }
+
+    public static void gotoHopeList() {
+        ARouter.getInstance()
+                .build(HOPE_LIST)
                 .navigation();
     }
 

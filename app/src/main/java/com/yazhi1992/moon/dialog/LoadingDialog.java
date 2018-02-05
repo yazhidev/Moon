@@ -45,7 +45,7 @@ public class LoadingDialog extends DialogFragment {
     public void show(FragmentManager manager) {
         manager.executePendingTransactions();
         if (!isAdded()) {
-            show(manager, "datePicker");
+            show(manager, LoadingDialog.class.getName());
         }
     }
 }

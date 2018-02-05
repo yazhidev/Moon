@@ -7,6 +7,16 @@
     <color name="theme_color_pressed">#1E88E5</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="color_3">#333333</color>
+    <color name="color_5">#555555</color>
+    <color name="color_d">#dddddd</color>
+    <color name="color_e">#eeeeee</color>
     <color name="test">#eee222</color>
     <color name="gray">#555555</color>
+    <color name="white_pressed">#dddddd</color>
+
+    <color name="belong_day_color">#5aa0eb</color>
+    <color name="belong_day_color_deep">#4584ca</color>
+    <color name="after_day_color">#ed9846</color>
+    <color name="after_day_color_deep">#e57a3a</color>
 </resources>

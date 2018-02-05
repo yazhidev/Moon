@@ -47,6 +47,7 @@
         </receiver>
         <!-- 桌面小部件 -->
 
+
         <!-- bugly -->
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
@@ -78,6 +79,7 @@
         </activity>
         <!-- QQ SSO 登录 -->
 
+
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
         <!-- 实时通信模块、推送都要使用 PushService -->
         <service android:name="com.avos.avoscloud.PushService"/>
@@ -101,6 +103,10 @@
             android:label="@string/about_us">
         </activity>
         <activity android:name=".ui.addmemorialday.AddMemorialActivity">
+        </activity>
+        <activity android:name=".ui.addhope.AddHopeActivity">
+        </activity>
+        <activity android:name=".ui.hopelist.HopeListActivity">
         </activity>
     </application>
 

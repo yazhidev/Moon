@@ -69,7 +69,7 @@ public class DatePickerDialog extends DialogFragment {
     public void show(FragmentManager manager) {
         manager.executePendingTransactions();
         if (!isAdded()) {
-            show(manager, "datePicker");
+            show(manager, DatePickerDialog.class.getName());
         }
     }
 

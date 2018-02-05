@@ -4,10 +4,11 @@ package com.yazhi1992.moon.constant;
  * Created by zengyazhi on 2018/1/24.
  */
 
-public class NameContant {
+public class NameConstant {
 
     public static class Common {
         public static final String CREATE_TIME = "createdAt";
+        public static final String UPDATE_TIME = "updatedAt";
         public static final String ID = "id";
         public static final String OBJECT_ID = "objectId";
     }
@@ -22,16 +23,15 @@ public class NameContant {
 
     //首页列表
     public static class LoveHistory {
-        public static final int TYPE_NORMAL_TEXT = 0;
-        public static final int TYPE_MEMORIAL_DAY = 1;
-
         public static final String CLAZZ_NAME = "love_history";
         public static final String MEMORIAL_DAY = "memorial_day";
-        public static final String TYPE = "type";
+        public static final String TYPE = "type"; //类型，1 纪念日，2 心愿
         public static final String ID = "id";
         public static final String USER_HEAD_URL = "user_head_url";
         public static final String USER_NAME = "username";
         public static final String USER_ID = "user_id";
+        public static final String HOPE = "hope";
+
     }
 
     public static class AVUserClass {
@@ -51,6 +51,17 @@ public class NameContant {
         public static final String USER_ID = "user_id";
         public static final String LOVER_ID = "lover_id";
         public static final String USER_NAME = "user_name";
+    }
 
+    //小心愿
+    public static class Hope {
+        public static final String CLAZZ_NAME = "hope";
+        public static final String TITLE = "title";
+        public static final String USER_ID = "user_id";
+        public static final String STATUS = "status"; //状态，0 未完成
+        public static final String LEVEL = "level";
+        public static final String USER_HEAD_URL = "user_head_url";
+        public static final String USER_NAME = "username";
+        public static final String ID = "id";
     }
 }

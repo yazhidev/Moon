@@ -15,14 +15,14 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.databinding.ActivityBindLoverBinding;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.PageRouter;
+import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 /**
  * Created by zengyazhi on 2018/1/26.
  */
 
-@Route(path = PageRouter.BIND_LOVER)
+@Route(path = ActivityRouter.BIND_LOVER)
 public class BindLoverActivity extends AbsUpgrateActivity {
 
     private ActivityBindLoverBinding mBinding;
@@ -47,10 +47,10 @@ public class BindLoverActivity extends AbsUpgrateActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.log_out) {
                     new UserDaoUtil().clear();
-                    PageRouter.gotoLogin();
+                    ActivityRouter.gotoLogin();
                     finish();
                 } else if(item.getItemId() == R.id.about_us) {
-                    PageRouter.gotoAboutUs();
+                    ActivityRouter.gotoAboutUs();
                 }
                 return true;
             }
@@ -72,11 +72,11 @@ public class BindLoverActivity extends AbsUpgrateActivity {
         mBinding.tvBind.setOnClickListener(v -> {
             String inviteNum = mBinding.etInput.getText().toString();
             if (LibUtils.isNullOrEmpty(inviteNum) || inviteNum.length() != 6) {
-                mBinding.inputLayout.setError("请输入正确的邀请码");
+                mBinding.inputLayout.setError(getString(R.string.bind_error_code));
                 return;
             }
             if(LibUtils.notNullNorEmpty(myInviteNum) && inviteNum.equals(myInviteNum)) {
-                mBinding.inputLayout.setError("请输入对方的邀请码");
+                mBinding.inputLayout.setError(getString(R.string.bind_error_code_peer));
                 return;
             }
             mBinding.tvBind.setLoading(true);
@@ -85,19 +85,19 @@ public class BindLoverActivity extends AbsUpgrateActivity {
                 @Override
                 public void onSuccess(BindLoverBean data) {
                     if (data.isBindComplete()) {
-                        mBinding.tvState.setText("有情人终成眷属");
+                        mBinding.tvState.setText(getString(R.string.bind_state_suc));
                         //更新本地数据
                         mUserDaoUtil = new UserDaoUtil();
                         mUserDaoUtil.updateLoveInfo(data.getLoverId()
                                 , data.getLoverName()
                                 , data.getLoverHeadUrl());
                         //绑定成功，跳转
-                        PageRouter.gotoHomePage();
+                        ActivityRouter.gotoHomePage();
                         finish();
                     } else {
-                        mBinding.tvState.setText("已有心上人，尚在单相思");
+                        mBinding.tvState.setText(getString(R.string.bind_state_single));
                     }
-                    LibUtils.showLongToast(BindLoverActivity.this, "来日方长，请多关照~");
+                    LibUtils.showLongToast(BindLoverActivity.this, getString(R.string.bind_state_finish));
                     mBinding.tvBind.setLoading(false);
                 }
 
@@ -127,23 +127,23 @@ public class BindLoverActivity extends AbsUpgrateActivity {
             public void onSuccess(Integer data) {
                 switch (data) {
                     case 0:
-                        mBinding.tvState.setText("有情人终成眷属");
+                        mBinding.tvState.setText(getString(R.string.bind_state_suc));
                         //绑定成功，跳转
-                        PageRouter.gotoHomePage();
+                        ActivityRouter.gotoHomePage();
                         finish();
                         break;
                     case 1:
-                        mBinding.tvState.setText("已有心上人，尚在单相思");
+                        mBinding.tvState.setText(getString(R.string.bind_state_single));
                         break;
                     case 2:
-                        mBinding.tvState.setText("还未添加心上人\n马上拨打电话订购吧！");
+                        mBinding.tvState.setText(getString(R.string.bind_state_original));
                         break;
                     default:
                         break;
                 }
                 mBinding.btnCheckState.setLoading(false);
                 if (showToast) {
-                    LibUtils.showToast(BindLoverActivity.this, "状态已更新");
+                    LibUtils.showToast(BindLoverActivity.this, getString(R.string.bind_state_refresh));
                 }
             }
 

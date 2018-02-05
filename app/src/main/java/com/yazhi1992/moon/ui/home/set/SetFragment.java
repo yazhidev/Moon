@@ -11,26 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMException;
-import com.avos.avoscloud.im.v2.AVIMMessage;
-import com.avos.avoscloud.im.v2.AVIMMessageHandler;
-import com.avos.avoscloud.im.v2.AVIMMessageManager;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
-import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
-import com.yazhi1992.moon.BaseApplication;
+import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.PageRouter;
-import com.yazhi1992.yazhilib.utils.LibUtils;
-
-import java.util.Arrays;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -71,7 +57,8 @@ public class SetFragment extends Fragment {
 
         });
 
-        mBinding.btnSendMsg.setOnClickListener(v -> {
+        mBinding.btnHopeList.setOnClickListener(v -> {
+            ActivityRouter.gotoHopeList();
         });
 
         mBinding.btnLogout.setOnClickListener(v -> {
@@ -84,7 +71,7 @@ public class SetFragment extends Fragment {
                             mPresenter.logout(new DataCallback<Boolean>() {
                                 @Override
                                 public void onSuccess(Boolean data) {
-                                    PageRouter.gotoLogin();
+                                    ActivityRouter.gotoLogin();
                                     getActivity().finish();
                                 }
 
@@ -99,10 +86,10 @@ public class SetFragment extends Fragment {
         });
 
         mBinding.btnAboutUs.setOnClickListener(v -> {
-            PageRouter.gotoAboutUs();
+            ActivityRouter.gotoAboutUs();
         });
 
-        mBinding.btnMemorialDay.setOnClickListener(v -> PageRouter.gotoMemorialList());
+        mBinding.btnMemorialDay.setOnClickListener(v -> ActivityRouter.gotoMemorialList());
 
     }
 

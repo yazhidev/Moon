@@ -5,31 +5,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibTimeUtils;
 
 import java.util.Date;
 
-import me.drakeet.multitype.ItemViewBinder;
-
 /**
  * Created by zengyazhi on 2018/1/30.
  */
-public class MemorialDayListViewBinder extends ItemViewBinder<MemorialDayBean, MemorialDayListViewBinder.ViewHolder> {
-
-    private MemorialDayViewListener mOnClickListener;
-
-    public interface MemorialDayViewListener {
-        void onClick(int id, int position);
-    }
-
-    public MemorialDayListViewBinder(MemorialDayViewListener onClickListener) {
-        mOnClickListener = onClickListener;
-    }
+public class MemorialDayListViewBinder extends CustomItemViewBinder<MemorialDayBean, MemorialDayListViewBinder.ViewHolder> {
 
     @NonNull
     @Override
@@ -39,34 +28,41 @@ public class MemorialDayListViewBinder extends ItemViewBinder<MemorialDayBean, M
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ViewHolder holder, @NonNull MemorialDayBean bean) {
+    protected void BindViewHolder(@NonNull ViewHolder holder, @NonNull MemorialDayBean bean) {
         int gapBetweenTwoDay = LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(bean.getTime()));
         String title = bean.getTitle();
         if (gapBetweenTwoDay > 0) {
-            title += (" 已经 " + gapBetweenTwoDay + " 天");
-        } else if (gapBetweenTwoDay < 0) {
-            title = ("距离 " + title + " 还有 " + gapBetweenTwoDay + " 天");
+            title = (String.format(BaseApplication.getInstance().getString(R.string.memorial_after), title));
+            holder.mTvTitle.setText(title);
+            holder.mTvDayNum.setText(String.valueOf(gapBetweenTwoDay));
+            holder.mLlBelong.setVisibility(View.VISIBLE);
+            holder.mLlAfter.setVisibility(View.GONE);
         } else {
-            title = title + " 今天";
+            title = String.format(BaseApplication.getInstance().getString(R.string.memorial_belong), title);
+            holder.mTvTitle2.setText(title);
+            holder.mTvDayNum2.setText(String.valueOf(gapBetweenTwoDay));
+            holder.mLlBelong.setVisibility(View.GONE);
+            holder.mLlAfter.setVisibility(View.VISIBLE);
         }
-        holder.mTvTitle.setText(title);
-
-        holder.mRootView.setOnClickListener(v -> {
-            if (mOnClickListener != null) {
-                mOnClickListener.onClick(R.id.root, getPosition(holder));
-            }
-        });
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTvTitle;
-        private RelativeLayout mRootView;
+        private TextView mTvDayNum;
+        private TextView mTvTitle2;
+        private TextView mTvDayNum2;
+        private View mLlBelong;
+        private View mLlAfter;
 
         ViewHolder(View itemView) {
             super(itemView);
             mTvTitle = itemView.findViewById(R.id.tv_title);
-            mRootView = itemView.findViewById(R.id.root);
+            mTvDayNum = itemView.findViewById(R.id.tv_day_num);
+            mTvTitle2 = itemView.findViewById(R.id.tv_title2);
+            mTvDayNum2 = itemView.findViewById(R.id.tv_day_num2);
+            mLlBelong = itemView.findViewById(R.id.ll_belong);
+            mLlAfter = itemView.findViewById(R.id.ll_after);
         }
     }
 }

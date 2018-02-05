@@ -13,17 +13,18 @@ import android.view.MenuItem;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
+import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.databinding.ActivityHomeBinding;
 import com.yazhi1992.moon.ui.home.history.HistoryFragment;
 import com.yazhi1992.moon.ui.home.home.HomeFragment;
 import com.yazhi1992.moon.ui.home.set.SetFragment;
-import com.yazhi1992.moon.PageRouter;
+import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Route(path = PageRouter.HOME_PAGE)
+@Route(path = ActivityRouter.HOME_PAGE)
 public class HomeActivity extends AbsUpgrateActivity {
 
     private ActivityHomeBinding mBinding;
@@ -65,9 +66,9 @@ public class HomeActivity extends AbsUpgrateActivity {
 
         Intent intent = getIntent();
         if(intent != null) {
-            String action = intent.getStringExtra("action");
+            String action = intent.getStringExtra(ActionConstant.Notification.ACTION_KEY);
             if(LibUtils.notNullNorEmpty(action)) {
-                if(action.equals("add")) {
+                if(action.equals(ActionConstant.Notification.ACTION_VALUE_HISTORY)) {
                     //跳转到回忆页
                     mBinding.viewPager.setCurrentItem(1);
                     mBinding.bottomNavigation.setSelectedItemId(R.id.item_history);

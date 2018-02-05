@@ -8,7 +8,7 @@ import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
-import com.yazhi1992.moon.constant.NameContant;
+import com.yazhi1992.moon.constant.NameConstant;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -35,18 +35,18 @@ public class BindLoverPresenter {
             currentUser.fetchInBackground(new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject avObject, AVException e) {
-                    String number = currentUser.getString(NameContant.AVUserClass.INVITE_NUMBER);
+                    String number = currentUser.getString(NameConstant.AVUserClass.INVITE_NUMBER);
                     if(LibUtils.isNullOrEmpty(number)) {
                         number = getRandomNum(6);
                         //存入云端
                         AVUser currentUser = AVUser.getCurrentUser();
                         //存入用户表
-                        currentUser.put(NameContant.AVUserClass.INVITE_NUMBER, number);
+                        currentUser.put(NameConstant.AVUserClass.INVITE_NUMBER, number);
                         //存入bind_lover表
-                        AVObject bindLoverItemData = new AVObject(NameContant.BindLover.CLAZZ_NAME);
-                        bindLoverItemData.put(NameContant.BindLover.INVITE_NUMBER, number);
-                        bindLoverItemData.put(NameContant.BindLover.USER_ID, currentUser.getObjectId());
-                        bindLoverItemData.put(NameContant.BindLover.USER_NAME, currentUser.getUsername());
+                        AVObject bindLoverItemData = new AVObject(NameConstant.BindLover.CLAZZ_NAME);
+                        bindLoverItemData.put(NameConstant.BindLover.INVITE_NUMBER, number);
+                        bindLoverItemData.put(NameConstant.BindLover.USER_ID, currentUser.getObjectId());
+                        bindLoverItemData.put(NameConstant.BindLover.USER_NAME, currentUser.getUsername());
                         List<AVObject> objects = new ArrayList<>();
                         objects.add(currentUser);
                         objects.add(bindLoverItemData);

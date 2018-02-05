@@ -12,8 +12,10 @@ import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
-import com.yazhi1992.moon.constant.NameContant;
+import com.yazhi1992.moon.constant.NameConstant;
+import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.util.MyLog;
+import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
@@ -57,6 +59,7 @@ public class Api {
         if (e == null) {
             onResultSuc.onSuc();
         } else {
+            LibUtils.showToast(BaseApplication.getInstance(), e.getCode() + e.getMessage());
             dataCallback.onFailed(e.getCode(), e.getMessage());
         }
     }
@@ -72,18 +75,19 @@ public class Api {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //查询自己或另一半的
-        final AVQuery<AVObject> meQuery = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
-        meQuery.whereEqualTo(NameContant.LoveHistory.USER_ID, currentUser.getObjectId());
+        final AVQuery<AVObject> meQuery = new AVQuery<>(NameConstant.LoveHistory.CLAZZ_NAME);
+        meQuery.whereEqualTo(NameConstant.LoveHistory.USER_ID, currentUser.getObjectId());
 
-        final AVQuery<AVObject> loverQuery = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
-        loverQuery.whereEqualTo(NameContant.LoveHistory.USER_ID, currentUser.getString(NameContant.AVUserClass.LOVER_ID));
+        final AVQuery<AVObject> loverQuery = new AVQuery<>(NameConstant.LoveHistory.CLAZZ_NAME);
+        loverQuery.whereEqualTo(NameConstant.LoveHistory.USER_ID, currentUser.getString(NameConstant.AVUserClass.LOVER_ID));
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
-        query.include(NameContant.MemorialDay.CLAZZ_NAME);
-        query.orderByDescending(NameContant.Common.CREATE_TIME);
+        query.include(NameConstant.MemorialDay.CLAZZ_NAME);
+        query.include(NameConstant.Hope.CLAZZ_NAME);
+        query.orderByDescending(NameConstant.Common.UPDATE_TIME);
         query.limit(size);
         if (lastItemId != -1) {
-            query.whereLessThan(NameContant.LoveHistory.ID, lastItemId);
+            query.whereLessThan(NameConstant.LoveHistory.ID, lastItemId);
         }
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -104,17 +108,17 @@ public class Api {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //存到纪念日表 + 首页历史列表
-        AVObject memorialDayObj = new AVObject(NameContant.MemorialDay.CLAZZ_NAME);
-        memorialDayObj.put(NameContant.MemorialDay.TITLE, title);
-        memorialDayObj.put(NameContant.MemorialDay.TIME, time);
-        memorialDayObj.put(NameContant.MemorialDay.USER_ID, currentUser.getObjectId());
+        AVObject memorialDayObj = new AVObject(NameConstant.MemorialDay.CLAZZ_NAME);
+        memorialDayObj.put(NameConstant.MemorialDay.TITLE, title);
+        memorialDayObj.put(NameConstant.MemorialDay.TIME, time);
+        memorialDayObj.put(NameConstant.MemorialDay.USER_ID, currentUser.getObjectId());
 
-        AVObject loveHistoryObj = new AVObject(NameContant.LoveHistory.CLAZZ_NAME);
-        loveHistoryObj.put(NameContant.LoveHistory.MEMORIAL_DAY, memorialDayObj);
-        loveHistoryObj.put(NameContant.LoveHistory.USER_ID, currentUser.getObjectId());
-        loveHistoryObj.put(NameContant.LoveHistory.TYPE, NameContant.LoveHistory.TYPE_MEMORIAL_DAY);
-        loveHistoryObj.put(NameContant.LoveHistory.USER_NAME, currentUser.getUsername());
-        loveHistoryObj.put(NameContant.LoveHistory.USER_HEAD_URL, currentUser.getString(NameContant.AVUserClass.HEAD_URL));
+        AVObject loveHistoryObj = new AVObject(NameConstant.LoveHistory.CLAZZ_NAME);
+        loveHistoryObj.put(NameConstant.LoveHistory.MEMORIAL_DAY, memorialDayObj);
+        loveHistoryObj.put(NameConstant.LoveHistory.USER_ID, currentUser.getObjectId());
+        loveHistoryObj.put(NameConstant.LoveHistory.TYPE, TypeConstant.TYPE_MEMORIAL_DAY);
+        loveHistoryObj.put(NameConstant.LoveHistory.USER_NAME, currentUser.getUsername());
+        loveHistoryObj.put(NameConstant.LoveHistory.USER_HEAD_URL, currentUser.getString(NameConstant.AVUserClass.HEAD_URL));
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
         loveHistoryObj.saveInBackground(new SaveCallback() {
@@ -147,8 +151,8 @@ public class Api {
                 .concatMap(new Function<AVObject, ObservableSource<String>>() {
                     @Override
                     public ObservableSource<String> apply(AVObject bindLoverItemData) throws Exception {
-                        peerUserId[0] = bindLoverItemData.getString(NameContant.BindLover.USER_ID);
-                        return updateMyBindLover(userObjId, peerUserId[0], bindLoverItemData.getString(NameContant.BindLover.LOVER_ID));
+                        peerUserId[0] = bindLoverItemData.getString(NameConstant.BindLover.USER_ID);
+                        return updateMyBindLover(userObjId, peerUserId[0], bindLoverItemData.getString(NameConstant.BindLover.LOVER_ID));
                     }
                 })
                 .takeWhile(new Predicate<String>() {
@@ -196,15 +200,15 @@ public class Api {
         return Observable.create(new ObservableOnSubscribe<AVObject>() {
             @Override
             public void subscribe(ObservableEmitter<AVObject> e) throws Exception {
-                AVQuery<AVObject> query = new AVQuery<>(NameContant.BindLover.CLAZZ_NAME);
-                query.whereEqualTo(NameContant.BindLover.INVITE_NUMBER, inviteNum);
+                AVQuery<AVObject> query = new AVQuery<>(NameConstant.BindLover.CLAZZ_NAME);
+                query.whereEqualTo(NameConstant.BindLover.INVITE_NUMBER, inviteNum);
                 query.findInBackground(new FindCallback<AVObject>() {
                     @Override
                     public void done(List<AVObject> list, AVException exc) {
                         if (exc == null) {
                             if (list != null && list.size() > 0) {
                                 AVObject bindLoverItemData = list.get(0);
-                                String loverId = bindLoverItemData.getString(NameContant.BindLover.LOVER_ID);
+                                String loverId = bindLoverItemData.getString(NameConstant.BindLover.LOVER_ID);
                                 if (LibUtils.isNullOrEmpty(loverId) || loverId.equals(userObjId)) {
                                     e.onNext(bindLoverItemData);
                                 } else {
@@ -228,10 +232,10 @@ public class Api {
         return Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
-                AVQuery<AVObject> query = new AVQuery<>(NameContant.BindLover.CLAZZ_NAME);
-                query.whereEqualTo(NameContant.BindLover.USER_ID, userObjId);
+                AVQuery<AVObject> query = new AVQuery<>(NameConstant.BindLover.CLAZZ_NAME);
+                query.whereEqualTo(NameConstant.BindLover.USER_ID, userObjId);
                 AVObject account = query.getFirst();
-                account.put(NameContant.BindLover.LOVER_ID, loverId);
+                account.put(NameConstant.BindLover.LOVER_ID, loverId);
                 account.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(AVException exc) {
@@ -256,23 +260,23 @@ public class Api {
         return Observable.create(new ObservableOnSubscribe<BindLoverBean>() {
             @Override
             public void subscribe(ObservableEmitter<BindLoverBean> e) throws Exception {
-                AVQuery<AVObject> query = new AVQuery<>(NameContant.AVUserClass.CLAZZ_NAME);
+                AVQuery<AVObject> query = new AVQuery<>(NameConstant.AVUserClass.CLAZZ_NAME);
                 try {
                     AVObject peerUser = query.get(peerId);
                     AVUser currentUser = AVUser.getCurrentUser();
-                    currentUser.put(NameContant.AVUserClass.HAVE_LOVER, true);
-                    currentUser.put(NameContant.AVUserClass.LOVER_ID, peerUser.getObjectId());
-                    currentUser.put(NameContant.AVUserClass.LOVER_NAME, peerUser.getString(NameContant.AVUserClass.USER_NAME));
-                    currentUser.put(NameContant.AVUserClass.LOVER_HEAD_URL, peerUser.getString(NameContant.AVUserClass.HEAD_URL));
+                    currentUser.put(NameConstant.AVUserClass.HAVE_LOVER, true);
+                    currentUser.put(NameConstant.AVUserClass.LOVER_ID, peerUser.getObjectId());
+                    currentUser.put(NameConstant.AVUserClass.LOVER_NAME, peerUser.getString(NameConstant.AVUserClass.USER_NAME));
+                    currentUser.put(NameConstant.AVUserClass.LOVER_HEAD_URL, peerUser.getString(NameConstant.AVUserClass.HEAD_URL));
                     currentUser.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException exc) {
                             if (exc == null) {
                                 BindLoverBean bindLoverBean = new BindLoverBean();
                                 bindLoverBean.setBindComplete(true);
-                                bindLoverBean.setLoverHeadUrl(peerUser.getString(NameContant.AVUserClass.HEAD_URL));
+                                bindLoverBean.setLoverHeadUrl(peerUser.getString(NameConstant.AVUserClass.HEAD_URL));
                                 bindLoverBean.setLoverId(peerUser.getObjectId());
-                                bindLoverBean.setLoverName(peerUser.getString(NameContant.AVUserClass.USER_NAME));
+                                bindLoverBean.setLoverName(peerUser.getString(NameConstant.AVUserClass.USER_NAME));
                                 e.onNext(bindLoverBean);
                             } else {
                                 e.onError(new Throwable(exc.getCode() + exc.getMessage()));
@@ -323,37 +327,37 @@ public class Api {
             @Override
             public void done(AVObject avObject, AVException e) {
                 if (e == null) {
-                    if (avObject.getBoolean(NameContant.AVUserClass.HAVE_LOVER)) {
+                    if (avObject.getBoolean(NameConstant.AVUserClass.HAVE_LOVER)) {
                         CheckBindStateBean checkBindStateBean = new CheckBindStateBean(0);
-                        checkBindStateBean.setPeerObjId(avObject.getString(NameContant.AVUserClass.LOVER_ID));
+                        checkBindStateBean.setPeerObjId(avObject.getString(NameConstant.AVUserClass.LOVER_ID));
                         callback.onSuccess(checkBindStateBean);
                     } else {
                         //查询是否自己绑定了人
-                        AVQuery<AVObject> query = new AVQuery<>(NameContant.BindLover.CLAZZ_NAME);
-                        query.whereEqualTo(NameContant.BindLover.USER_ID, userId);
+                        AVQuery<AVObject> query = new AVQuery<>(NameConstant.BindLover.CLAZZ_NAME);
+                        query.whereEqualTo(NameConstant.BindLover.USER_ID, userId);
                         query.findInBackground(new FindCallback<AVObject>() {
                             @Override
                             public void done(List<AVObject> list, AVException e) {
                                 if (e == null) {
                                     if (list != null && list.size() > 0) {
                                         AVObject bindLoverItemData = list.get(0);
-                                        String loverId = bindLoverItemData.getString(NameContant.BindLover.LOVER_ID);
+                                        String loverId = bindLoverItemData.getString(NameConstant.BindLover.LOVER_ID);
                                         if (LibUtils.isNullOrEmpty(loverId)) {
                                             callback.onSuccess(new CheckBindStateBean(2));
                                         } else {
                                             //查询对方是否绑定你
-                                            AVQuery<AVObject> query = new AVQuery<>(NameContant.BindLover.CLAZZ_NAME);
-                                            query.whereEqualTo(NameContant.BindLover.USER_ID, loverId);
+                                            AVQuery<AVObject> query = new AVQuery<>(NameConstant.BindLover.CLAZZ_NAME);
+                                            query.whereEqualTo(NameConstant.BindLover.USER_ID, loverId);
                                             query.findInBackground(new FindCallback<AVObject>() {
                                                 @Override
                                                 public void done(List<AVObject> list, AVException e) {
                                                     if (e == null) {
                                                         if (list != null && list.size() > 0) {
                                                             AVObject bindLoverItemData = list.get(0);
-                                                            String loverId = bindLoverItemData.getString(NameContant.BindLover.LOVER_ID);
+                                                            String loverId = bindLoverItemData.getString(NameConstant.BindLover.LOVER_ID);
                                                             if (LibUtils.notNullNorEmpty(loverId) && loverId.equals(userId)) {
                                                                 CheckBindStateBean checkBindStateBean = new CheckBindStateBean(0);
-                                                                checkBindStateBean.setPeerObjId(bindLoverItemData.getString(NameContant.BindLover.USER_ID));
+                                                                checkBindStateBean.setPeerObjId(bindLoverItemData.getString(NameConstant.BindLover.USER_ID));
                                                                 callback.onSuccess(checkBindStateBean);
                                                             } else {
                                                                 callback.onSuccess(new CheckBindStateBean(1));
@@ -390,12 +394,10 @@ public class Api {
      * @param objId
      * @param callback
      */
-    public void deleteMemorialDay(String objId, String dayObjId, DataCallback<Boolean> callback) {
-
+    public void deleteMemorialDay(String objId, @TypeConstant.DataTypeInHistory int type, String dayObjId, DataCallback<Boolean> callback) {
         final int[] num = {2};
-
-        final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(NameContant.LoveHistory.CLAZZ_NAME);
-        loveHistoryQuery.whereEqualTo(NameContant.Common.OBJECT_ID, objId);
+        final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(NameConstant.LoveHistory.CLAZZ_NAME);
+        loveHistoryQuery.whereEqualTo(NameConstant.Common.OBJECT_ID, objId);
         loveHistoryQuery.deleteAllInBackground(new DeleteCallback() {
             @Override
             public void done(AVException e) {
@@ -406,8 +408,21 @@ public class Api {
             }
         });
 
-        final AVQuery<AVObject> dayQuery = new AVQuery<>(NameContant.MemorialDay.CLAZZ_NAME);
-        dayQuery.whereEqualTo(NameContant.Common.OBJECT_ID, dayObjId);
+        String clazzName = null;
+        switch (type) {
+            case TypeConstant.TYPE_MEMORIAL_DAY:
+                clazzName = NameConstant.MemorialDay.CLAZZ_NAME;
+                break;
+            case TypeConstant.TYPE_HOPE:
+                clazzName = NameConstant.Hope.CLAZZ_NAME;
+                break;
+            case TypeConstant.TYPE_NORMAL_TEXT:
+                break;
+            default:
+                break;
+        }
+        final AVQuery<AVObject> dayQuery = new AVQuery<>(clazzName);
+        dayQuery.whereEqualTo(NameConstant.Common.OBJECT_ID, dayObjId);
         dayQuery.deleteAllInBackground(new DeleteCallback() {
             @Override
             public void done(AVException e) {
@@ -428,17 +443,17 @@ public class Api {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //查询自己或另一半的
-        final AVQuery<AVObject> meQuery = new AVQuery<>(NameContant.MemorialDay.CLAZZ_NAME);
-        meQuery.whereEqualTo(NameContant.MemorialDay.USER_ID, currentUser.getObjectId());
+        final AVQuery<AVObject> meQuery = new AVQuery<>(NameConstant.MemorialDay.CLAZZ_NAME);
+        meQuery.whereEqualTo(NameConstant.MemorialDay.USER_ID, currentUser.getObjectId());
 
-        final AVQuery<AVObject> loverQuery = new AVQuery<>(NameContant.MemorialDay.CLAZZ_NAME);
-        loverQuery.whereEqualTo(NameContant.MemorialDay.USER_ID, currentUser.getString(NameContant.AVUserClass.LOVER_ID));
+        final AVQuery<AVObject> loverQuery = new AVQuery<>(NameConstant.MemorialDay.CLAZZ_NAME);
+        loverQuery.whereEqualTo(NameConstant.MemorialDay.USER_ID, currentUser.getString(NameConstant.AVUserClass.LOVER_ID));
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
-        query.orderByAscending(NameContant.MemorialDay.TIME);
+        query.orderByDescending(NameConstant.MemorialDay.TIME);
         query.limit(size);
         if (lastItemId != -1) {
-            query.whereLessThan(NameContant.LoveHistory.ID, lastItemId);
+            query.whereLessThan(NameConstant.LoveHistory.ID, lastItemId);
         }
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -446,7 +461,7 @@ public class Api {
                 if (e == null) {
                     List<MemorialDayBean> dataList = new ArrayList<>();
                     for (AVObject object : list) {
-                        MemorialDayBean memorialDayBean = new MemorialDayBean(object.getString(NameContant.MemorialDay.TITLE), object.getLong(NameContant.MemorialDay.TIME));
+                        MemorialDayBean memorialDayBean = new MemorialDayBean(object.getString(NameConstant.MemorialDay.TITLE), object.getLong(NameConstant.MemorialDay.TIME));
                         dataList.add(memorialDayBean);
                     }
                     callback.onSuccess(dataList);
@@ -455,5 +470,115 @@ public class Api {
                 }
             }
         });
+    }
+
+    /**
+     * 许愿
+     *
+     * @param title        标题
+     * @param level        等级
+     * @param dataCallback
+     */
+    public void addHope(String title, int level, final DataCallback<Boolean> dataCallback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        //存到心愿表 + 首页历史列表
+        AVObject hopeObj = new AVObject(NameConstant.Hope.CLAZZ_NAME);
+        hopeObj.put(NameConstant.Hope.TITLE, title);
+        hopeObj.put(NameConstant.Hope.LEVEL, level);
+        hopeObj.put(NameConstant.Hope.USER_ID, currentUser.getObjectId());
+        hopeObj.put(NameConstant.Hope.USER_NAME, currentUser.getUsername());
+        hopeObj.put(NameConstant.Hope.USER_HEAD_URL, currentUser.getString(NameConstant.AVUserClass.HEAD_URL));
+
+        AVObject loveHistoryObj = new AVObject(NameConstant.LoveHistory.CLAZZ_NAME);
+        loveHistoryObj.put(NameConstant.LoveHistory.HOPE, hopeObj);
+        loveHistoryObj.put(NameConstant.LoveHistory.USER_ID, currentUser.getObjectId());
+        loveHistoryObj.put(NameConstant.LoveHistory.TYPE, TypeConstant.TYPE_HOPE);
+        loveHistoryObj.put(NameConstant.LoveHistory.USER_NAME, currentUser.getUsername());
+        loveHistoryObj.put(NameConstant.LoveHistory.USER_HEAD_URL, currentUser.getString(NameConstant.AVUserClass.HEAD_URL));
+
+        //保存关联对象的同时，被关联的对象也会随之被保存到云端。
+        loveHistoryObj.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+            }
+        });
+    }
+
+    /**
+     * 获取愿望列表
+     *
+     * @param callback
+     */
+    public void getHopeList(int lastItemId, int size, DataCallback<List<HopeItemDataBean>> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        //查询自己或另一半的
+        final AVQuery<AVObject> meQuery = new AVQuery<>(NameConstant.Hope.CLAZZ_NAME);
+        meQuery.whereEqualTo(NameConstant.Hope.USER_ID, currentUser.getObjectId());
+
+        final AVQuery<AVObject> loverQuery = new AVQuery<>(NameConstant.Hope.CLAZZ_NAME);
+        loverQuery.whereEqualTo(NameConstant.Hope.USER_ID, currentUser.getString(NameConstant.AVUserClass.LOVER_ID));
+
+        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
+        query.addAscendingOrder(NameConstant.Hope.STATUS); //已完成排在最下面
+        query.addDescendingOrder(NameConstant.Hope.LEVEL); //等级优先级高于时间
+        query.addDescendingOrder(NameConstant.Common.CREATE_TIME);
+        query.limit(size);
+        if (lastItemId != -1) {
+            query.whereLessThan(NameConstant.Hope.ID, lastItemId);
+        }
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    List<HopeItemDataBean> dataList = new ArrayList<>();
+                    for (AVObject object : list) {
+                        HopeItemDataBean hopeData = new HopeItemDataBean(object.getString(NameConstant.Hope.TITLE), object.getInt(NameConstant.Hope.LEVEL));
+                        hopeData.setObjectId(object.getObjectId());
+                        hopeData.setUserName(object.getString(NameConstant.Hope.USER_NAME));
+                        hopeData.setUserHeadUrl(object.getString(NameConstant.Hope.USER_HEAD_URL));
+                        hopeData.setCreateTime(object.getDate(NameConstant.Common.CREATE_TIME));
+                        hopeData.setUpdateTime(object.getDate(NameConstant.Common.UPDATE_TIME));
+                        hopeData.setStatus(object.getInt(NameConstant.Hope.STATUS));
+                        dataList.add(hopeData);
+                    }
+                    callback.onSuccess(dataList);
+                } else {
+                    callback.onFailed(e.getCode(), e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * 心愿达成
+     */
+    public void finishHope(String objectId, DataCallback<Boolean> callback) {
+        AVQuery<AVObject> query = new AVQuery<>(NameConstant.Hope.CLAZZ_NAME);
+        query.getInBackground(objectId, new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        object.put(NameConstant.Hope.STATUS, 1);
+                        object.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException exc) {
+                                handleResult(exc, callback, new onResultSuc() {
+                                    @Override
+                                    public void onSuc() {
+                                        callback.onSuccess(true);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
     }
 }

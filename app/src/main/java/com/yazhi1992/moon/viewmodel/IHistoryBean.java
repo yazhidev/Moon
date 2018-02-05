@@ -1,39 +1,28 @@
 package com.yazhi1992.moon.viewmodel;
 
 import com.avos.avoscloud.AVObject;
-import com.yazhi1992.moon.constant.NameContant;
+import com.yazhi1992.moon.constant.NameConstant;
 
 /**
  * Created by zengyazhi on 2018/1/29.
  */
 
-public abstract class IHistoryBean<T> {
+public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
     private int mId;
     private String mUserName;
     private String mUserHeadUrl;
     private int mType;
     private T mData;
-    private String objectId;
 
     public IHistoryBean(AVObject loveHistoryItemData) {
-        setType(loveHistoryItemData.getInt(NameContant.LoveHistory.TYPE));
-        setId(loveHistoryItemData.getInt(NameContant.LoveHistory.ID));
-        setUserName(loveHistoryItemData.getString(NameContant.LoveHistory.USER_NAME));
-        setUserHeadUrl(loveHistoryItemData.getString(NameContant.LoveHistory.USER_HEAD_URL));
+        setType(loveHistoryItemData.getInt(NameConstant.LoveHistory.TYPE));
+        setId(loveHistoryItemData.getInt(NameConstant.LoveHistory.ID));
+        setUserName(loveHistoryItemData.getString(NameConstant.LoveHistory.USER_NAME));
+        setUserHeadUrl(loveHistoryItemData.getString(NameConstant.LoveHistory.USER_HEAD_URL));
         setObjectId(loveHistoryItemData.getObjectId());
+        setCreateTime(loveHistoryItemData.getCreatedAt());
+        setUpdateTime(loveHistoryItemData.getUpdatedAt());
         mData = transformAvObject(loveHistoryItemData);
-    }
-
-    public void setData(T data) {
-        mData = data;
-    }
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
     }
 
     abstract T transformAvObject(AVObject loveHistoryItemData);

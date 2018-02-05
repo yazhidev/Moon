@@ -1,4 +1,4 @@
-package com.yazhi1992.moon.adapter;
+package com.yazhi1992.moon.adapter.base;
 
 import me.drakeet.multitype.MultiTypeAdapter;
 
@@ -7,6 +7,7 @@ import me.drakeet.multitype.MultiTypeAdapter;
  */
 
 public class CustomMultitypeAdapter extends MultiTypeAdapter {
+
     public void remove(int position) {
         getItems().remove(position);
         notifyItemRemoved(position);

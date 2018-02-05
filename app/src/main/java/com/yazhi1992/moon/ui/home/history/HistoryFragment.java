@@ -14,16 +14,22 @@ import android.view.ViewGroup;
 
 import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.adapter.CustomMultitypeAdapter;
+import com.yazhi1992.moon.adapter.FinishedHopeInHistoryViewBinder;
+import com.yazhi1992.moon.adapter.HopeInHistoryViewBinder;
 import com.yazhi1992.moon.adapter.MemorialDayViewBinder;
+import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
+import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
-import com.yazhi1992.moon.constant.NameContant;
+import com.yazhi1992.moon.constant.NameConstant;
+import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
-import com.yazhi1992.moon.event.AddHistoryData;
+import com.yazhi1992.moon.dialog.AddDialog;
+import com.yazhi1992.moon.dialog.DeleteDialog;
+import com.yazhi1992.moon.event.AddHistoryDataEvent;
+import com.yazhi1992.moon.viewmodel.HopeItemDataWrapper;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
-import com.yazhi1992.moon.PageRouter;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,6 +38,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.List;
 
 import me.drakeet.multitype.Items;
+import me.drakeet.multitype.TypePool;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -45,6 +52,9 @@ public class HistoryFragment extends Fragment {
     private final int SIZE = 20;
     private int lastItemId = -1;
     private HistoryPresenter mPresenter = new HistoryPresenter();
+    private AddDialog mAddDialog;
+    private DeleteDialog mDeletaDialog;
+    private int mDeletePosition;
 
     @Nullable
     @Override
@@ -59,27 +69,35 @@ public class HistoryFragment extends Fragment {
 
         mMultiTypeAdapter = new CustomMultitypeAdapter();
         //纪念日
-        mMultiTypeAdapter.register(MemorialBeanWrapper.class, new MemorialDayViewBinder(new MemorialDayViewBinder.MemorialDayViewListener() {
-            @Override
-            public void onClick(int id, int position) {
-                if(id == R.id.delete) {
-                    //删除
-                    MemorialBeanWrapper data = (MemorialBeanWrapper) mItems.get(position);
-                    mPresenter.delete(data.getObjectId(), data.getData().getObjId(), new DataCallback<Boolean>() {
-                        @Override
-                        public void onSuccess(Boolean data) {
-                            mMultiTypeAdapter.remove(position);
-                        }
-
-                        @Override
-                        public void onFailed(int code, String msg) {
-                            LibUtils.showToast(getActivity(), msg);
-                        }
-                    });
-                }
-            }
-        }));
+        mMultiTypeAdapter.register(MemorialBeanWrapper.class, new MemorialDayViewBinder());
         //愿望清单
+        mMultiTypeAdapter.register(HopeItemDataWrapper.class).to(
+                new HopeInHistoryViewBinder(),
+                new FinishedHopeInHistoryViewBinder()
+        ).withClassLinker((position, hopeItemDataWrapper) -> {
+            if (hopeItemDataWrapper.getData().getStatus() == 0) {
+                //未完成
+                return HopeInHistoryViewBinder.class;
+            } else {
+                //已完成
+                return FinishedHopeInHistoryViewBinder.class;
+            }
+        });
+
+        //添加长按删除功能
+        CustomItemViewBinder.OnItemLongClickListener onItemLongClickListener = new CustomItemViewBinder.OnItemLongClickListener() {
+            @Override
+            public void onLongClick(int position) {
+                //删除弹窗
+                mDeletePosition = position;
+                showDeleteDialog();
+            }
+        };
+        TypePool typePool = mMultiTypeAdapter.getTypePool();
+        for (int i = 0; i < typePool.size(); i++) {
+            CustomItemViewBinder<?, ?> itemViewBinder = (CustomItemViewBinder<?, ?>) typePool.getItemViewBinder(i);
+            itemViewBinder.setOnLongClickListener(onItemLongClickListener);
+        }
 
         mBinding.smartRefresh.setOnRefreshListener(refreshlayout -> getDatas(false));
         mBinding.smartRefresh.setOnLoadmoreListener(refreshlayout -> getDatas(true));
@@ -107,23 +125,50 @@ public class HistoryFragment extends Fragment {
             }
         });
 
-        mBinding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PageRouter.gotoAddMemorial();
-
-                sendMsg();
-            }
-        });
+        mBinding.fab.setOnClickListener(v -> showAddDialog());
         mBinding.smartRefresh.autoRefresh();
-
     }
 
-    private Object transformData(int type, AVObject itemData) {
+    private void showDeleteDialog() {
+        if (mDeletaDialog == null) {
+            mDeletaDialog = new DeleteDialog();
+            mDeletaDialog.setOnClickDeleteListener(() -> {
+                IHistoryBean data = (IHistoryBean) mItems.get(mDeletePosition);
+                mPresenter.delete(data.getObjectId(), data.getType(), data.getData().getObjectId(), new DataCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean data) {
+                        mMultiTypeAdapter.remove(mDeletePosition);
+                    }
+
+                    @Override
+                    public void onFailed(int code, String msg) {
+                        LibUtils.showToast(getActivity(), msg);
+                    }
+                });
+            });
+        }
+        if (!mDeletaDialog.isAdded() && getActivity() != null) {
+            mDeletaDialog.show(getActivity().getFragmentManager());
+        }
+    }
+
+    private void showAddDialog() {
+        if (mAddDialog == null) {
+            mAddDialog = new AddDialog();
+        }
+        if (!mAddDialog.isAdded() && getActivity() != null) {
+            mAddDialog.show(getActivity().getFragmentManager());
+        }
+    }
+
+    private Object transformData(@TypeConstant.DataTypeInHistory int type, AVObject itemData) {
         Object data = null;
         switch (type) {
-            case NameContant.LoveHistory.TYPE_MEMORIAL_DAY:
+            case TypeConstant.TYPE_MEMORIAL_DAY:
                 data = new MemorialBeanWrapper(itemData);
+                break;
+            case TypeConstant.TYPE_HOPE:
+                data = new HopeItemDataWrapper(itemData);
                 break;
             default:
                 break;
@@ -135,9 +180,9 @@ public class HistoryFragment extends Fragment {
     private void getDatas(final boolean loadMore) {
         if (loadMore) {
             //获取末尾id
-            if(mItems.size() > 0) {
+            if (mItems.size() > 0) {
                 Object item = mItems.get(mItems.size() - 1);
-                if(item != null && item instanceof IHistoryBean) {
+                if (item != null && item instanceof IHistoryBean) {
                     lastItemId = ((IHistoryBean) item).getId();
                 }
             }
@@ -147,7 +192,7 @@ public class HistoryFragment extends Fragment {
         Api.getInstance().getLoveHistory(lastItemId, SIZE, new DataCallback<List<AVObject>>() {
             @Override
             public void onSuccess(List<AVObject> data) {
-                if(loadMore) {
+                if (loadMore) {
                     mBinding.smartRefresh.finishLoadmore();
                 } else {
                     mItems.clear();
@@ -155,7 +200,7 @@ public class HistoryFragment extends Fragment {
                 }
                 if (data.size() > 0) {
                     for (AVObject loveHistoryItemData : data) {
-                        mItems.add(transformData(loveHistoryItemData.getInt(NameContant.LoveHistory.TYPE), loveHistoryItemData));
+                        mItems.add(transformData(loveHistoryItemData.getInt(NameConstant.LoveHistory.TYPE), loveHistoryItemData));
                     }
                     mMultiTypeAdapter.notifyDataSetChanged();
                 }
@@ -164,17 +209,13 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public void onFailed(int code, String msg) {
-                if(loadMore) {
+                if (loadMore) {
                     mBinding.smartRefresh.finishLoadmore();
                 } else {
                     mBinding.smartRefresh.finishRefresh();
                 }
             }
         });
-    }
-
-    private void sendMsg() {
-
     }
 
     @Override
@@ -190,7 +231,7 @@ public class HistoryFragment extends Fragment {
     }
 
     @Subscribe
-    public void addMemorial(AddHistoryData bean) {
+    public void addMemorial(AddHistoryDataEvent bean) {
         mBinding.smartRefresh.autoRefresh();
     }
 }

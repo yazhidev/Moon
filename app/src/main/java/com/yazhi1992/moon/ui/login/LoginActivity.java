@@ -8,12 +8,13 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.BuildConfig;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
+import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.databinding.ActivityLoginBinding;
 import com.yazhi1992.moon.dialog.LoadingDialog;
 import com.yazhi1992.moon.dialog.LoadingHelper;
-import com.yazhi1992.moon.PageRouter;
+import com.yazhi1992.moon.ActivityRouter;
 
-@Route(path = PageRouter.LOGIN)
+@Route(path = ActivityRouter.LOGIN)
 public class LoginActivity extends AbsUpgrateActivity {
 
     private ActivityLoginBinding mBinding;
@@ -24,14 +25,22 @@ public class LoginActivity extends AbsUpgrateActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_login);
 
-        mBinding.igQqLogin.setOnClickListener(v -> mPresenter.loginWithQQ(this, haveLover -> {
-            LoadingHelper.getInstance().closeLoading();
-            if(haveLover) {
-                PageRouter.gotoHomePage();
-            } else {
-                PageRouter.gotoBindLover();
+        mBinding.igQqLogin.setOnClickListener(v -> mPresenter.loginWithQQ(this, new DataCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean haveLover) {
+                LoadingHelper.getInstance().closeLoading();
+                if(haveLover) {
+                    ActivityRouter.gotoHomePage();
+                } else {
+                    ActivityRouter.gotoBindLover();
+                }
+                finish();
             }
-            finish();
+
+            @Override
+            public void onFailed(int code, String msg) {
+
+            }
         }));
 
         mBinding.btn.setOnClickListener(v -> {

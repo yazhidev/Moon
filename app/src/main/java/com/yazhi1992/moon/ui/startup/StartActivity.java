@@ -7,9 +7,9 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.GetCallback;
-import com.yazhi1992.moon.PageRouter;
+import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.constant.NameContant;
+import com.yazhi1992.moon.constant.NameConstant;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.util.PushManager;
 
@@ -38,32 +38,32 @@ public class StartActivity extends AppCompatActivity {
         UserDaoUtil userDaoUtil = new UserDaoUtil();
         if(userDaoUtil.getUserDao() == null) {
             //未登录
-            PageRouter.gotoLogin();
+            ActivityRouter.gotoLogin();
             finish();
         } else {
             PushManager.getInstance().init();
             if(userDaoUtil.getUserDao().getHaveLover()) {
                 //已绑定
-                PageRouter.gotoHomePage();
+                ActivityRouter.gotoHomePage();
                 finish();
             } else {
                 AVUser.getCurrentUser().fetchInBackground(new GetCallback<AVObject>() {
                     @Override
                     public void done(AVObject object, AVException e) {
                         if(e == null) {
-                            if(object.getBoolean(NameContant.AVUserClass.HAVE_LOVER)) {
-                                userDaoUtil.updateLoveInfo(object.getString(NameContant.AVUserClass.LOVER_ID)
-                                        , object.getString(NameContant.AVUserClass.LOVER_NAME)
-                                        , object.getString(NameContant.AVUserClass.LOVER_HEAD_URL));
+                            if(object.getBoolean(NameConstant.AVUserClass.HAVE_LOVER)) {
+                                userDaoUtil.updateLoveInfo(object.getString(NameConstant.AVUserClass.LOVER_ID)
+                                        , object.getString(NameConstant.AVUserClass.LOVER_NAME)
+                                        , object.getString(NameConstant.AVUserClass.LOVER_HEAD_URL));
                                 //已绑定
-                                PageRouter.gotoHomePage();
+                                ActivityRouter.gotoHomePage();
                             } else {
                                 //未绑定
-                                PageRouter.gotoBindLover();
+                                ActivityRouter.gotoBindLover();
                             }
                         } else {
                             //异常
-                            PageRouter.gotoLogin();
+                            ActivityRouter.gotoLogin();
                         }
                         finish();
                     }

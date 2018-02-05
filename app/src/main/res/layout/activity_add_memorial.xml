@@ -10,11 +10,9 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            style="@style/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorAccent"
-            app:title="添加纪念日"
-            app:titleTextColor="@color/white"></android.support.v7.widget.Toolbar>
+            app:title="@string/add_memorial_lable"></android.support.v7.widget.Toolbar>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,6 +20,15 @@
             android:layout_below="@+id/toolbar"
             android:padding="15dp"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_memorial_title"
+                android:textColor="@color/color_5"
+                android:textSize="17sp"
+                android:gravity="center"
+                />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/titleLayout"
@@ -33,9 +40,8 @@
                     android:id="@+id/et_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/add_memorial"
+                    android:hint="@string/title_add_memorial"
                     android:imeActionId="6"
-                    android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:maxLines="1"
                     android:singleLine="true"/>
@@ -56,16 +62,12 @@
             <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
                 android:id="@+id/btn_comfirm"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/white"
-                android:padding="10dp"
-                app:rv_cornerRadius="10dp"
-                app:rv_textSize="18"
-                app:rv_text="添加"
-                app:rv_textColor="@color/white"
-                app:rv_backgroundColor="@color/theme_color"
-                app:rv_backgroundPressColor="@color/theme_color_pressed"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/loading_btn"
+                app:rv_text="@string/add_text"
                 app:layout_constraintTop_toBottomOf="@+id/datePicker"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
 
         </LinearLayout>

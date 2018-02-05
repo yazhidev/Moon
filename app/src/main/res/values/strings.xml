@@ -1,28 +1,11 @@
 <resources>
     <string name="app_name">小本本</string>
-    <string name="title_activity_login">登录</string>
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">请输入用户名</string>
-    <string name="prompt_password">请输入密码</string>
-    <string name="action_sign_in">登录</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_name">用户名不合法</string>
-    <string name="error_invalid_password">密码不合法</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">请输入用户名</string>
-    <string name="title_activity_home">月色</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
 
     <string name="upgrade_title">别来无恙</string>
     <string name="upgrade_cancel">取消</string>
     <string name="upgrade_comfirm">更新</string>
 
-    <string name="add_memorial">请输入标题</string>
+    <string name="title_add_memorial">请输入标题</string>
     <string name="error_invite_num">请确认邀请码是否正确</string>
     <string name="about_us">关于小本本</string>
     <string name="log_out">退出登录</string>
@@ -32,5 +15,60 @@
     <string name="cancel">取消</string>
     <string name="comfirm">确定</string>
 
+    <string name="hope_title_in_history">许下小心愿</string>
+    <string name="finish_hope_title_in_history">执子之手，心想事成。达成心愿</string>
+
+    <!--bind-->
+    <string name="bind_error_code">请输入正确的邀请码</string>
+    <string name="bind_error_code_peer">请输入对方的邀请码</string>
+    <string name="bind_state_suc">有情人终成眷属</string>
+    <string name="bind_state_single">已有心上人，尚在单相思</string>
+    <string name="bind_state_original">还未添加心上人\n马上拨打电话订购吧！</string>
+    <string name="bind_state_finish">来日方长，请多关照~</string>
+    <string name="bind_state_refresh">状态已更新</string>
+
+    <!--add dialog-->
+    <string name="home_add_item_title_memorial">添加纪念日</string>
+    <string name="home_add_item_title_hope">添加小心愿</string>
+
+    <!--delete dialog-->
+    <string name="delete_dialog">删除</string>
+    <string name="delete_dialog_cancel">取消</string>
+
+    <!--memorial-->
+    <string name="add_memorial_empty_title">标题不能为空</string>
+    <string name="add_memorial_lable">添加纪念日</string>
+    <string name="add_memorial_title">来日纵是千千晚星，亮过今晚月亮</string>
+    <string name="add_text">添加</string>
+
+    <!--add hope-->
+    <string name="add_hope_lable">许愿</string>
+    <string name="add_hope_title">我所有的向往都是你</string>
+    <string name="title_add_hope">请输入心愿</string>
+    <string name="add_tip_choose_level">还没有选小心心~</string>
+    <string name="add_hope_empty_title">标题不能为空</string>
+    <!--add hope-->
+
+    <string name="hope_list_title">愿望清单</string>
+    <string name="memorial_day_list_title">我怀念的</string>
+
+    <string name="memorial_after">%s已经</string>
+    <string name="memorial_belong">距离%s还有</string>
+
+    <!--notification-->
+    <string name="notification_add_memorial_title">ta 添加了纪念日</string>
+    <string name="notification_add_hope_title">ta 悄悄许了个愿望</string>
+    <string name="notification_add_memorial_content">快去瞅瞅吧~</string>
+    <string name="pushmanager_init_failed">推送初始化失败</string>
+
+    <string name="about_us_developer">Designed by D &#038; Lina in Hangzhou\nPowered by Love</string>
+
+    <string name="week_mon">星期一</string>
+    <string name="week_tue">星期二</string>
+    <string name="week_wed">星期三</string>
+    <string name="week_thu">星期四</string>
+    <string name="week_fri">星期五</string>
+    <string name="week_sat">星期六</string>
+    <string name="week_sun">星期日</string>
 
 </resources>

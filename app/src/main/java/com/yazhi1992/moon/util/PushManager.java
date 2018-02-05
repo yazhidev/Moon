@@ -4,11 +4,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.IntDef;
-import android.support.annotation.StringDef;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.view.View;
 
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -23,13 +20,12 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.addmemorialday.AddMemorialActivity;
 import com.yazhi1992.moon.ui.home.HomeActivity;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,7 +59,7 @@ public class PushManager {
                 if(e==null){
                     mClient = client;
                 } else {
-                    LibUtils.showToast(BaseApplication.getInstance(), "推送初始化失败");
+                    LibUtils.showToast(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.pushmanager_init_failed));
                 }
             }
         });
@@ -80,7 +76,7 @@ public class PushManager {
                         .setContentText(text);
 
         Intent resultIntent = new Intent(BaseApplication.getInstance().getTopActivity(), HomeActivity.class);
-        resultIntent.putExtra("action", "add");
+        resultIntent.putExtra(ActionConstant.Notification.ACTION_KEY, ActionConstant.Notification.ACTION_VALUE_HISTORY);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(BaseApplication.getInstance());
         stackBuilder.addParentStack(AddMemorialActivity.class);
@@ -104,9 +100,15 @@ public class PushManager {
                 if(message instanceof AVIMTextMessage){
                     String text = ((AVIMTextMessage) message).getText();
                     switch (text) {
-                        case ADD_MEMORIAL:
+                        case ActionConstant.ADD_MEMORIAL:
                             //对方新增纪念日
-                            PushManager.getInstance().createNotification("ta 添加了纪念日", "快去瞅瞅吧~");
+                            PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_add_memorial_title)
+                                    , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
+                            break;
+                        case ActionConstant.ADD_HOPE:
+                            //对方新增愿望
+                            PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_add_hope_title)
+                                    , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
                             break;
                         default:
                             break;
@@ -135,15 +137,9 @@ public class PushManager {
         return mClient;
     }
 
-    public static final String ADD_MEMORIAL = "add_memorial";
-
-
-    @StringDef({ADD_MEMORIAL})
-    public @interface PushAction {}
-
-    public void pushAction(@PushAction String action) {
+    public void pushAction(@ActionConstant.AddAction String action) {
         switch (action) {
-        case ADD_MEMORIAL:
+        case ActionConstant.ADD_MEMORIAL:
             postMsg(action);
             break;
         default:
@@ -152,7 +148,7 @@ public class PushManager {
     }
 
     //发消息给对方
-    private void postMsg(@PushAction String action) {
+    private void postMsg(@ActionConstant.AddAction String action) {
         getClient().createConversation(getComversationList(), action, null,
                 new AVIMConversationCreatedCallback() {
 

@@ -4,17 +4,16 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.yazhi1992.moon.PageRouter;
+import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.databinding.ActivityAddMemorialBinding;
 import com.yazhi1992.moon.dialog.DatePickerDialog;
-import com.yazhi1992.moon.event.AddHistoryData;
+import com.yazhi1992.moon.event.AddHistoryDataEvent;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.AppUtils;
 import com.yazhi1992.moon.util.PushManager;
-import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,11 +21,12 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.ParseException;
 import java.util.Date;
 
-@Route(path = PageRouter.ADD_MEMORIAL)
+@Route(path = ActivityRouter.ADD_MEMORIAL)
 public class AddMemorialActivity extends BaseActivity {
 
     Date chooseDate = new Date();
     private ActivityAddMemorialBinding mBinding;
+    private AddMemorialDayPresenter mPresenter = new AddMemorialDayPresenter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,19 +61,18 @@ public class AddMemorialActivity extends BaseActivity {
         mBinding.btnComfirm.setOnClickListener(v -> {
             String title = mBinding.etTitle.getText().toString();
             if(title.isEmpty()) {
-                mBinding.titleLayout.setError("标题不能为空");
+                mBinding.titleLayout.setError(getString(R.string.add_memorial_empty_title));
                 return;
             }
-            MemorialDayBean memorialDayBean = new MemorialDayBean(title, chooseDate.getTime());
             mBinding.btnComfirm.setLoading(true);
-            Api.getInstance().addMemorialDay(memorialDayBean.getTitle(), memorialDayBean.getTime(), new DataCallback<Boolean>() {
+            mPresenter.addMemorialDay(title, chooseDate.getTime(), new DataCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean data) {
-                    EventBus.getDefault().post(new AddHistoryData());
+                    EventBus.getDefault().post(new AddHistoryDataEvent(ActionConstant.ADD_MEMORIAL));
                     LibUtils.hideKeyboard(mBinding.etTitle);
                     mBinding.btnComfirm.setLoading(false);
                     finish();
-                    PushManager.getInstance().pushAction(PushManager.ADD_MEMORIAL);
+                    PushManager.getInstance().pushAction(ActionConstant.ADD_MEMORIAL);
                 }
 
                 @Override

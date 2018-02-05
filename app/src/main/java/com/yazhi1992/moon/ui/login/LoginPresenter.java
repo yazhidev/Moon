@@ -13,11 +13,11 @@ import com.avos.sns.SNSCallback;
 import com.avos.sns.SNSException;
 import com.avos.sns.SNSType;
 import com.yazhi1992.moon.BuildConfig;
-import com.yazhi1992.moon.constant.NameContant;
+import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.constant.NameConstant;
 import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.ui.PresenterCallback;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.json.JSONException;
@@ -30,7 +30,7 @@ import org.json.JSONObject;
 // TODO: 2018/1/28 未安装QQ状态
 public class LoginPresenter {
     private SNSType ThirdPartyType = SNSType.AVOSCloudSNSQQ;
-    private PresenterCallback<Boolean> mPresenterCallback;
+    private DataCallback<Boolean> mCallback;
     final SNSCallback myCallback = new SNSCallback() {
         @Override
         public void done(SNSBase object, SNSException e) {
@@ -46,7 +46,7 @@ public class LoginPresenter {
                                 //关联成功，已在 _User 表新增一条用户数据
                                 //修改用户名为QQ名，头像为QQ头像
                                 avUser.setUsername(nickname);
-                                avUser.put(NameContant.AVUserClass.HEAD_URL, headUrl);
+                                avUser.put(NameConstant.AVUserClass.HEAD_URL, headUrl);
                                 avUser.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(AVException e) {
@@ -55,18 +55,18 @@ public class LoginPresenter {
                                             User user = new User();
                                             user.setName(nickname);
                                             user.setHeadUrl(headUrl);
-                                            user.setInviteNumber(avUser.getString(NameContant.AVUserClass.INVITE_NUMBER));
+                                            user.setInviteNumber(avUser.getString(NameConstant.AVUserClass.INVITE_NUMBER));
                                             user.setObjectId(avUser.getObjectId());
-                                            if (LibUtils.notNullNorEmpty(avUser.getString(NameContant.AVUserClass.LOVER_ID))) {
+                                            if (LibUtils.notNullNorEmpty(avUser.getString(NameConstant.AVUserClass.LOVER_ID))) {
                                                 user.setHaveLover(true);
-                                                user.setLoverId(avUser.getString(NameContant.AVUserClass.LOVER_ID));
-                                                user.setLoverName(avUser.getString(NameContant.AVUserClass.LOVER_NAME));
-                                                user.setLoverHeadUrl(avUser.getString(NameContant.AVUserClass.LOVER_HEAD_URL));
+                                                user.setLoverId(avUser.getString(NameConstant.AVUserClass.LOVER_ID));
+                                                user.setLoverName(avUser.getString(NameConstant.AVUserClass.LOVER_NAME));
+                                                user.setLoverHeadUrl(avUser.getString(NameConstant.AVUserClass.LOVER_HEAD_URL));
                                             }
                                             new UserDaoUtil().insert(user);
 
-                                            if (mPresenterCallback != null) {
-                                                mPresenterCallback.onCallback(user.getHaveLover());
+                                            if (mCallback != null) {
+                                                mCallback.onSuccess(user.getHaveLover());
                                             }
                                         }
                                     }
@@ -96,11 +96,11 @@ public class LoginPresenter {
      * @param activity
      * @param callback true 已绑定另一半，false 未绑定
      */
-    void loginWithQQ(Activity activity, PresenterCallback<Boolean> callback) {
+    void loginWithQQ(Activity activity, DataCallback<Boolean> callback) {
         SNS.logout(activity, ThirdPartyType);
         try {
             if (callback != null) {
-                mPresenterCallback = callback;
+                mCallback = callback;
             }
             LoadingHelper.getInstance().showLoading(activity);
             SNS.setupPlatform(activity, SNSType.AVOSCloudSNSQQ, BuildConfig.QQ_ID, BuildConfig.QQ_KEY, "");

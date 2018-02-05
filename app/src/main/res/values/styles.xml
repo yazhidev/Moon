@@ -48,6 +48,17 @@
         <item name="android:background">@color/colorAccent</item>
         <item name="android:elevation">4dp</item>
         <item name="titleTextColor">@color/white</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
     </style>
 
+    <style name="loading_btn">
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="rv_cornerRadius">6dp</item>
+        <item name="rv_textSize">16</item>
+        <item name="rv_textColor">@color/white</item>
+        <item name="rv_textPressColor">@color/white</item>
+        <item name="rv_backgroundColor">@color/theme_color</item>
+        <item name="rv_backgroundPressColor">@color/theme_color_pressed</item>
+    </style>
 </resources>
