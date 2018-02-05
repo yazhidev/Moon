@@ -95,7 +95,7 @@
         <activity android:name=".ui.login.LoginActivity">
         </activity>
         <activity
-            android:name=".ui.memoriallist.MemorialListActivity"
+            android:name=".ui.memorialdaylist.MemorialDayListActivity"
             android:label="纪念日">
         </activity>
         <activity

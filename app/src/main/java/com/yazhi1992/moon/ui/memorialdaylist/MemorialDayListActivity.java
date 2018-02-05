@@ -1,4 +1,4 @@
-package com.yazhi1992.moon.ui.memoriallist;
+package com.yazhi1992.moon.ui.memorialdaylist;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.ActivityRouter;
@@ -16,11 +16,11 @@ import java.util.List;
 import me.drakeet.multitype.MultiTypeAdapter;
 
 @Route(path = ActivityRouter.MEMORIAL_LIST)
-public class MemorialListActivity extends BaseListActivity<MemorialDayBean> {
+public class MemorialDayListActivity extends BaseListActivity<MemorialDayBean> {
 
     @Override
     public void adapterRegister(MultiTypeAdapter adapter) {
-        mBinding.ry.setPadding(0, (int) LibCalcUtil.dp2px(this, 10), 0, 0);
+        mBinding.ry.setPadding(0, (int) LibCalcUtil.dp2px(this, 20), 0, 0);
         adapter.register(MemorialDayBean.class, new MemorialDayListViewBinder());
     }
 

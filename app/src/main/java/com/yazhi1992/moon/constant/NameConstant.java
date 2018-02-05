@@ -19,6 +19,7 @@ public class NameConstant {
         public static final String TITLE = "title";
         public static final String TIME = "time";
         public static final String USER_ID = "user_id";
+        public static final String LOOP = "loop"; //0 不循环，1 年循环
     }
 
     //首页列表
@@ -57,11 +58,30 @@ public class NameConstant {
     public static class Hope {
         public static final String CLAZZ_NAME = "hope";
         public static final String TITLE = "title";
-        public static final String USER_ID = "user_id";
         public static final String STATUS = "status"; //状态，0 未完成
         public static final String LEVEL = "level";
+        public static final String USER_ID = "user_id";
         public static final String USER_HEAD_URL = "user_head_url";
         public static final String USER_NAME = "username";
         public static final String ID = "id";
+    }
+
+    public static class Text {
+        public static final String CLAZZ_NAME = "single_text";
+        public static final String CONTENT = "content";
+        public static final String ID = "id";
+        public static final String USER_ID = "user_id";
+        public static final String USER_NAME = "username";
+        public static final String USER_HEAD_URL = "user_head_url";
+    }
+
+    //评论
+    public static class Comment {
+        public static final String CLAZZ_NAME = "comment";
+        public static final String CONTENT = "content";
+        public static final String ID = "id";
+        public static final String USER_ID = "user_id";
+        public static final String USER_NAME = "username";
+        public static final String USER_HEAD_URL = "user_head_url";
     }
 }

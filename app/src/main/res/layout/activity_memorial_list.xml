@@ -6,7 +6,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.yazhi1992.moon.ui.memoriallist.MemorialListActivity">
+        tools:context="com.yazhi1992.moon.ui.memorialdaylist.MemorialDayListActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

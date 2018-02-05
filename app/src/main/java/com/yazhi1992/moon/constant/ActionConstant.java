@@ -7,10 +7,11 @@ import android.support.annotation.StringDef;
  */
 
 public class ActionConstant {
+    public static final String ADD_TEXT = "add_text";
     public static final String ADD_MEMORIAL = "add_memorial";
     public static final String ADD_HOPE = "add_hope";
 
-    @StringDef({ActionConstant.ADD_MEMORIAL, ADD_HOPE})
+    @StringDef({ActionConstant.ADD_MEMORIAL, ADD_HOPE, ADD_TEXT})
     public @interface AddAction {}
 
     public static class Notification {

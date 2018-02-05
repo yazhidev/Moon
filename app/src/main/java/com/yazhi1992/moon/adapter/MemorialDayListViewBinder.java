@@ -12,6 +12,7 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibTimeUtils;
+import com.yazhi1992.yazhilib.widget.RoundView.RoundTextView;
 
 import java.util.Date;
 
@@ -33,36 +34,28 @@ public class MemorialDayListViewBinder extends CustomItemViewBinder<MemorialDayB
         String title = bean.getTitle();
         if (gapBetweenTwoDay > 0) {
             title = (String.format(BaseApplication.getInstance().getString(R.string.memorial_after), title));
-            holder.mTvTitle.setText(title);
-            holder.mTvDayNum.setText(String.valueOf(gapBetweenTwoDay));
-            holder.mLlBelong.setVisibility(View.VISIBLE);
-            holder.mLlAfter.setVisibility(View.GONE);
+            holder.mTvDayNum.getDelegate().setBackgroundColor(holder.mTvDayNum.getContext().getResources().getColor(R.color.after_day_color));
+            holder.mTvDay.getDelegate().setBackgroundColor(holder.mTvDayNum.getContext().getResources().getColor(R.color.after_day_color_deep));
         } else {
             title = String.format(BaseApplication.getInstance().getString(R.string.memorial_belong), title);
-            holder.mTvTitle2.setText(title);
-            holder.mTvDayNum2.setText(String.valueOf(gapBetweenTwoDay));
-            holder.mLlBelong.setVisibility(View.GONE);
-            holder.mLlAfter.setVisibility(View.VISIBLE);
+            holder.mTvDayNum.getDelegate().setBackgroundColor(holder.mTvDayNum.getContext().getResources().getColor(R.color.belong_day_color));
+            holder.mTvDay.getDelegate().setBackgroundColor(holder.mTvDayNum.getContext().getResources().getColor(R.color.belong_day_color_deep));
         }
+        holder.mTvTitle.setText(title);
+        holder.mTvDayNum.setText(String.valueOf(Math.abs(gapBetweenTwoDay)));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTvTitle;
-        private TextView mTvDayNum;
-        private TextView mTvTitle2;
-        private TextView mTvDayNum2;
-        private View mLlBelong;
-        private View mLlAfter;
+        private RoundTextView mTvDayNum;
+        private RoundTextView mTvDay;
 
         ViewHolder(View itemView) {
             super(itemView);
             mTvTitle = itemView.findViewById(R.id.tv_title);
             mTvDayNum = itemView.findViewById(R.id.tv_day_num);
-            mTvTitle2 = itemView.findViewById(R.id.tv_title2);
-            mTvDayNum2 = itemView.findViewById(R.id.tv_day_num2);
-            mLlBelong = itemView.findViewById(R.id.ll_belong);
-            mLlAfter = itemView.findViewById(R.id.ll_after);
+            mTvDay = itemView.findViewById(R.id.tv_day_str);
         }
     }
 }
