@@ -55,6 +55,11 @@
     <string name="memorial_after">%s已经</string>
     <string name="memorial_belong">距离%s还有</string>
 
+    <!--tip-->
+    <string name="delete_data">是否要删除该数据？</string>
+
+    <string name="finish_hope">是否已达成心愿？</string>
+
     <!--notification-->
     <string name="notification_add_memorial_title">ta 添加了纪念日</string>
     <string name="notification_add_hope_title">ta 悄悄许了个愿望</string>

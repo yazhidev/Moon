@@ -14,6 +14,7 @@ import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
 import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 import com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView;
 import com.yazhi1992.yazhilib.widget.YZRatingBar;
@@ -55,20 +56,25 @@ public class HopeInListViewBinder extends CustomItemViewBinder<HopeItemDataBean,
         holder.mBtnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.mBtnFinish.setLoading(true);
-                //标记为已完成
-                Api.getInstance().finishHope(data.getObjectId(), new DataCallback<Boolean>() {
+                TipDialogHelper.getInstance().showDialog(holder.mBtnFinish.getContext(), holder.mBtnFinish.getContext().getString(R.string.finish_hope), new TipDialogHelper.OnComfirmListener() {
                     @Override
-                    public void onSuccess(Boolean data) {
-                        holder.mBtnFinish.setLoading(false);
-                        holder.mBtnFinish.setVisibility(View.GONE);
-                        holder.mIgFinish.setVisibility(View.VISIBLE);
-                        holder.mRatingbar.setVisibility(View.GONE);
-                    }
+                    public void comfirm() {
+                        holder.mBtnFinish.setLoading(true);
+                        //标记为已完成
+                        Api.getInstance().finishHope(data.getObjectId(), new DataCallback<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean data) {
+                                holder.mBtnFinish.setLoading(false);
+                                holder.mBtnFinish.setVisibility(View.GONE);
+                                holder.mIgFinish.setVisibility(View.VISIBLE);
+                                holder.mRatingbar.setVisibility(View.GONE);
+                            }
 
-                    @Override
-                    public void onFailed(int code, String msg) {
-                        holder.mBtnFinish.setLoading(false);
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                holder.mBtnFinish.setLoading(false);
+                            }
+                        });
                     }
                 });
             }

@@ -27,6 +27,7 @@ import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
 import com.yazhi1992.moon.dialog.AddDialog;
 import com.yazhi1992.moon.dialog.DeleteDialog;
 import com.yazhi1992.moon.event.AddHistoryDataEvent;
+import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.HopeItemDataWrapper;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
@@ -134,15 +135,20 @@ public class HistoryFragment extends Fragment {
             mDeletaDialog = new DeleteDialog();
             mDeletaDialog.setOnClickDeleteListener(() -> {
                 IHistoryBean data = (IHistoryBean) mItems.get(mDeletePosition);
-                mPresenter.delete(data.getObjectId(), data.getType(), data.getData().getObjectId(), new DataCallback<Boolean>() {
+                TipDialogHelper.getInstance().showDialog(getActivity(), getString(R.string.delete_data), new TipDialogHelper.OnComfirmListener() {
                     @Override
-                    public void onSuccess(Boolean data) {
-                        mMultiTypeAdapter.remove(mDeletePosition);
-                    }
+                    public void comfirm() {
+                        mPresenter.delete(data.getObjectId(), data.getType(), data.getData().getObjectId(), new DataCallback<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean data) {
+                                mMultiTypeAdapter.remove(mDeletePosition);
+                            }
 
-                    @Override
-                    public void onFailed(int code, String msg) {
-                        LibUtils.showToast(getActivity(), msg);
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                LibUtils.showToast(getActivity(), msg);
+                            }
+                        });
                     }
                 });
             });
