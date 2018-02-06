@@ -41,7 +41,7 @@ public class StartActivity extends AppCompatActivity {
             ActivityRouter.gotoLogin();
             finish();
         } else {
-            PushManager.getInstance().init();
+            PushManager.getInstance().register();
             if(userDaoUtil.getUserDao().getHaveLover()) {
                 //已绑定
                 ActivityRouter.gotoHomePage();

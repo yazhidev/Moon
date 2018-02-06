@@ -17,6 +17,7 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.moon.util.PushManager;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -71,6 +72,7 @@ public class SetFragment extends Fragment {
                             mPresenter.logout(new DataCallback<Boolean>() {
                                 @Override
                                 public void onSuccess(Boolean data) {
+                                    PushManager.getInstance().unregister();
                                     ActivityRouter.gotoLogin();
                                     getActivity().finish();
                                 }

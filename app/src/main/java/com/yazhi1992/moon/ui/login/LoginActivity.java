@@ -13,6 +13,7 @@ import com.yazhi1992.moon.databinding.ActivityLoginBinding;
 import com.yazhi1992.moon.dialog.LoadingDialog;
 import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.ActivityRouter;
+import com.yazhi1992.moon.util.PushManager;
 
 @Route(path = ActivityRouter.LOGIN)
 public class LoginActivity extends AbsUpgrateActivity {
@@ -28,6 +29,7 @@ public class LoginActivity extends AbsUpgrateActivity {
         mBinding.igQqLogin.setOnClickListener(v -> mPresenter.loginWithQQ(this, new DataCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean haveLover) {
+                PushManager.getInstance().register();
                 LoadingHelper.getInstance().closeLoading();
                 if(haveLover) {
                     ActivityRouter.gotoHomePage();

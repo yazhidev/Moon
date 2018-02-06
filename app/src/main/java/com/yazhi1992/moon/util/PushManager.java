@@ -50,10 +50,10 @@ public class PushManager {
         return PushManagerHolder.INSTANCE;
     }
 
-    public void init() {
+    public void register() {
         //聊天登录
-        AVIMClient jerry = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
-        jerry.open(new AVIMClientCallback() {
+        AVIMClient msg = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
+        msg.open(new AVIMClientCallback() {
             @Override
             public void done(AVIMClient client, AVIMException e) {
                 if (e == null) {
@@ -65,6 +65,19 @@ public class PushManager {
         });
 
         AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
+    }
+
+    public void unregister() {
+        if(getClient() != null) {
+            getClient().close(new AVIMClientCallback() {
+                @Override
+                public void done(AVIMClient client, AVIMException e) {
+                    if (e == null) {
+                        //登出成功
+                    }
+                }
+            });
+        }
     }
 
     //创建推送
