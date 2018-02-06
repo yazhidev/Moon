@@ -68,16 +68,15 @@ public class PushManager {
     }
 
     public void unregister() {
-        if(getClient() != null) {
-            getClient().close(new AVIMClientCallback() {
-                @Override
-                public void done(AVIMClient client, AVIMException e) {
-                    if (e == null) {
-                        //登出成功
-                    }
+        if (getClient() == null) return;
+        getClient().close(new AVIMClientCallback() {
+            @Override
+            public void done(AVIMClient client, AVIMException e) {
+                if (e == null) {
+                    //登出成功
                 }
-            });
-        }
+            }
+        });
     }
 
     //创建推送
@@ -161,6 +160,7 @@ public class PushManager {
 
     //发消息给对方
     private void postMsg(@ActionConstant.AddAction String action) {
+        if (getClient() == null) return;
         getClient().createConversation(getComversationList(), action, null,
                 new AVIMConversationCreatedCallback() {
 
