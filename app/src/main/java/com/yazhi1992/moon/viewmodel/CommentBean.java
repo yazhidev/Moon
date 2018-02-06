@@ -7,12 +7,56 @@ package com.yazhi1992.moon.viewmodel;
 public class CommentBean extends IDataBean{
 
     private String mContent;
+    private long mId;
     private String mUserName;
+    private String mUserId;
     private String mReplyName;
+    private String mReplyId;
+    private String mParentId;
+
+    public static final String CONTENT = "content";
+    public static final String USER_NAME = "userName";
+    public static final String USER_ID = "userId";
+    public static final String REPLAY_NAME = "replyName";
+    public static final String REPLAY_ID = "replyId";
+    public static final String PARENT_ID = "parentId";
+    public static final String ID = "id";
 
     public CommentBean(String content, String userName) {
         mContent = content;
         mUserName = userName;
+    }
+
+    public String getParentId() {
+        return mParentId;
+    }
+
+    public void setParentId(String parentId) {
+        mParentId = parentId;
+    }
+
+    public long getId() {
+        return mId;
+    }
+
+    public void setId(long id) {
+        mId = id;
+    }
+
+    public String getUserId() {
+        return mUserId;
+    }
+
+    public void setUserId(String userId) {
+        mUserId = userId;
+    }
+
+    public String getReplyId() {
+        return mReplyId;
+    }
+
+    public void setReplyId(String replyId) {
+        mReplyId = replyId;
     }
 
     public String getUserName() {

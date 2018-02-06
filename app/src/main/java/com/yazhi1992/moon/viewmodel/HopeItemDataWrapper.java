@@ -11,12 +11,12 @@ import com.yazhi1992.moon.constant.TableConstant;
 
 public class HopeItemDataWrapper extends IHistoryBean<HopeItemDataBean> {
 
-    public HopeItemDataWrapper(HistoryBeanFromApi loveHistoryItemData) {
+    public HopeItemDataWrapper(HistoryItemDataFromApi loveHistoryItemData) {
         super(loveHistoryItemData);
     }
 
     @Override
-    HopeItemDataBean transformAvObject(HistoryBeanFromApi loveHistoryItemData) {
+    HopeItemDataBean transformAvObject(HistoryItemDataFromApi loveHistoryItemData) {
         //纪念日类型
         AVObject avObject = loveHistoryItemData.getAvObject();
         AVObject hopeItemData = avObject.getAVObject(TableConstant.LoveHistory.HOPE);

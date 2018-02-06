@@ -44,6 +44,7 @@ public class TableConstant {
         public static final String HOPE = "hope";
         public static final String USER = "user";
         public static final String HAVE_COMMENT = "have_comment";
+        public static final String COMMENT_LIST = "comment_list";
     }
 
     //绑定表

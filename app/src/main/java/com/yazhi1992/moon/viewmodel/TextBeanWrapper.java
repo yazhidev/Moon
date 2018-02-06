@@ -11,12 +11,12 @@ import com.yazhi1992.moon.constant.TableConstant;
 
 public class TextBeanWrapper extends IHistoryBean<TextBean> {
 
-    public TextBeanWrapper(HistoryBeanFromApi loveHistoryItemData) {
+    public TextBeanWrapper(HistoryItemDataFromApi loveHistoryItemData) {
         super(loveHistoryItemData);
     }
 
     @Override
-    TextBean transformAvObject(HistoryBeanFromApi loveHistoryItemData) {
+    TextBean transformAvObject(HistoryItemDataFromApi loveHistoryItemData) {
         //纪念日类型
         AVObject avObject = loveHistoryItemData.getAvObject();
         AVObject textItemData = avObject.getAVObject(TableConstant.LoveHistory.TEXT);

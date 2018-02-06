@@ -2,7 +2,8 @@ package com.yazhi1992.moon.ui.home.history;
 
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
-import com.yazhi1992.moon.viewmodel.HistoryBeanFromApi;
+import com.yazhi1992.moon.viewmodel.CommentBean;
+import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class HistoryPresenter {
 
-    public void getLoveHistory(int lastItemId, int size, final DataCallback<List<HistoryBeanFromApi>> dataCallback) {
+    public void getLoveHistory(int lastItemId, int size, final DataCallback<List<HistoryItemDataFromApi>> dataCallback) {
         Api.getInstance().getLoveHistory(lastItemId, size, dataCallback);
     }
 
@@ -20,7 +21,11 @@ public class HistoryPresenter {
         Api.getInstance().deleteHistoryData(objId, type, dayObjId, callback);
     }
 
-    public void addComment(String content, String parentObjId, String replyId, final DataCallback<Boolean> dataCallback) {
-        Api.getInstance().addComment(content, parentObjId, replyId, dataCallback);
+    public void addComment(String content, String parentObjId,final DataCallback<CommentBean> dataCallback) {
+        Api.getInstance().addComment(content, parentObjId, dataCallback);
+    }
+
+    public void replyComment(String content, String parentObjId, String peerId, String peerName, DataCallback<CommentBean> dataCallback) {
+        Api.getInstance().replyComment(content, parentObjId, peerId, peerName, dataCallback);
     }
 }

@@ -27,7 +27,8 @@ import com.yazhi1992.moon.dialog.AddDialog;
 import com.yazhi1992.moon.dialog.DeleteDialog;
 import com.yazhi1992.moon.event.AddHistoryDataEvent;
 import com.yazhi1992.moon.util.TipDialogHelper;
-import com.yazhi1992.moon.viewmodel.HistoryBeanFromApi;
+import com.yazhi1992.moon.viewmodel.CommentBean;
+import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataWrapper;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
@@ -68,6 +69,11 @@ public class HistoryFragment extends Fragment {
     private Disposable mShowBottomInpulSubscribe;
     private int mKeyBoardHeight = 0;
     private int mAddCommentPosition;
+    private int mInputType; //0添加评论，1回复
+    private String mAddCommentInput;
+    private String mReplyCommentInput;
+    private String mReplyCommentPeerId;
+    private String mReplyCommentPeerName;
 
     @Nullable
     @Override
@@ -114,10 +120,37 @@ public class HistoryFragment extends Fragment {
                 if (mShowKeyboard) {
                     LibUtils.hideKeyboard(mBinding.root);
                 } else {
-                    //弹出评论输入框
+                    //添加评论
+                    if (mAddCommentInput != null || mInputType != 0) {
+                        //缓存添加评论输入的字
+                        mReplyCommentInput = mBinding.etInput.getText().toString();
+                        mBinding.etInput.setText(mAddCommentInput == null ? "" : mAddCommentInput);
+                        mBinding.etInput.setSelection(mBinding.etInput.getText().toString().length());
+                        mAddCommentInput = null;
+                    }
+                    mBinding.etInput.setHint(getString(R.string.title_add_text));
+                    mInputType = 0;
                     mAddCommentPosition = position;
                     LibUtils.showKeyoard(getActivity(), mBinding.etInput);
                 }
+            }
+
+            @Override
+            public void onReplyComment(int position, String peerName, String peerId) {
+                if (mReplyCommentInput != null || mInputType != 1) {
+                    //缓存添加评论输入的字
+                    mAddCommentInput = mBinding.etInput.getText().toString();
+                    mBinding.etInput.setText(mReplyCommentInput == null ? "" : mReplyCommentInput);
+                    mBinding.etInput.setSelection(mBinding.etInput.getText().toString().length());
+                    mReplyCommentInput = null;
+                }
+                mInputType = 1;
+                //回复对方
+                mBinding.etInput.setHint("回复 " + peerName);
+                mAddCommentPosition = position;
+                mReplyCommentPeerId = peerId;
+                mReplyCommentPeerName = peerName;
+                LibUtils.showKeyoard(getActivity(), mBinding.etInput);
             }
         };
         TypePool typePool = mMultiTypeAdapter.getTypePool();
@@ -139,7 +172,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(mShowKeyboard) {
+                if (mShowKeyboard) {
                     LibUtils.hideKeyboard(mBinding.root);
                 }
                 if (dy > 0) {
@@ -197,19 +230,19 @@ public class HistoryFragment extends Fragment {
             public void onClick(View v) {
                 //发送评论
                 String comment = mBinding.etInput.getText().toString();
-                if(LibUtils.isNullOrEmpty(comment)) {
+                if (LibUtils.isNullOrEmpty(comment)) {
                     LibUtils.showToast(getActivity(), getString(R.string.history_comment_empty));
                     return;
                 }
                 IHistoryBean data = (IHistoryBean) mItems.get(mAddCommentPosition);
-                String replyUserId = null;
-                if(data instanceof MemorialBeanWrapper) {
-                    //如果是评论，则有对方的姓名
-                }
                 mBinding.tvSend.setLoading(true);
-                mPresenter.addComment(comment, data.getObjectId(), replyUserId, new DataCallback<Boolean>() {
+                DataCallback<CommentBean> callback = new DataCallback<CommentBean>() {
                     @Override
-                    public void onSuccess(Boolean data) {
+                    public void onSuccess(CommentBean result) {
+                        data.getCommentDatas().add(result);
+                        mMultiTypeAdapter.notifyItemChanged(mAddCommentPosition);
+
+                        LibUtils.showToast(getActivity(), getString(R.string.comment_suc));
                         mBinding.tvSend.setLoading(false);
                         mBinding.etInput.setText("");
                         LibUtils.hideKeyboard(mBinding.root);
@@ -220,12 +253,18 @@ public class HistoryFragment extends Fragment {
                         mBinding.tvSend.setLoading(false);
                         LibUtils.hideKeyboard(mBinding.root);
                     }
-                });
+                };
+                if (mInputType == 1) {
+                    //回复，则有对方的姓名
+                    mPresenter.replyComment(comment, data.getObjectId(), mReplyCommentPeerId, mReplyCommentPeerName, callback);
+                } else {
+                    mPresenter.addComment(comment, data.getObjectId(), callback);
+                }
             }
         });
     }
 
-    private Object transformData(@TypeConstant.DataTypeInHistory int type, HistoryBeanFromApi itemData) {
+    private Object transformData(@TypeConstant.DataTypeInHistory int type, HistoryItemDataFromApi itemData) {
         Object data = null;
         switch (type) {
             case TypeConstant.TYPE_MEMORIAL_DAY:
@@ -293,9 +332,9 @@ public class HistoryFragment extends Fragment {
         } else {
             lastItemId = -1;
         }
-        mPresenter.getLoveHistory(lastItemId, SIZE, new DataCallback<List<HistoryBeanFromApi>>() {
+        mPresenter.getLoveHistory(lastItemId, SIZE, new DataCallback<List<HistoryItemDataFromApi>>() {
             @Override
-            public void onSuccess(List<HistoryBeanFromApi> data) {
+            public void onSuccess(List<HistoryItemDataFromApi> data) {
                 if (loadMore) {
                     mBinding.smartRefresh.finishLoadmore();
                 } else {
@@ -303,7 +342,7 @@ public class HistoryFragment extends Fragment {
                     mBinding.smartRefresh.finishRefresh();
                 }
                 if (data.size() > 0) {
-                    for (HistoryBeanFromApi loveHistoryItemData : data) {
+                    for (HistoryItemDataFromApi loveHistoryItemData : data) {
                         mItems.add(transformData(loveHistoryItemData.getType(), loveHistoryItemData));
                     }
                     mMultiTypeAdapter.notifyDataSetChanged();

@@ -15,6 +15,8 @@
     <string name="cancel">取消</string>
     <string name="comfirm">确定</string>
 
+    <string name="delete_comment">是否删除该评论？</string>
+
     <string name="hope_title_in_history">许下小心愿</string>
     <string name="finish_hope_title_in_history">执子之手，心想事成。达成心愿</string>
 
@@ -72,6 +74,9 @@
     <string name="delete_data">是否要删除该数据？</string>
 
     <string name="finish_hope">是否已达成心愿？</string>
+
+    <string name="comment_suc">评论成功！</string>
+
 
     <!--notification-->
     <string name="notification_add_memorial_title">ta 添加了纪念日</string>

@@ -7,7 +7,7 @@
         style="@style/rl_in_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        
+
         <ImageView
             android:id="@+id/ig_user"
             style="@style/user_ig_in_history"

@@ -16,7 +16,7 @@ public abstract class CustomItemViewBinder<T, VH extends RecyclerView.ViewHolder
 
     private OnItemClickListener mOnClickListener;
     private OnItemLongClickListener mOnLongClickListener;
-    private OnItemClickCommentListener mOnItemClickCommentListener;
+    protected OnItemClickCommentListener mOnItemClickCommentListener;
 
     public interface OnItemClickListener {
         void onClick(int position);
@@ -24,6 +24,8 @@ public abstract class CustomItemViewBinder<T, VH extends RecyclerView.ViewHolder
 
     public interface OnItemClickCommentListener {
         void onClick(int position);
+
+        void onReplyComment(int position, String peerName, String peerId);
     }
 
     public interface OnItemLongClickListener {

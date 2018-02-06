@@ -45,19 +45,41 @@ public class TextInHistoryViewBinder extends CustomItemViewBinder<TextBeanWrappe
         holder.mTvTime.setText(AppUtils.getTimeForHistory(historyBean.getCreateTime()));
         holder.mTvContent.setText(textBean.getContent());
 
-        List<CommentBean> commentDatas = historyBean.getCommentDatas();
-        if (commentDatas != null && !commentDatas.isEmpty()) {
-            //评论有数据，加载评论列表
-            if (holder instanceof CommentViewHolder) {
-                CommentViewHolder holder1 = (CommentViewHolder) holder;
+
+
+        //评论有数据，加载评论列表
+        if (holder instanceof CommentViewHolder) {
+            CommentViewHolder holder1 = (CommentViewHolder) holder;
+            if (historyBean.getCommentDatas() != null && !historyBean.getCommentDatas().isEmpty()) {
                 mCommentAdapter = new CustomMultitypeAdapter();
-                mCommentAdapter.register(CommentBean.class, new CommentInHistoryViewBinder());
+                mCommentAdapter.register(CommentBean.class, new CommentInHistoryViewBinder(new CommentInHistoryViewBinder.OnCommentDeleteListener() {
+                    @Override
+                    public void onDelete(long id) {
+                        for (int i = 0; i < historyBean.getCommentDatas().size(); i++) {
+                            CommentBean commentBean = historyBean.getCommentDatas().get(i);
+                            if(commentBean.getId() == id) {
+                                historyBean.getCommentDatas().remove(i);
+                            }
+                        }
+                        getAdapter().notifyItemChanged(getPosition(holder));
+                    }
+
+                    @Override
+                    public void onReply(String peerName, String peerId) {
+                        //点击回复对方
+                        if(mOnItemClickCommentListener != null) {
+                            mOnItemClickCommentListener.onReplyComment(getPosition(holder), peerName, peerId);
+                        }
+                    }
+                }));
                 mItems = new Items();
-                mItems.addAll(commentDatas);
+                mItems.addAll(historyBean.getCommentDatas());
                 mCommentAdapter.setItems(mItems);
                 holder1.mRyComment.setVisibility(View.VISIBLE);
                 holder1.mRyComment.setAdapter(mCommentAdapter);
                 holder1.mRyComment.setLayoutManager(new LinearLayoutManager(holder1.mRyComment.getContext()));
+            } else {
+                holder1.mRyComment.setVisibility(View.GONE);
             }
         }
     }

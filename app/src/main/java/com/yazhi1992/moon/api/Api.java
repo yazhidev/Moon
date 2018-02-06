@@ -14,14 +14,21 @@ import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
+import com.yazhi1992.moon.util.AppUtils;
 import com.yazhi1992.moon.util.MyLog;
-import com.yazhi1992.moon.viewmodel.HistoryBeanFromApi;
+import com.yazhi1992.moon.viewmodel.CommentBean;
+import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -72,7 +79,7 @@ public class Api {
      * @param size         每页个数
      * @param dataCallback
      */
-    public void getLoveHistory(int lastItemId, int size, final DataCallback<List<HistoryBeanFromApi>> dataCallback) {
+    public void getLoveHistory(int lastItemId, int size, final DataCallback<List<HistoryItemDataFromApi>> dataCallback) {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //查询自己或另一半的
@@ -87,7 +94,7 @@ public class Api {
         query.include(TableConstant.MemorialDay.CLAZZ_NAME);
         query.include(TableConstant.Hope.CLAZZ_NAME);
         query.include(TableConstant.Text.CLAZZ_NAME);
-        query.orderByDescending(TableConstant.Common.UPDATE_TIME);
+        query.orderByDescending(TableConstant.Common.CREATE_TIME);
         query.limit(size);
         if (lastItemId != -1) {
             query.whereLessThan(TableConstant.LoveHistory.ID, lastItemId);
@@ -96,45 +103,12 @@ public class Api {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 handleResult(e, dataCallback, () -> {
-                    List<HistoryBeanFromApi> result = new ArrayList<>();
-                    //遍历查询每个item的评论
-//                    Observable.fromIterable(list)
-//                            .observeOn(Schedulers.io())
-//                            .
-
-                    if (list == null || list.isEmpty()) {
-                        dataCallback.onSuccess(result);
-                        return;
+                    List<HistoryItemDataFromApi> dataList = new ArrayList<>();
+                    for (AVObject object : list) {
+                        HistoryItemDataFromApi historyItemDataFromApi = new HistoryItemDataFromApi(object.getInt(TableConstant.LoveHistory.TYPE), object);
+                        dataList.add(historyItemDataFromApi);
                     }
-
-                    boolean haveComment = false;
-                    final int[] num = {0};
-                    for (int i = 0; i < list.size(); i++) {
-                        AVObject object = list.get(i);
-                        // TODO: 2018/2/6 异步回调顺序错乱
-                        // TODO: 2018/2/6 发起调用的次数不是list 的 size
-                        if (!object.getBoolean(TableConstant.LoveHistory.HAVE_COMMENT)) continue;
-                        haveComment = true;
-                        HistoryBeanFromApi historyBeanFromApi = new HistoryBeanFromApi(object.getInt(TableConstant.LoveHistory.TYPE), object);
-                        AVQuery<AVObject> commentQuery = new AVQuery<>(TableConstant.Comment.CLAZZ_NAME);
-                        commentQuery.whereEqualTo(TableConstant.Comment.PARENT, object);
-                        commentQuery.findInBackground(new FindCallback<AVObject>() {
-                            @Override
-                            public void done(List<AVObject> list, AVException e) {
-                                if (e == null) {
-                                    historyBeanFromApi.setCommentList(list);
-                                    result.add(historyBeanFromApi);
-                                    dataCallback.onSuccess(result);
-                                } else {
-                                    dataCallback.onFailed(e.getCode(), e.getMessage());
-                                }
-                            }
-                        });
-                    }
-                    if (!haveComment) {
-                        dataCallback.onSuccess(result);
-                    }
-
+                    dataCallback.onSuccess(dataList);
                 });
             }
         });
@@ -656,26 +630,91 @@ public class Api {
     /**
      * 添加评论
      */
-    public void addComment(String content, String parentObjId, String replyUserId, final DataCallback<Boolean> dataCallback) {
-        // TODO: 2018/2/6 评论后parent标记有评论，不用每个都查询
+    public void addComment(String content, String parentObjId, final DataCallback<CommentBean> dataCallback) {
+        AVObject commentItemData = AVObject.createWithoutData(TableConstant.LoveHistory.CLAZZ_NAME, parentObjId);
         AVUser currentUser = AVUser.getCurrentUser();
 
-        //保存到评论表
-        AVObject commentObj = new AVObject(TableConstant.Comment.CLAZZ_NAME);
-        commentObj.put(TableConstant.Comment.CONTENT, content);
-        commentObj.put(TableConstant.Comment.PARENT, AVObject.createWithoutData(TableConstant.LoveHistory.CLAZZ_NAME, parentObjId));
-        commentObj.put(TableConstant.Comment.USER, getUserObj(currentUser.getObjectId()));
-        if (LibUtils.notNullNorEmpty(replyUserId)) {
-            AVObject replyUser = AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, replyUserId);
-            commentObj.put(TableConstant.Comment.REPLY_USER, replyUser);
-        }
+        CommentBean commentBean = new CommentBean(content, currentUser.getUsername());
+        commentBean.setUserId(currentUser.getObjectId());
+        commentBean.setId(new Date().getTime());
+        commentBean.setParentId(parentObjId);
 
-        commentObj.saveInBackground(new SaveCallback() {
+        commentItemData.add(TableConstant.LoveHistory.COMMENT_LIST, commentBean);
+
+        commentItemData.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+                handleResult(e, dataCallback, () -> dataCallback.onSuccess(commentBean));
             }
         });
+    }
+
+    public void replyComment(String content, String parentObjId, String peerId, String peerName, final DataCallback<CommentBean> dataCallback) {
+        AVObject commentItemData = AVObject.createWithoutData(TableConstant.LoveHistory.CLAZZ_NAME, parentObjId);
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        CommentBean commentBean = new CommentBean(content, currentUser.getUsername());
+        commentBean.setUserId(currentUser.getObjectId());
+        commentBean.setId(new Date().getTime());
+        commentBean.setReplyId(peerId);
+        commentBean.setReplyName(peerName);
+        commentBean.setParentId(parentObjId);
+
+        commentItemData.add(TableConstant.LoveHistory.COMMENT_LIST, commentBean);
+
+        commentItemData.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, dataCallback, () -> dataCallback.onSuccess(commentBean));
+            }
+        });
+    }
+
+    public void deleteComment(String parentObjId, long commentId, DataCallback<Boolean> callback) {
+        AVObject object = AVObject.createWithoutData(TableConstant.LoveHistory.CLAZZ_NAME, parentObjId);
+        object.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException exc) {
+                handleResult(exc, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        //先更新数据再删除
+                        JSONArray jsonArray = avObject.getJSONArray(TableConstant.LoveHistory.COMMENT_LIST);
+                        if(jsonArray != null && jsonArray.length() > 0) {
+                            //评论有数据
+                            List<CommentBean> list = new ArrayList<>();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                try {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    if(jsonObject.getLong(CommentBean.ID) == commentId) {
+                                        continue;
+                                    }
+                                    CommentBean commentBean = new CommentBean(jsonObject.getString(CommentBean.CONTENT), jsonObject.getString(CommentBean.USER_NAME));
+                                    commentBean.setUserId(jsonObject.getString(CommentBean.USER_ID));
+                                    commentBean.setReplyName(jsonObject.getString(CommentBean.REPLAY_NAME));
+                                    commentBean.setReplyId(jsonObject.getString(CommentBean.REPLAY_ID));
+                                    commentBean.setId(jsonObject.getLong(CommentBean.ID));
+                                    commentBean.setParentId(jsonObject.getString(CommentBean.PARENT_ID));
+                                    list.add(commentBean);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            object.put(TableConstant.LoveHistory.COMMENT_LIST, list);
+                            object.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(AVException e) {
+                                    handleResult(e, callback, () -> callback.onSuccess(true));
+                                }
+                            });
+                        } else {
+                            callback.onSuccess(true);
+                        }
+                    }
+                });
+            }
+        });
+
     }
 
     private AVObject getUserObj(String objId) {
