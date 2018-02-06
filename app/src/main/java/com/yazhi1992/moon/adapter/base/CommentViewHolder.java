@@ -11,10 +11,12 @@ import com.yazhi1992.moon.R;
 
 public class CommentViewHolder extends RecyclerView.ViewHolder {
 
-    protected View mCommentView;
+    public View mCommentView;
+    public RecyclerView mRyComment;
 
     public CommentViewHolder(View itemView) {
         super(itemView);
         mCommentView = itemView.findViewById(R.id.ig_comment);
+        mRyComment = itemView.findViewById(R.id.ry_comment);
     }
 }

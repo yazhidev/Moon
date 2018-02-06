@@ -4,7 +4,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ry_comment"
+        android:visibility="gone"
+        android:background="@color/color_d"
+        android:layout_marginBottom="@dimen/comment_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
     <RelativeLayout
+        android:layout_below="@+id/ry_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

@@ -1,8 +1,8 @@
 package com.yazhi1992.moon.ui.home.history;
 
-import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.viewmodel.HistoryBeanFromApi;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class HistoryPresenter {
 
-    public void getLoveHistory(int lastItemId, int size, final DataCallback<List<AVObject>> dataCallback) {
+    public void getLoveHistory(int lastItemId, int size, final DataCallback<List<HistoryBeanFromApi>> dataCallback) {
         Api.getInstance().getLoveHistory(lastItemId, size, dataCallback);
     }
 

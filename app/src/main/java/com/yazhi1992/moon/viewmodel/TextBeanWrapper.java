@@ -11,14 +11,15 @@ import com.yazhi1992.moon.constant.TableConstant;
 
 public class TextBeanWrapper extends IHistoryBean<TextBean> {
 
-    public TextBeanWrapper(AVObject loveHistoryItemData) {
+    public TextBeanWrapper(HistoryBeanFromApi loveHistoryItemData) {
         super(loveHistoryItemData);
     }
 
     @Override
-    TextBean transformAvObject(AVObject loveHistoryItemData) {
+    TextBean transformAvObject(HistoryBeanFromApi loveHistoryItemData) {
         //纪念日类型
-        AVObject textItemData = loveHistoryItemData.getAVObject(TableConstant.LoveHistory.TEXT);
+        AVObject avObject = loveHistoryItemData.getAvObject();
+        AVObject textItemData = avObject.getAVObject(TableConstant.LoveHistory.TEXT);
         TextBean textBean = new TextBean(textItemData.getString(TableConstant.Text.CONTENT));
         textBean.setObjectId(textItemData.getObjectId());
         return textBean;

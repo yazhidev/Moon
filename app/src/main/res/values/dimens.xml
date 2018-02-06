@@ -11,5 +11,6 @@
 
     <dimen name="text_line_space">3dp</dimen>
     <dimen name="add_margin">15dp</dimen>
+    <dimen name="comment_margin">8dp</dimen>
 
 </resources>

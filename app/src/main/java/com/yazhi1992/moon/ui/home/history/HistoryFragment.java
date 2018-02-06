@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.FinishedHopeInHistoryViewBinder;
 import com.yazhi1992.moon.adapter.HopeInHistoryViewBinder;
@@ -22,13 +21,13 @@ import com.yazhi1992.moon.adapter.TextInHistoryViewBinder;
 import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
 import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
 import com.yazhi1992.moon.api.DataCallback;
-import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
 import com.yazhi1992.moon.dialog.AddDialog;
 import com.yazhi1992.moon.dialog.DeleteDialog;
 import com.yazhi1992.moon.event.AddHistoryDataEvent;
 import com.yazhi1992.moon.util.TipDialogHelper;
+import com.yazhi1992.moon.viewmodel.HistoryBeanFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataWrapper;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
@@ -226,7 +225,7 @@ public class HistoryFragment extends Fragment {
         });
     }
 
-    private Object transformData(@TypeConstant.DataTypeInHistory int type, AVObject itemData) {
+    private Object transformData(@TypeConstant.DataTypeInHistory int type, HistoryBeanFromApi itemData) {
         Object data = null;
         switch (type) {
             case TypeConstant.TYPE_MEMORIAL_DAY:
@@ -294,9 +293,9 @@ public class HistoryFragment extends Fragment {
         } else {
             lastItemId = -1;
         }
-        mPresenter.getLoveHistory(lastItemId, SIZE, new DataCallback<List<AVObject>>() {
+        mPresenter.getLoveHistory(lastItemId, SIZE, new DataCallback<List<HistoryBeanFromApi>>() {
             @Override
-            public void onSuccess(List<AVObject> data) {
+            public void onSuccess(List<HistoryBeanFromApi> data) {
                 if (loadMore) {
                     mBinding.smartRefresh.finishLoadmore();
                 } else {
@@ -304,8 +303,8 @@ public class HistoryFragment extends Fragment {
                     mBinding.smartRefresh.finishRefresh();
                 }
                 if (data.size() > 0) {
-                    for (AVObject loveHistoryItemData : data) {
-                        mItems.add(transformData(loveHistoryItemData.getInt(TableConstant.LoveHistory.TYPE), loveHistoryItemData));
+                    for (HistoryBeanFromApi loveHistoryItemData : data) {
+                        mItems.add(transformData(loveHistoryItemData.getType(), loveHistoryItemData));
                     }
                     mMultiTypeAdapter.notifyDataSetChanged();
                 }

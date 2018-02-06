@@ -43,6 +43,7 @@ public class TableConstant {
         public static final String ID = "id";
         public static final String HOPE = "hope";
         public static final String USER = "user";
+        public static final String HAVE_COMMENT = "have_comment";
     }
 
     //绑定表

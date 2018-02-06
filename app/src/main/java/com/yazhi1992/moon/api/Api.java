@@ -15,6 +15,7 @@ import com.yazhi1992.moon.api.bean.CheckBindStateBean;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.util.MyLog;
+import com.yazhi1992.moon.viewmodel.HistoryBeanFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -71,7 +72,7 @@ public class Api {
      * @param size         每页个数
      * @param dataCallback
      */
-    public void getLoveHistory(int lastItemId, int size, final DataCallback<List<AVObject>> dataCallback) {
+    public void getLoveHistory(int lastItemId, int size, final DataCallback<List<HistoryBeanFromApi>> dataCallback) {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //查询自己或另一半的
@@ -94,7 +95,47 @@ public class Api {
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-                handleResult(e, dataCallback, () -> dataCallback.onSuccess(list));
+                handleResult(e, dataCallback, () -> {
+                    List<HistoryBeanFromApi> result = new ArrayList<>();
+                    //遍历查询每个item的评论
+//                    Observable.fromIterable(list)
+//                            .observeOn(Schedulers.io())
+//                            .
+
+                    if (list == null || list.isEmpty()) {
+                        dataCallback.onSuccess(result);
+                        return;
+                    }
+
+                    boolean haveComment = false;
+                    final int[] num = {0};
+                    for (int i = 0; i < list.size(); i++) {
+                        AVObject object = list.get(i);
+                        // TODO: 2018/2/6 异步回调顺序错乱
+                        // TODO: 2018/2/6 发起调用的次数不是list 的 size
+                        if (!object.getBoolean(TableConstant.LoveHistory.HAVE_COMMENT)) continue;
+                        haveComment = true;
+                        HistoryBeanFromApi historyBeanFromApi = new HistoryBeanFromApi(object.getInt(TableConstant.LoveHistory.TYPE), object);
+                        AVQuery<AVObject> commentQuery = new AVQuery<>(TableConstant.Comment.CLAZZ_NAME);
+                        commentQuery.whereEqualTo(TableConstant.Comment.PARENT, object);
+                        commentQuery.findInBackground(new FindCallback<AVObject>() {
+                            @Override
+                            public void done(List<AVObject> list, AVException e) {
+                                if (e == null) {
+                                    historyBeanFromApi.setCommentList(list);
+                                    result.add(historyBeanFromApi);
+                                    dataCallback.onSuccess(result);
+                                } else {
+                                    dataCallback.onFailed(e.getCode(), e.getMessage());
+                                }
+                            }
+                        });
+                    }
+                    if (!haveComment) {
+                        dataCallback.onSuccess(result);
+                    }
+
+                });
             }
         });
     }
@@ -536,7 +577,7 @@ public class Api {
                         HopeItemDataBean hopeData = new HopeItemDataBean(object.getString(TableConstant.Hope.TITLE), object.getInt(TableConstant.Hope.LEVEL));
                         hopeData.setObjectId(object.getObjectId());
                         AVObject user = object.getAVObject(TableConstant.AVUserClass.CLAZZ_NAME);
-                        if(user != null) {
+                        if (user != null) {
                             hopeData.setUserName(user.getString(TableConstant.AVUserClass.USER_NAME));
                             hopeData.setUserHeadUrl(user.getString(TableConstant.AVUserClass.HEAD_URL));
                         }
@@ -587,7 +628,7 @@ public class Api {
     /**
      * 添加文本
      *
-     * @param content   内容
+     * @param content      内容
      * @param dataCallback
      */
     public void addText(String content, final DataCallback<Boolean> dataCallback) {
@@ -616,6 +657,7 @@ public class Api {
      * 添加评论
      */
     public void addComment(String content, String parentObjId, String replyUserId, final DataCallback<Boolean> dataCallback) {
+        // TODO: 2018/2/6 评论后parent标记有评论，不用每个都查询
         AVUser currentUser = AVUser.getCurrentUser();
 
         //保存到评论表
@@ -623,7 +665,7 @@ public class Api {
         commentObj.put(TableConstant.Comment.CONTENT, content);
         commentObj.put(TableConstant.Comment.PARENT, AVObject.createWithoutData(TableConstant.LoveHistory.CLAZZ_NAME, parentObjId));
         commentObj.put(TableConstant.Comment.USER, getUserObj(currentUser.getObjectId()));
-        if(LibUtils.notNullNorEmpty(replyUserId)) {
+        if (LibUtils.notNullNorEmpty(replyUserId)) {
             AVObject replyUser = AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, replyUserId);
             commentObj.put(TableConstant.Comment.REPLY_USER, replyUser);
         }

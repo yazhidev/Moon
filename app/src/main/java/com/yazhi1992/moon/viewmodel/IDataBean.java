@@ -4,6 +4,8 @@ import java.util.Date;
 
 /**
  * Created by zengyazhi on 2018/2/5.
+ *
+ * 与网络相关的数据模型的基类，都包含唯一id，创建时间、修改时间
  */
 
 public class IDataBean {

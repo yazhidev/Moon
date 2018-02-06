@@ -11,14 +11,15 @@ import com.yazhi1992.moon.constant.TableConstant;
 
 public class MemorialBeanWrapper extends IHistoryBean<MemorialDayBean> {
 
-    public MemorialBeanWrapper(AVObject loveHistoryItemData) {
+    public MemorialBeanWrapper(HistoryBeanFromApi loveHistoryItemData) {
         super(loveHistoryItemData);
     }
 
     @Override
-    MemorialDayBean transformAvObject(AVObject loveHistoryItemData) {
+    MemorialDayBean transformAvObject(HistoryBeanFromApi loveHistoryItemData) {
         //纪念日类型
-        AVObject memorialDayItemData = loveHistoryItemData.getAVObject(TableConstant.LoveHistory.MEMORIAL_DAY);
+        AVObject avObject = loveHistoryItemData.getAvObject();
+        AVObject memorialDayItemData = avObject.getAVObject(TableConstant.LoveHistory.MEMORIAL_DAY);
         MemorialDayBean memorialDayBean = new MemorialDayBean(memorialDayItemData.getString(TableConstant.MemorialDay.TITLE), memorialDayItemData.getLong(TableConstant.MemorialDay.TIME));
         memorialDayBean.setObjectId(memorialDayItemData.getObjectId());
         return memorialDayBean;
