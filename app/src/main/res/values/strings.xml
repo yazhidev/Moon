@@ -27,7 +27,10 @@
     <string name="bind_state_finish">来日方长，请多关照~</string>
     <string name="bind_state_refresh">状态已更新</string>
 
+    <string name="history_comment_empty">还没有输入内容~</string>
+
     <!--add dialog-->
+    <string name="home_add_item_title_text">添加想说的话</string>
     <string name="home_add_item_title_memorial">添加纪念日</string>
     <string name="home_add_item_title_hope">添加小心愿</string>
 
@@ -35,12 +38,13 @@
     <string name="delete_dialog">删除</string>
     <string name="delete_dialog_cancel">取消</string>
 
-    <!--memorial-->
+    <!--add memorial-->
     <string name="add_memorial_empty_title">标题不能为空</string>
     <string name="add_memorial_lable">添加纪念日</string>
     <string name="add_memorial_title">来日纵是千千晚星，亮过今晚月亮</string>
     <string name="add_text">添加</string>
     <string name="history_memorial_day">添加了纪念日</string>
+    <!--add memorial-->
 
     <!--add hope-->
     <string name="add_hope_lable">许愿</string>
@@ -49,6 +53,14 @@
     <string name="add_tip_choose_level">还没有选小心心~</string>
     <string name="add_hope_empty_title">标题不能为空</string>
     <!--add hope-->
+
+    <!--add text-->
+    <string name="add_text_lable">心声</string>
+    <string name="add_text_title">想把我唱给你听</string>
+    <string name="title_add_text">请输入想说的话</string>
+    <string name="add_text_empty">内容不能为空</string>
+    <!--add text-->
+
 
     <string name="hope_list_title">愿望清单</string>
     <string name="memorial_day_list_title">我怀念的</string>
@@ -64,6 +76,7 @@
     <!--notification-->
     <string name="notification_add_memorial_title">ta 添加了纪念日</string>
     <string name="notification_add_hope_title">ta 悄悄许了个愿望</string>
+    <string name="notification_add_text_title">ta 对你说了悄悄话</string>
     <string name="notification_add_memorial_content">快去瞅瞅吧~</string>
     <string name="pushmanager_init_failed">推送初始化失败</string>
 

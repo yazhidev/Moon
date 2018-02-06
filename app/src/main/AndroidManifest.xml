@@ -108,6 +108,8 @@
         </activity>
         <activity android:name=".ui.hopelist.HopeListActivity">
         </activity>
+        <activity android:name=".ui.addtext.AddTextActivity">
+        </activity>
     </application>
 
 </manifest>

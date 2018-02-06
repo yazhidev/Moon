@@ -30,7 +30,7 @@ ext {
 
     eventbusVersion = '3.1.1'
 
-    leancloudAvoscloudSdk = '4.6.1'
+    leancloudAvoscloudSdk = '4.6.4'
 
     multitype = '3.4.2'
 

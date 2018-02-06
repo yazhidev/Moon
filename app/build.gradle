@@ -139,9 +139,11 @@ dependencies {
 
     //LeanCould
     compile "cn.leancloud.android:avoscloud-sdk:v$rootProject.ext.leancloudAvoscloudSdk"
-    compile('cn.leancloud.android:avoscloud-push:v4.6.1@aar') { transitive = true } //IM、Push
+    compile("cn.leancloud.android:avoscloud-push:v$rootProject.ext.leancloudAvoscloudSdk@aar") {
+        transitive = true
+    } //IM、Push
     // avoscloud-sns：LeanCloud 第三方登录包
-    compile('cn.leancloud.android:avoscloud-sns:v4.6.1@aar')
+    compile("cn.leancloud.android:avoscloud-sns:v$rootProject.ext.leancloudAvoscloudSdk@aar")
     compile('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
 
     //recyclerview 多布局

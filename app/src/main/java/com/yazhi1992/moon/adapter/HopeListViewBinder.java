@@ -24,7 +24,7 @@ import com.yazhi1992.yazhilib.widget.YZRatingBar;
  *
  * 心愿列表 viewBinder
  */
-public class HopeInListViewBinder extends CustomItemViewBinder<HopeItemDataBean, HopeInListViewBinder.ViewHolder> {
+public class HopeListViewBinder extends CustomItemViewBinder<HopeItemDataBean, HopeListViewBinder.ViewHolder> {
 
     @NonNull
     @Override

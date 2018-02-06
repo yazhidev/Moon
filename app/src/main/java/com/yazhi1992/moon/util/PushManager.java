@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * Created by zengyazhi on 2018/2/4.
- *
+ * <p>
  * 推送消息给对方
  */
 
@@ -39,11 +39,11 @@ public class PushManager {
     private AVIMClient mClient;
     private String mLoverObjid;
 
-    private PushManager(){
+    private PushManager() {
     }
 
     private static class PushManagerHolder {
-        private static PushManager INSTANCE= new PushManager();
+        private static PushManager INSTANCE = new PushManager();
     }
 
     public static PushManager getInstance() {
@@ -53,10 +53,10 @@ public class PushManager {
     public void init() {
         //聊天登录
         AVIMClient jerry = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
-        jerry.open(new AVIMClientCallback(){
+        jerry.open(new AVIMClientCallback() {
             @Override
-            public void done(AVIMClient client,AVIMException e){
-                if(e==null){
+            public void done(AVIMClient client, AVIMException e) {
+                if (e == null) {
                     mClient = client;
                 } else {
                     LibUtils.showToast(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.pushmanager_init_failed));
@@ -95,9 +95,9 @@ public class PushManager {
     public static class CustomMessageHandler extends AVIMMessageHandler {
         //接收到消息后的处理逻辑
         @Override
-        public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client){
-            if(new UserDaoUtil().getUserDao() != null) {
-                if(message instanceof AVIMTextMessage){
+        public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
+            if (new UserDaoUtil().getUserDao() != null) {
+                if (message instanceof AVIMTextMessage) {
                     String text = ((AVIMTextMessage) message).getText();
                     switch (text) {
                         case ActionConstant.ADD_MEMORIAL:
@@ -110,6 +110,11 @@ public class PushManager {
                             PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_add_hope_title)
                                     , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
                             break;
+                        case ActionConstant.ADD_TEXT:
+                            //对方新增文本
+                            PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_add_text_title)
+                                    , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
+                            break;
                         default:
                             break;
                     }
@@ -117,16 +122,16 @@ public class PushManager {
             }
         }
 
-        public void onMessageReceipt(AVIMMessage message,AVIMConversation conversation,AVIMClient client){
+        public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
 
         }
     }
 
     public List<String> getComversationList() {
-        if(mLoverObjid == null) {
+        if (mLoverObjid == null) {
             mLoverObjid = new UserDaoUtil().getUserDao().getLoverId();
         }
-        if(mLoverObjid != null) {
+        if (mLoverObjid != null) {
             return Arrays.asList(mLoverObjid);
         } else {
             return null;
@@ -138,13 +143,7 @@ public class PushManager {
     }
 
     public void pushAction(@ActionConstant.AddAction String action) {
-        switch (action) {
-        case ActionConstant.ADD_MEMORIAL:
-            postMsg(action);
-            break;
-        default:
-            break;
-        }
+        postMsg(action);
     }
 
     //发消息给对方

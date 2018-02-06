@@ -23,6 +23,8 @@ public class ActivityRouter {
     public static final String ADD_HOPE = "/app/add_hope";
     //愿望列表
     public static final String HOPE_LIST = "/app/hope_list";
+    //添加文本
+    public static final String ADD_TEXT = "/app/add_text";
 
     public static void gotoAddMemorial() {
         ARouter.getInstance()
@@ -69,6 +71,12 @@ public class ActivityRouter {
     public static void gotoHopeList() {
         ARouter.getInstance()
                 .build(HOPE_LIST)
+                .navigation();
+    }
+
+    public static void gotoAddText() {
+        ARouter.getInstance()
+                .build(ADD_TEXT)
                 .navigation();
     }
 

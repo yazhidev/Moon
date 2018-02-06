@@ -11,17 +11,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.FinishedHopeInHistoryViewBinder;
 import com.yazhi1992.moon.adapter.HopeInHistoryViewBinder;
-import com.yazhi1992.moon.adapter.MemorialDayViewBinder;
+import com.yazhi1992.moon.adapter.MemorialDayInHistoryViewBinder;
+import com.yazhi1992.moon.adapter.TextInHistoryViewBinder;
 import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
 import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
-import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
-import com.yazhi1992.moon.constant.NameConstant;
+import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
 import com.yazhi1992.moon.dialog.AddDialog;
@@ -31,13 +32,21 @@ import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.HopeItemDataWrapper;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
+import com.yazhi1992.moon.viewmodel.TextBeanWrapper;
+import com.yazhi1992.yazhilib.utils.KeyBoardHeightUtil;
+import com.yazhi1992.yazhilib.utils.LibCalcUtil;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import me.drakeet.multitype.Items;
 import me.drakeet.multitype.TypePool;
 
@@ -56,6 +65,10 @@ public class HistoryFragment extends Fragment {
     private AddDialog mAddDialog;
     private DeleteDialog mDeletaDialog;
     private int mDeletePosition;
+    private boolean mShowKeyboard = false;
+    private Disposable mShowBottomInpulSubscribe;
+    private int mKeyBoardHeight = 0;
+    private int mAddCommentPosition;
 
     @Nullable
     @Override
@@ -70,7 +83,7 @@ public class HistoryFragment extends Fragment {
 
         mMultiTypeAdapter = new CustomMultitypeAdapter();
         //纪念日
-        mMultiTypeAdapter.register(MemorialBeanWrapper.class, new MemorialDayViewBinder());
+        mMultiTypeAdapter.register(MemorialBeanWrapper.class, new MemorialDayInHistoryViewBinder());
         //愿望清单
         mMultiTypeAdapter.register(HopeItemDataWrapper.class).to(
                 new HopeInHistoryViewBinder(),
@@ -84,6 +97,8 @@ public class HistoryFragment extends Fragment {
                 return FinishedHopeInHistoryViewBinder.class;
             }
         });
+        //文本
+        mMultiTypeAdapter.register(TextBeanWrapper.class, new TextInHistoryViewBinder());
 
         //添加长按删除功能
         CustomItemViewBinder.OnItemLongClickListener onItemLongClickListener = new CustomItemViewBinder.OnItemLongClickListener() {
@@ -94,10 +109,23 @@ public class HistoryFragment extends Fragment {
                 showDeleteDialog();
             }
         };
+        CustomItemViewBinder.OnItemClickCommentListener onItemClickCommentListener = new CustomItemViewBinder.OnItemClickCommentListener() {
+            @Override
+            public void onClick(int position) {
+                if (mShowKeyboard) {
+                    LibUtils.hideKeyboard(mBinding.root);
+                } else {
+                    //弹出评论输入框
+                    mAddCommentPosition = position;
+                    LibUtils.showKeyoard(getActivity(), mBinding.etInput);
+                }
+            }
+        };
         TypePool typePool = mMultiTypeAdapter.getTypePool();
         for (int i = 0; i < typePool.size(); i++) {
             CustomItemViewBinder<?, ?> itemViewBinder = (CustomItemViewBinder<?, ?>) typePool.getItemViewBinder(i);
             itemViewBinder.setOnLongClickListener(onItemLongClickListener);
+            itemViewBinder.setOnItemClickCommentListener(onItemClickCommentListener);
         }
 
         mBinding.smartRefresh.setOnRefreshListener(refreshlayout -> getDatas(false));
@@ -112,6 +140,9 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                if(mShowKeyboard) {
+                    LibUtils.hideKeyboard(mBinding.root);
+                }
                 if (dy > 0) {
                     // Scroll Down
                     if (mBinding.fab.isShown()) {
@@ -128,6 +159,89 @@ public class HistoryFragment extends Fragment {
 
         mBinding.fab.setOnClickListener(v -> showAddDialog());
         mBinding.smartRefresh.autoRefresh();
+
+        KeyBoardHeightUtil.getKeyBoardHeight(mBinding.root, new KeyBoardHeightUtil.KeyBoardHeightListener() {
+
+            @Override
+            public void onLayoutListener(int keyboardHeight, boolean isShowing) {
+                //监听屏幕尺寸变化
+                if (isShowing) {
+                    mShowKeyboard = true;
+                    mShowBottomInpulSubscribe = Observable.timer(225, TimeUnit.MILLISECONDS)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<Long>() {
+                                @Override
+                                public void accept(Long aLong) throws Exception {
+                                    mBinding.rlInput.setVisibility(View.VISIBLE);
+                                    if (mKeyBoardHeight == 0 || mKeyBoardHeight != keyboardHeight) {
+                                        mKeyBoardHeight = keyboardHeight;
+                                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mBinding.rlInput.getLayoutParams();
+                                        layoutParams.setMargins(0, 0, 0, (int) (keyboardHeight - LibCalcUtil.dp2px(getActivity(), 56))); //需减去底部tab栏高度
+                                    }
+                                    mShowBottomInpulSubscribe = null;
+                                }
+                            });
+
+                } else {
+                    mShowKeyboard = false;
+                    if (mShowBottomInpulSubscribe != null) {
+                        mShowBottomInpulSubscribe.dispose();
+                        mShowBottomInpulSubscribe = null;
+                    }
+                    mBinding.rlInput.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        mBinding.tvSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //发送评论
+                String comment = mBinding.etInput.getText().toString();
+                if(LibUtils.isNullOrEmpty(comment)) {
+                    LibUtils.showToast(getActivity(), getString(R.string.history_comment_empty));
+                    return;
+                }
+                IHistoryBean data = (IHistoryBean) mItems.get(mAddCommentPosition);
+                String replyUserId = null;
+                if(data instanceof MemorialBeanWrapper) {
+                    //如果是评论，则有对方的姓名
+                }
+                mBinding.tvSend.setLoading(true);
+                mPresenter.addComment(comment, data.getObjectId(), replyUserId, new DataCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean data) {
+                        mBinding.tvSend.setLoading(false);
+                        mBinding.etInput.setText("");
+                        LibUtils.hideKeyboard(mBinding.root);
+                    }
+
+                    @Override
+                    public void onFailed(int code, String msg) {
+                        mBinding.tvSend.setLoading(false);
+                        LibUtils.hideKeyboard(mBinding.root);
+                    }
+                });
+            }
+        });
+    }
+
+    private Object transformData(@TypeConstant.DataTypeInHistory int type, AVObject itemData) {
+        Object data = null;
+        switch (type) {
+            case TypeConstant.TYPE_MEMORIAL_DAY:
+                data = new MemorialBeanWrapper(itemData);
+                break;
+            case TypeConstant.TYPE_HOPE:
+                data = new HopeItemDataWrapper(itemData);
+                break;
+            case TypeConstant.TYPE_TEXT:
+                data = new TextBeanWrapper(itemData);
+                break;
+            default:
+                break;
+        }
+        return data;
     }
 
     private void showDeleteDialog() {
@@ -167,21 +281,6 @@ public class HistoryFragment extends Fragment {
         }
     }
 
-    private Object transformData(@TypeConstant.DataTypeInHistory int type, AVObject itemData) {
-        Object data = null;
-        switch (type) {
-            case TypeConstant.TYPE_MEMORIAL_DAY:
-                data = new MemorialBeanWrapper(itemData);
-                break;
-            case TypeConstant.TYPE_HOPE:
-                data = new HopeItemDataWrapper(itemData);
-                break;
-            default:
-                break;
-        }
-        return data;
-    }
-
     // TODO: 2018/1/25 使用 dagger 分层
     private void getDatas(final boolean loadMore) {
         if (loadMore) {
@@ -195,7 +294,7 @@ public class HistoryFragment extends Fragment {
         } else {
             lastItemId = -1;
         }
-        Api.getInstance().getLoveHistory(lastItemId, SIZE, new DataCallback<List<AVObject>>() {
+        mPresenter.getLoveHistory(lastItemId, SIZE, new DataCallback<List<AVObject>>() {
             @Override
             public void onSuccess(List<AVObject> data) {
                 if (loadMore) {
@@ -206,7 +305,7 @@ public class HistoryFragment extends Fragment {
                 }
                 if (data.size() > 0) {
                     for (AVObject loveHistoryItemData : data) {
-                        mItems.add(transformData(loveHistoryItemData.getInt(NameConstant.LoveHistory.TYPE), loveHistoryItemData));
+                        mItems.add(transformData(loveHistoryItemData.getInt(TableConstant.LoveHistory.TYPE), loveHistoryItemData));
                     }
                     mMultiTypeAdapter.notifyDataSetChanged();
                 }
@@ -240,4 +339,5 @@ public class HistoryFragment extends Fragment {
     public void addMemorial(AddHistoryDataEvent bean) {
         mBinding.smartRefresh.autoRefresh();
     }
+
 }

@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.MenuItem;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.constant.ActionConstant;
@@ -18,7 +19,6 @@ import com.yazhi1992.moon.databinding.ActivityHomeBinding;
 import com.yazhi1992.moon.ui.home.history.HistoryFragment;
 import com.yazhi1992.moon.ui.home.home.HomeFragment;
 import com.yazhi1992.moon.ui.home.set.SetFragment;
-import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import java.util.ArrayList;
@@ -76,8 +76,6 @@ public class HomeActivity extends AbsUpgrateActivity {
             }
         }
     }
-
-
 
     class HomeAdapter extends FragmentPagerAdapter {
 

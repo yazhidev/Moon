@@ -7,4 +7,9 @@
     <dimen name="fab_margin">30dp</dimen>
 
     <dimen name="history_margin">10dp</dimen>
+    <dimen name="history_input_margin">8dp</dimen>
+
+    <dimen name="text_line_space">3dp</dimen>
+    <dimen name="add_margin">15dp</dimen>
+
 </resources>

@@ -20,7 +20,6 @@
             android:id="@+id/bottomNavigation"
             app:itemTextColor="@color/bottom_nav_color"
             app:menu="@menu/bottom_menu"
-            android:layout_alignParentBottom="true"
             android:elevation="8dp"
             android:layout_width="match_parent"
             android:layout_height="56dp"></android.support.design.widget.BottomNavigationView>

@@ -10,35 +10,35 @@ import java.util.Date;
 
 public class MemorialDayBean extends IDataBean{
 
-    private String title;
-    private long time; //纪念日的时间
-    private String timeStr; //纪念日时间格式化后字符串
+    private String mTitle;
+    private long mTime; //纪念日的时间
+    private String mTimeStr; //纪念日时间格式化后字符串
 
     public MemorialDayBean(String title, long time) {
-        this.title = title;
-        this.time = time;
-        this.timeStr = AppUtils.getTimeStrForMemorialDay(new Date(time));
+        this.mTitle = title;
+        this.mTime = time;
+        this.mTimeStr = AppUtils.getTimeStrForMemorialDay(new Date(time));
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.mTitle = title;
     }
 
     public long getTime() {
-        return time;
+        return mTime;
     }
 
     public void setTime(long time) {
-        this.time = time;
-        this.timeStr = AppUtils.getTimeStrForMemorialDay(new Date(time));
+        this.mTime = time;
+        this.mTimeStr = AppUtils.getTimeStrForMemorialDay(new Date(time));
     }
 
     public String getTimeStr() {
-        return timeStr;
+        return mTimeStr;
     }
 
 }

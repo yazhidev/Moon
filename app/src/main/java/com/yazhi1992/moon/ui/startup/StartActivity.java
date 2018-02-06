@@ -9,7 +9,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.GetCallback;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.constant.NameConstant;
+import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.util.PushManager;
 
@@ -51,10 +51,10 @@ public class StartActivity extends AppCompatActivity {
                     @Override
                     public void done(AVObject object, AVException e) {
                         if(e == null) {
-                            if(object.getBoolean(NameConstant.AVUserClass.HAVE_LOVER)) {
-                                userDaoUtil.updateLoveInfo(object.getString(NameConstant.AVUserClass.LOVER_ID)
-                                        , object.getString(NameConstant.AVUserClass.LOVER_NAME)
-                                        , object.getString(NameConstant.AVUserClass.LOVER_HEAD_URL));
+                            if(object.getBoolean(TableConstant.AVUserClass.HAVE_LOVER)) {
+                                userDaoUtil.updateLoveInfo(object.getString(TableConstant.AVUserClass.LOVER_ID)
+                                        , object.getString(TableConstant.AVUserClass.LOVER_NAME)
+                                        , object.getString(TableConstant.AVUserClass.LOVER_HEAD_URL));
                                 //已绑定
                                 ActivityRouter.gotoHomePage();
                             } else {

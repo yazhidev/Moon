@@ -52,10 +52,11 @@ public class AddDialog extends DialogFragment {
         AddItemViewBinder addItemViewBinder = new AddItemViewBinder();
         addItemViewBinder.setOnClickListener(position -> {
             AddItemBean bean = (AddItemBean) mItems.get(position);
-            handleAction(bean.getAcction());
+            handleAction(bean.getAction());
         });
         mAdapter.register(AddItemBean.class, addItemViewBinder);
         mItems = new Items();
+        mItems.add(new AddItemBean(ActionConstant.ADD_TEXT, getString(R.string.home_add_item_title_text)));
         mItems.add(new AddItemBean(ActionConstant.ADD_MEMORIAL, getString(R.string.home_add_item_title_memorial)));
         mItems.add(new AddItemBean(ActionConstant.ADD_HOPE, getString(R.string.home_add_item_title_hope)));
         mAdapter.setItems(mItems);
@@ -64,7 +65,7 @@ public class AddDialog extends DialogFragment {
         mBinding.ry.setLayoutManager(new LinearLayoutManager(view.getContext()));
     }
 
-    private void handleAction(String action) {
+    private void handleAction(@ActionConstant.AddAction String action) {
         switch (action) {
             case ActionConstant.ADD_MEMORIAL:
                 ActivityRouter.gotoAddMemorial();
@@ -72,6 +73,10 @@ public class AddDialog extends DialogFragment {
                 break;
             case ActionConstant.ADD_HOPE:
                 ActivityRouter.gotoAddHope();
+                dismiss();
+                break;
+            case ActionConstant.ADD_TEXT:
+                ActivityRouter.gotoAddText();
                 dismiss();
                 break;
             default:

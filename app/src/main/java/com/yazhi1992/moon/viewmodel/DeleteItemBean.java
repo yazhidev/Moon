@@ -8,8 +8,8 @@ import android.support.annotation.StringDef;
 
 public class DeleteItemBean {
 
-    private String acction;
-    private String title;
+    private String mAction;
+    private String mTitle;
 
     public static final String DELETE = "delete";
     public static final String CANCEL = "CANCEL";
@@ -19,23 +19,23 @@ public class DeleteItemBean {
     }
 
     public DeleteItemBean(@DeleteDialogAction String action, String title) {
-        this.acction = action;
-        this.title = title;
+        this.mAction = action;
+        this.mTitle = title;
     }
 
-    public String getAcction() {
-        return acction;
+    public String getAction() {
+        return mAction;
     }
 
-    public void setAcction(String acction) {
-        this.acction = acction;
+    public void setAction(String action) {
+        this.mAction = action;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.mTitle = title;
     }
 }

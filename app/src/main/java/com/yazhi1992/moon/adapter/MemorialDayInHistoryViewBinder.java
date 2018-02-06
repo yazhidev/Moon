@@ -1,7 +1,6 @@
 package com.yazhi1992.moon.adapter;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.adapter.base.CommentViewHolder;
 import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
 import com.yazhi1992.moon.util.AppUtils;
@@ -23,12 +23,12 @@ import java.util.Date;
 /**
  * Created by zengyazhi on 2018/1/23.
  */
-public class MemorialDayViewBinder extends CustomItemViewBinder<MemorialBeanWrapper, MemorialDayViewBinder.ViewHolder> {
+public class MemorialDayInHistoryViewBinder extends CustomItemViewBinder<MemorialBeanWrapper, MemorialDayInHistoryViewBinder.ViewHolder> {
 
     @NonNull
     @Override
     protected ViewHolder onCreateViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-        View root = inflater.inflate(R.layout.item_memorial_day, parent, false);
+        View root = inflater.inflate(R.layout.item_memorial_day_in_history, parent, false);
         return new ViewHolder(root);
     }
 
@@ -54,7 +54,7 @@ public class MemorialDayViewBinder extends CustomItemViewBinder<MemorialBeanWrap
         holder.mTvDayNum.setText(String.valueOf(Math.abs(gapBetweenTwoDay)));
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends CommentViewHolder {
 
         private final TextView mTvName;
         private final ImageView mIgUser;

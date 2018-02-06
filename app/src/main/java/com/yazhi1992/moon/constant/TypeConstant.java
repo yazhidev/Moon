@@ -10,10 +10,10 @@ import android.support.annotation.IntDef;
 
 public class TypeConstant {
 
-    public static final int TYPE_NORMAL_TEXT = 0; //文本
+    public static final int TYPE_TEXT = 0; //文本
     public static final int TYPE_MEMORIAL_DAY = 1; //纪念日
     public static final int TYPE_HOPE = 2; //心愿
 
-    @IntDef({TYPE_NORMAL_TEXT, TYPE_MEMORIAL_DAY, TYPE_HOPE})
+    @IntDef({TYPE_TEXT, TYPE_MEMORIAL_DAY, TYPE_HOPE})
     public @interface DataTypeInHistory{}
 }

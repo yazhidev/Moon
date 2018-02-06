@@ -1,7 +1,7 @@
 package com.yazhi1992.moon.viewmodel;
 
 import com.avos.avoscloud.AVObject;
-import com.yazhi1992.moon.constant.NameConstant;
+import com.yazhi1992.moon.constant.TableConstant;
 
 /**
  * Created by zengyazhi on 2018/1/29.
@@ -18,8 +18,8 @@ public class MemorialBeanWrapper extends IHistoryBean<MemorialDayBean> {
     @Override
     MemorialDayBean transformAvObject(AVObject loveHistoryItemData) {
         //纪念日类型
-        AVObject memorialDayItemData = loveHistoryItemData.getAVObject(NameConstant.LoveHistory.MEMORIAL_DAY);
-        MemorialDayBean memorialDayBean = new MemorialDayBean(memorialDayItemData.getString(NameConstant.MemorialDay.TITLE), memorialDayItemData.getLong(NameConstant.MemorialDay.TIME));
+        AVObject memorialDayItemData = loveHistoryItemData.getAVObject(TableConstant.LoveHistory.MEMORIAL_DAY);
+        MemorialDayBean memorialDayBean = new MemorialDayBean(memorialDayItemData.getString(TableConstant.MemorialDay.TITLE), memorialDayItemData.getLong(TableConstant.MemorialDay.TIME));
         memorialDayBean.setObjectId(memorialDayItemData.getObjectId());
         return memorialDayBean;
     }

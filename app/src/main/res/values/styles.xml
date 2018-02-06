@@ -61,4 +61,45 @@
         <item name="rv_backgroundColor">@color/theme_color</item>
         <item name="rv_backgroundPressColor">@color/theme_color_pressed</item>
     </style>
+
+    <!--首页布局-->
+
+    <style name="user_ig_in_history">
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">50dp</item>
+    </style>
+
+    <style name="rl_in_history">
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingRight">15dp</item>
+    </style>
+
+    <style name="user_name_in_history">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="content_in_history">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginTop">@dimen/history_margin</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="add_top_text">
+        <item name="android:textColor">@color/color_5</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:layout_marginTop">20dp</item>
+    </style>
+
+    <style name="comment_in_history">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <!--首页布局-->
+
 </resources>

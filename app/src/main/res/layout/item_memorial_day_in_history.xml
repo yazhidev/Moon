@@ -4,17 +4,13 @@
 
     <com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/rl_in_history"
         android:layout_width="match_parent"
-        app:rv_backgroundPressColor="@color/white_pressed"
-        android:paddingLeft="15dp"
-        android:paddingBottom="15dp"
         android:layout_height="wrap_content">
         
         <ImageView
             android:id="@+id/ig_user"
-            android:layout_marginTop="15dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            style="@style/user_ig_in_history"
             tool:src="@mipmap/ic_launcher"
             />
 
@@ -22,35 +18,29 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/gray"
             android:layout_alignTop="@+id/ig_user"
             android:layout_toRightOf="@+id/ig_user"
-            android:layout_marginLeft="10dp"
-            android:textSize="18sp"
+            style="@style/user_name_in_history"
             />
 
         <TextView
             android:id="@+id/tv_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/history_memorial_day"
+            android:layout_alignLeft="@+id/tv_name"
             android:layout_below="@+id/tv_name"
-            android:textColor="@color/black"
+            android:text="@string/history_memorial_day"
             android:layout_toRightOf="@+id/ig_user"
-            android:layout_marginTop="@dimen/history_margin"
-            android:layout_marginLeft="10dp"
-            android:textSize="15sp"
+            style="@style/content_in_history"
             />
 
         <LinearLayout
             android:id="@+id/ll_time"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/history_margin"
             android:layout_alignLeft="@+id/tv_type"
             android:layout_below="@+id/tv_type"
-            android:layout_marginRight="15dp"
             android:layout_height="36dp">
 
             <com.yazhi1992.yazhilib.widget.RoundView.RoundTextView
@@ -76,7 +66,6 @@
                 android:gravity="center"
                 android:textSize="16sp"
                 android:textColor="@color/white"
-                app:rv_backgroundColor="@color/belong_day_color"
                 android:layout_width="0dp"
                 android:textStyle="bold"
                 android:layout_height="match_parent"/>
@@ -89,23 +78,18 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textSize="16sp"
-                app:rv_backgroundColor="@color/belong_day_color_deep"
                 android:textColor="@color/white"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"/>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <include
             android:layout_alignLeft="@+id/ll_time"
             android:layout_below="@+id/ll_time"
-            android:layout_marginTop="@dimen/history_margin"
-            android:textSize="12sp"
-            android:text=""
-            />
+            layout="@layout/include_history_comment"
+            style="@style/comment_in_history"
+            ></include>
 
     </com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout>
 </layout>

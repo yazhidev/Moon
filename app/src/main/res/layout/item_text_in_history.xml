@@ -24,41 +24,18 @@
             />
 
         <TextView
-            android:id="@+id/tv_type"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/finish_hope_title_in_history"
+            android:lineSpacingExtra="5dp"
             android:layout_below="@+id/tv_name"
             android:layout_alignLeft="@+id/tv_name"
             style="@style/content_in_history"
             />
 
-        <com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout
-            android:id="@+id/rl_hope"
-            android:layout_alignLeft="@+id/tv_type"
-            android:layout_below="@+id/tv_type"
-            app:rv_backgroundColor="@color/color_e"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="@dimen/history_margin"
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:lineSpacingExtra="3dp"
-                android:textColor="@color/color_3"
-                android:text=""
-                />
-
-        </com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout>
-
         <include
-            android:layout_alignLeft="@+id/rl_hope"
-            android:layout_below="@+id/rl_hope"
+            android:layout_alignLeft="@+id/tv_content"
+            android:layout_below="@+id/tv_content"
             layout="@layout/include_history_comment"
             style="@style/comment_in_history"
             ></include>

@@ -6,23 +6,23 @@ package com.yazhi1992.moon.viewmodel;
 
 public class HopeItemDataBean extends IDataBean{
 
-    private String title;
-    private int level; //等级
+    private String mTitle;
+    private int mLevel; //等级
     private String mUserName;
     private String mUserHeadUrl;
-    private int status; //0未完成，1已完成
+    private int mStatus; //0未完成，1已完成
 
     public HopeItemDataBean(String title, int level) {
-        this.title = title;
-        this.level = level;
+        this.mTitle = title;
+        this.mLevel = level;
     }
 
     public int getStatus() {
-        return status;
+        return mStatus;
     }
 
     public void setStatus(int status) {
-        this.status = status;
+        this.mStatus = status;
     }
 
     public String getUserName() {
@@ -42,18 +42,18 @@ public class HopeItemDataBean extends IDataBean{
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.mTitle = title;
     }
 
     public int getLevel() {
-        return level;
+        return mLevel;
     }
 
     public void setLevel(int level) {
-        this.level = level;
+        this.mLevel = level;
     }
 }

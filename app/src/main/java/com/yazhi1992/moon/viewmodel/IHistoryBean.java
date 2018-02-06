@@ -1,7 +1,7 @@
 package com.yazhi1992.moon.viewmodel;
 
 import com.avos.avoscloud.AVObject;
-import com.yazhi1992.moon.constant.NameConstant;
+import com.yazhi1992.moon.constant.TableConstant;
 
 /**
  * Created by zengyazhi on 2018/1/29.
@@ -15,13 +15,16 @@ public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
     private T mData;
 
     public IHistoryBean(AVObject loveHistoryItemData) {
-        setType(loveHistoryItemData.getInt(NameConstant.LoveHistory.TYPE));
-        setId(loveHistoryItemData.getInt(NameConstant.LoveHistory.ID));
-        setUserName(loveHistoryItemData.getString(NameConstant.LoveHistory.USER_NAME));
-        setUserHeadUrl(loveHistoryItemData.getString(NameConstant.LoveHistory.USER_HEAD_URL));
+        setType(loveHistoryItemData.getInt(TableConstant.LoveHistory.TYPE));
+        setId(loveHistoryItemData.getInt(TableConstant.LoveHistory.ID));
         setObjectId(loveHistoryItemData.getObjectId());
         setCreateTime(loveHistoryItemData.getCreatedAt());
         setUpdateTime(loveHistoryItemData.getUpdatedAt());
+        AVObject user = loveHistoryItemData.getAVObject(TableConstant.LoveHistory.USER);
+        if(user != null) {
+            setUserName(user.getString(TableConstant.AVUserClass.USER_NAME));
+            setUserHeadUrl(user.getString(TableConstant.AVUserClass.HEAD_URL));
+        }
         mData = transformAvObject(loveHistoryItemData);
     }
 

@@ -8,27 +8,27 @@ import com.yazhi1992.moon.constant.ActionConstant;
 
 public class AddItemBean {
 
-    private String acction;
-    private String title;
+    private @ActionConstant.AddAction String mAction;
+    private String mTitle;
 
     public AddItemBean(@ActionConstant.AddAction String action, String title) {
-        this.acction = action;
-        this.title = title;
+        this.mAction = action;
+        this.mTitle = title;
     }
 
-    public String getAcction() {
-        return acction;
+    public String getAction() {
+        return mAction;
     }
 
-    public void setAcction(String acction) {
-        this.acction = acction;
+    public void setAction(@ActionConstant.AddAction String action) {
+        this.mAction = action;
     }
 
     public String getTitle() {
-        return title;
+        return mTitle;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.mTitle = title;
     }
 }

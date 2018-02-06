@@ -17,6 +17,10 @@ public class HistoryPresenter {
     }
 
     public void delete(String objId, int type, String dayObjId, DataCallback<Boolean> callback) {
-        Api.getInstance().deleteMemorialDay(objId, type, dayObjId, callback);
+        Api.getInstance().deleteHistoryData(objId, type, dayObjId, callback);
+    }
+
+    public void addComment(String content, String parentObjId, String replyId, final DataCallback<Boolean> dataCallback) {
+        Api.getInstance().addComment(content, parentObjId, replyId, dataCallback);
     }
 }

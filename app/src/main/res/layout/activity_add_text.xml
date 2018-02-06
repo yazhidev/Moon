@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.yazhi1992.moon.ui.addtext.AddTextActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/toolbar"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:title="@string/add_text_lable"></android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/add_top_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_text_title"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            />
+
+        <EditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_margin="@dimen/add_margin"
+            android:gravity="top|left"
+            android:hint="@string/title_add_text"
+            android:imeActionId="6"
+            android:imeOptions="actionUnspecified"
+            android:background="@null"
+            android:lineSpacingExtra="@dimen/text_line_space"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"/>
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
+            android:id="@+id/btn_add"
+            style="@style/loading_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_title"
+            app:rv_text="@string/add_text"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

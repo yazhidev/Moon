@@ -1,7 +1,6 @@
 package com.yazhi1992.moon.adapter;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.adapter.base.CommentViewHolder;
 import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
 import com.yazhi1992.moon.util.AppUtils;
@@ -38,7 +38,7 @@ public class HopeInHistoryViewBinder extends CustomItemViewBinder<HopeItemDataWr
         holder.mTvTitle.setText(hopeBean.getTitle());
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends CommentViewHolder {
 
         private YZRatingBar mRatingbar;
         private final TextView mTvName;
