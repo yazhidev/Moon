@@ -16,8 +16,8 @@
     <color name="gray">#555555</color>
     <color name="white_pressed">#dddddd</color>
 
-    <color name="belong_day_color">#5aa0eb</color>
-    <color name="belong_day_color_deep">#4584ca</color>
+    <color name="belong_day_color">#2196F3</color>
+    <color name="belong_day_color_deep">#1E88E5</color>
     <color name="after_day_color">#ed9846</color>
     <color name="after_day_color_deep">#e57a3a</color>
 

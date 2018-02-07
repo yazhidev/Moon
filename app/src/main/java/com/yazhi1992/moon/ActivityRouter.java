@@ -13,6 +13,8 @@ public class ActivityRouter {
     public static final String ADD_MEMORIAL = "/app/add_memorial";
     //纪念日列表
     public static final String MEMORIAL_LIST = "/app/memorial_list";
+    //纪念日详情
+    public static final String MEMORIAL_DAY_DETAIL = "/app/memorial_day_detail";
     //登录
     public static final String LOGIN = "/app/login";
     //绑定另一半
@@ -25,6 +27,12 @@ public class ActivityRouter {
     public static final String HOPE_LIST = "/app/hope_list";
     //添加文本
     public static final String ADD_TEXT = "/app/add_text";
+
+    public static class KeyName {
+        public static final String TITLE_KEY = "title";
+        public static final String TIME_KEY = "time";
+
+    }
 
     public static void gotoAddMemorial() {
         ARouter.getInstance()
@@ -77,6 +85,14 @@ public class ActivityRouter {
     public static void gotoAddText() {
         ARouter.getInstance()
                 .build(ADD_TEXT)
+                .navigation();
+    }
+
+    public static void gotoMemorialDayDetail(String title, long time) {
+        ARouter.getInstance()
+                .build(MEMORIAL_DAY_DETAIL)
+                .withString(KeyName.TITLE_KEY, title)
+                .withLong(KeyName.TIME_KEY, time)
                 .navigation();
     }
 

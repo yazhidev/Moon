@@ -110,6 +110,8 @@
         </activity>
         <activity android:name=".ui.addtext.AddTextActivity">
         </activity>
+        <activity android:name=".ui.memorialdaydetail.MemorialDayDetailActivity">
+        </activity>
     </application>
 
 </manifest>

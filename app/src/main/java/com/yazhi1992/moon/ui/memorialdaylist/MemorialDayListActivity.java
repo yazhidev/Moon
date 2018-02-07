@@ -4,6 +4,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.MemorialDayListViewBinder;
+import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
@@ -21,7 +22,15 @@ public class MemorialDayListActivity extends BaseListActivity<MemorialDayBean> {
     @Override
     public void adapterRegister(MultiTypeAdapter adapter) {
         mBinding.ry.setPadding(0, (int) LibCalcUtil.dp2px(this, 20), 0, 0);
-        adapter.register(MemorialDayBean.class, new MemorialDayListViewBinder());
+        MemorialDayListViewBinder memorialDayListViewBinder = new MemorialDayListViewBinder();
+        memorialDayListViewBinder.setOnClickListener(new CustomItemViewBinder.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                MemorialDayBean bean = (MemorialDayBean) adapter.getItems().get(position);
+                ActivityRouter.gotoMemorialDayDetail(bean.getTitle(), bean.getTime());
+            }
+        });
+        adapter.register(MemorialDayBean.class, memorialDayListViewBinder);
     }
 
     @Override
