@@ -8,7 +8,7 @@
         android:id="@+id/ry_comment"
         android:visibility="gone"
         android:paddingTop="@dimen/comment_item_margin"
-        android:background="@color/color_d"
+        android:background="@color/color_f3"
         android:layout_marginBottom="@dimen/comment_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>

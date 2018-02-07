@@ -36,8 +36,8 @@
         <include
             android:layout_alignLeft="@+id/tv_content"
             android:layout_below="@+id/tv_content"
-            layout="@layout/include_history_comment"
             style="@style/comment_in_history"
+            layout="@layout/include_history_comment"
             ></include>
 
     </com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout>
