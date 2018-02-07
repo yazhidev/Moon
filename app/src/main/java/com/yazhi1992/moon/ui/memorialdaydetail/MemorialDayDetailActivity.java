@@ -1,7 +1,9 @@
 package com.yazhi1992.moon.ui.memorialdaydetail;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -46,8 +48,12 @@ public class MemorialDayDetailActivity extends BaseActivity {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.toolbar.getLayoutParams();
         layoutParams.setMargins(0, StatusBarUtils.getStatusBarHeight(this), 0, 0);
         mBinding.toolbar.setTitle(getString(R.string.memorial_day_detail_title));
-        mBinding.toolbar.getBackground().setAlpha(0);
-
+        // 获取Drawable对象
+        Drawable mDrawable = ContextCompat.getDrawable(this, R.drawable.bad);
+        // 设置Drawable的透明度
+        mDrawable.setAlpha(0);
+        // 给Toolbar设置背景图
+        mBinding.toolbar.setBackgroundDrawable(mDrawable);
         initToolBar(mBinding.toolbar);
 
         Date date = new Date(mTime);
