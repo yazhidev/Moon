@@ -22,6 +22,10 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initStatusBar();
+    }
+
+    protected void initStatusBar() {
         StatusBarUtils.with(this)
                 .setColor(getResources().getColor(R.color.colorAccent))
                 .init();
