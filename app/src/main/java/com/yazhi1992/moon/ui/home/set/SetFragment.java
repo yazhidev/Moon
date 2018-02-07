@@ -59,7 +59,6 @@ public class SetFragment extends Fragment {
         });
 
         mBinding.btnHopeList.setOnClickListener(v -> {
-            ActivityRouter.gotoHopeList();
         });
 
         mBinding.btnLogout.setOnClickListener(v -> {
@@ -91,7 +90,7 @@ public class SetFragment extends Fragment {
             ActivityRouter.gotoAboutUs();
         });
 
-        mBinding.btnMemorialDay.setOnClickListener(v -> ActivityRouter.gotoMemorialList());
+//        mBinding.btnMemorialDay.setOnClickListener(v -> );
 
     }
 

@@ -102,6 +102,7 @@
             android:layout_margin="15dp"
             android:layout_marginBottom="8dp"
             android:text="纪念日列表"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/btn_about_us"
             tools:layout_editor_absoluteX="15dp"/>
 
@@ -113,6 +114,7 @@
             android:layout_margin="15dp"
             android:layout_marginBottom="8dp"
             android:text="心愿列表"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/btn_memorial_day"
             tools:layout_editor_absoluteX="15dp"/>
 

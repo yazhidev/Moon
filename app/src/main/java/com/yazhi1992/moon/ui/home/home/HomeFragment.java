@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
 
@@ -36,9 +37,11 @@ public class HomeFragment extends Fragment {
         Glide.with(view.getContext()).load(URL)
                 .into(mBinding.ig);
 
-        mBinding.ig.setOnClickListener(v -> {
-
+        mBinding.llHopeDayList.setOnClickListener(v -> {
+            ActivityRouter.gotoHopeList();
         });
+
+        mBinding.llMemorialDayList.setOnClickListener(v -> ActivityRouter.gotoMemorialList());
     }
 
 }

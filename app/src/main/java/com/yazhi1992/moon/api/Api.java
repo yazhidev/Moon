@@ -14,7 +14,6 @@ import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
-import com.yazhi1992.moon.util.AppUtils;
 import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
@@ -91,9 +90,9 @@ public class Api {
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
         query.include(TableConstant.LoveHistory.USER);
-        query.include(TableConstant.MemorialDay.CLAZZ_NAME);
-        query.include(TableConstant.Hope.CLAZZ_NAME);
-        query.include(TableConstant.Text.CLAZZ_NAME);
+        query.include(TableConstant.LoveHistory.MEMORIAL_DAY);
+        query.include(TableConstant.LoveHistory.HOPE);
+        query.include(TableConstant.LoveHistory.TEXT);
         query.orderByDescending(TableConstant.Common.CREATE_TIME);
         query.limit(size);
         if (lastItemId != -1) {
@@ -537,7 +536,7 @@ public class Api {
         query.addAscendingOrder(TableConstant.Hope.STATUS); //已完成排在最下面
         query.addDescendingOrder(TableConstant.Hope.LEVEL); //等级优先级高于时间
         query.addDescendingOrder(TableConstant.Common.CREATE_TIME);
-        query.include(TableConstant.AVUserClass.CLAZZ_NAME);
+        query.include(TableConstant.Hope.USER);
         query.limit(size);
         if (lastItemId != -1) {
             query.whereLessThan(TableConstant.Hope.ID, lastItemId);
@@ -550,7 +549,7 @@ public class Api {
                     for (AVObject object : list) {
                         HopeItemDataBean hopeData = new HopeItemDataBean(object.getString(TableConstant.Hope.TITLE), object.getInt(TableConstant.Hope.LEVEL));
                         hopeData.setObjectId(object.getObjectId());
-                        AVObject user = object.getAVObject(TableConstant.AVUserClass.CLAZZ_NAME);
+                        AVObject user = object.getAVObject(TableConstant.Hope.USER);
                         if (user != null) {
                             hopeData.setUserName(user.getString(TableConstant.AVUserClass.USER_NAME));
                             hopeData.setUserHeadUrl(user.getString(TableConstant.AVUserClass.HEAD_URL));
