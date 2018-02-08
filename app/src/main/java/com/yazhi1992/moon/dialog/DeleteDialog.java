@@ -53,7 +53,7 @@ public class DeleteDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         mAdapter = new CustomMultitypeAdapter();
         DeleteItemViewBinder deketeItemViewBinder = new DeleteItemViewBinder();
-        deketeItemViewBinder.setOnClickListener(position -> {
+        deketeItemViewBinder.setOnItemClickListener(position -> {
             //删除
             DeleteItemBean bean = (DeleteItemBean) mItems.get(position);
             handleAction(bean.getAction());

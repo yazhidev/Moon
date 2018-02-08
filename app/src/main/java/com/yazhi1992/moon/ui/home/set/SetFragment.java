@@ -90,7 +90,7 @@ public class SetFragment extends Fragment {
             ActivityRouter.gotoAboutUs();
         });
 
-//        mBinding.btnMemorialDay.setOnClickListener(v -> );
+//        mBinding.btnMemorialDay.setOnItemClickListener(v -> );
 
     }
 

@@ -24,7 +24,7 @@ public class MemorialDayListActivity extends BaseListActivity<MemorialDayBean> {
         mBinding.ry.setPadding(0, (int) LibCalcUtil.dp2px(this, 20), 0, 0);
         MemorialDayListViewBinder memorialDayListViewBinder = new MemorialDayListViewBinder();
         // TODO: 2018/2/8 点击时背景颜色异常
-        memorialDayListViewBinder.setOnClickListener(new CustomItemViewBinder.OnItemClickListener() {
+        memorialDayListViewBinder.setOnItemClickListener(new CustomItemViewBinder.OnItemClickListener() {
             @Override
             public void onClick(int position) {
                 MemorialDayBean bean = (MemorialDayBean) adapter.getItems().get(position);

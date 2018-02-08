@@ -477,6 +477,7 @@ public class Api {
                     List<MemorialDayBean> dataList = new ArrayList<>();
                     for (AVObject object : list) {
                         MemorialDayBean memorialDayBean = new MemorialDayBean(object.getString(TableConstant.MemorialDay.TITLE), object.getLong(TableConstant.MemorialDay.TIME));
+                        memorialDayBean.setObjectId(object.getObjectId());
                         dataList.add(memorialDayBean);
                     }
                     callback.onSuccess(dataList);

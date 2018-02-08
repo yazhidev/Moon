@@ -50,7 +50,7 @@ public class AddDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         mAdapter = new CustomMultitypeAdapter();
         AddItemViewBinder addItemViewBinder = new AddItemViewBinder();
-        addItemViewBinder.setOnClickListener(position -> {
+        addItemViewBinder.setOnItemClickListener(position -> {
             AddItemBean bean = (AddItemBean) mItems.get(position);
             handleAction(bean.getAction());
         });

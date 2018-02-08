@@ -73,14 +73,4 @@ public class TableConstant {
         public static final String ID = "id";
         public static final String USER = "user";
     }
-
-    //评论表
-    public static class Comment {
-        public static final String CLAZZ_NAME = "comment";
-        public static final String CONTENT = "content";
-        public static final String ID = "id";
-        public static final String USER = "user";
-        public static final String PARENT = "parent";
-        public static final String REPLY_USER = "reply_user";
-    }
 }

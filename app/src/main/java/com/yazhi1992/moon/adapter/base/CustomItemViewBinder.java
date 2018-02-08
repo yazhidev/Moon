@@ -32,11 +32,11 @@ public abstract class CustomItemViewBinder<T, VH extends RecyclerView.ViewHolder
         void onLongClick(int position);
     }
 
-    public void setOnClickListener(OnItemClickListener onClickListener) {
+    public void setOnItemClickListener(OnItemClickListener onClickListener) {
         mOnClickListener = onClickListener;
     }
 
-    public void setOnLongClickListener(OnItemLongClickListener onLongClickListener) {
+    public void setOnItemLongClickListener(OnItemLongClickListener onLongClickListener) {
         mOnLongClickListener = onLongClickListener;
     }
 

@@ -114,6 +114,22 @@ public class HistoryFragment extends Fragment {
                 showDeleteDialog();
             }
         };
+        CustomItemViewBinder.OnItemClickListener onItemClickListener = new CustomItemViewBinder.OnItemClickListener() {
+
+            @Override
+            public void onClick(int position) {
+                //跳转内容详情页
+                IHistoryBean obj = (IHistoryBean) mItems.get(position);
+                int type = obj.getType();
+                switch (type) {
+                case TypeConstant.TYPE_MEMORIAL_DAY:
+//                    ActivityRouter.gotoMemorialDayDetail();
+                    break;
+                default:
+                    break;
+                }
+            }
+        };
         CustomItemViewBinder.OnItemClickCommentListener onItemClickCommentListener = new CustomItemViewBinder.OnItemClickCommentListener() {
             @Override
             public void onClick(int position) {
@@ -156,7 +172,8 @@ public class HistoryFragment extends Fragment {
         TypePool typePool = mMultiTypeAdapter.getTypePool();
         for (int i = 0; i < typePool.size(); i++) {
             CustomItemViewBinder<?, ?> itemViewBinder = (CustomItemViewBinder<?, ?>) typePool.getItemViewBinder(i);
-            itemViewBinder.setOnLongClickListener(onItemLongClickListener);
+            itemViewBinder.setOnItemClickListener(onItemClickListener);
+            itemViewBinder.setOnItemLongClickListener(onItemLongClickListener);
             itemViewBinder.setOnItemClickCommentListener(onItemClickCommentListener);
         }
 

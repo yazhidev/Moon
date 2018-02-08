@@ -29,12 +29,19 @@ public class ActivityRouter {
     public static final String ADD_TEXT = "/app/add_text";
 
     public static class KeyName {
+        public static final String OBJECT_ID_KEY = "objectid";
         public static final String TITLE_KEY = "title";
         public static final String TIME_KEY = "time";
 
     }
 
     public static void gotoAddMemorial() {
+        ARouter.getInstance()
+                .build(ADD_MEMORIAL)
+                .navigation();
+    }
+
+    public static void gotoEditMemorial() {
         ARouter.getInstance()
                 .build(ADD_MEMORIAL)
                 .navigation();
