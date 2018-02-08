@@ -9,6 +9,7 @@ import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.ui.base.BaseListActivity;
+import com.yazhi1992.moon.util.EditDataHelper;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibCalcUtil;
 
@@ -27,7 +28,8 @@ public class MemorialDayListActivity extends BaseListActivity<MemorialDayBean> {
             @Override
             public void onClick(int position) {
                 MemorialDayBean bean = (MemorialDayBean) adapter.getItems().get(position);
-                ActivityRouter.gotoMemorialDayDetail(bean.getTitle(), bean.getTime());
+                EditDataHelper.getInstance().saveData(bean);
+                ActivityRouter.gotoMemorialDayDetail();
             }
         });
         adapter.register(MemorialDayBean.class, memorialDayListViewBinder);
@@ -35,7 +37,7 @@ public class MemorialDayListActivity extends BaseListActivity<MemorialDayBean> {
 
     @Override
     public void onClickAddData() {
-        ActivityRouter.gotoAddMemorial();
+        ActivityRouter.gotoAddMemorial(true);
     }
 
     @Override

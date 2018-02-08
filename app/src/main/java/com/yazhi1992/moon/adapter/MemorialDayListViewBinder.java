@@ -23,19 +23,6 @@ public class MemorialDayListViewBinder extends DataBindingViewBinder<MemorialDay
     @Override
     protected void BindViewHolder(@NonNull DatabindingViewHolder holder, @NonNull MemorialDayBean memorialBean) {
         super.BindViewHolder(holder, memorialBean);
-        ItemMemorialDayListBinding binding = (ItemMemorialDayListBinding) holder.getBinding();
-        int gapBetweenTwoDay = LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(memorialBean.getTime()));
-        String finalTitle = memorialBean.getTitle();
-        if (gapBetweenTwoDay > 0) {
-            finalTitle = (String.format(BaseApplication.getInstance().getString(R.string.memorial_after), finalTitle));
-            binding.tvDayNum.getDelegate().setBackgroundColor(binding.tvDayNum.getContext().getResources().getColor(R.color.after_day_color));
-            binding.tvDayStr.getDelegate().setBackgroundColor(binding.tvDayStr.getContext().getResources().getColor(R.color.after_day_color_deep));
-        } else {
-            finalTitle = String.format(BaseApplication.getInstance().getString(R.string.memorial_belong), finalTitle);
-            binding.tvDayNum.getDelegate().setBackgroundColor(binding.tvDayNum.getContext().getResources().getColor(R.color.belong_day_color));
-            binding.tvDayStr.getDelegate().setBackgroundColor(binding.tvDayStr.getContext().getResources().getColor(R.color.belong_day_color_deep));
-        }
-        memorialBean.setFinalTitle(finalTitle);
     }
 
 }

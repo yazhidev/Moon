@@ -18,7 +18,7 @@ public class HistoryPresenter {
     }
 
     public void delete(String objId, int type, String dayObjId, DataCallback<Boolean> callback) {
-        Api.getInstance().deleteHistoryData(objId, type, dayObjId, callback);
+        Api.getInstance().deleteMemorialDayData(objId, type, dayObjId, callback);
     }
 
     public void addComment(String content, String parentObjId,final DataCallback<CommentBean> dataCallback) {

@@ -14,16 +14,21 @@ import android.view.WindowManager;
 
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.DialogDatePickerBinding;
+import com.yazhi1992.moon.util.AppUtils;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by zengyazhi on 2018/1/23.
- *
+ * <p>
  * 日期选择弹窗
  */
 
 public class DatePickerDialog extends DialogFragment {
 
     private DialogDatePickerBinding mBinding;
+    private long mTime;
 
     @Nullable
     @Override
@@ -64,9 +69,29 @@ public class DatePickerDialog extends DialogFragment {
                 dismiss();
             }
         });
+
+        if (mTime != 0) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date(mTime));
+            mBinding.datePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
+        }
     }
 
     public void show(FragmentManager manager) {
+        manager.executePendingTransactions();
+        if (!isAdded()) {
+            show(manager, DatePickerDialog.class.getName());
+        }
+    }
+
+    /**
+     * 修改日期，原来就带了时间
+     *
+     * @param manager
+     * @param time
+     */
+    public void show(FragmentManager manager, long time) {
+        mTime = time;
         manager.executePendingTransactions();
         if (!isAdded()) {
             show(manager, DatePickerDialog.class.getName());
@@ -82,6 +107,7 @@ public class DatePickerDialog extends DialogFragment {
     public interface Comfirmlistener {
         /**
          * 点击确定
+         *
          * @param timeStr 返回日期字符串格式 yyyy-MM-dd
          */
         void comfirm(String timeStr);

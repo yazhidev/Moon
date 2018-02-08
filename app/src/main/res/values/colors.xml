@@ -8,6 +8,8 @@
     <color name="white">#ffffff</color>
     <color name="transparent">#ffffffff</color>
     <color name="black">#000000</color>
+    <color name="red">#ea575c</color>
+    <color name="red_pressed">#ef5350</color>
     <color name="color_f3">#f3f3f3</color>
     <color name="color_3">#333333</color>
     <color name="color_5">#555555</color>

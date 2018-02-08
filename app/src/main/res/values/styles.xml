@@ -62,6 +62,17 @@
         <item name="rv_backgroundPressColor">@color/theme_color_pressed</item>
     </style>
 
+    <style name="loading_delete_btn">
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="rv_cornerRadius">6dp</item>
+        <item name="rv_textSize">16</item>
+        <item name="rv_textColor">@color/white</item>
+        <item name="rv_textPressColor">@color/white</item>
+        <item name="rv_backgroundColor">@color/red</item>
+        <item name="rv_backgroundPressColor">@color/red_pressed</item>
+    </style>
+
     <!--首页布局-->
 
     <style name="user_ig_in_history">

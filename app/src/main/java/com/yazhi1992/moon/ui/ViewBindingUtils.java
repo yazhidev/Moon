@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.yazhilib.widget.RoundView.RoundTextView;
 
 import java.util.Date;
 
@@ -25,6 +26,11 @@ public class ViewBindingUtils {
     @BindingAdapter("history_time")
     public static void transformTimeForHistory(TextView tv, Date time) {
         tv.setText(AppUtils.getTimeForHistory(time));
+    }
+
+    @BindingAdapter("rv_backgroundColor")
+    public static void rv_backgroundColor(RoundTextView tv, int color) {
+        tv.getDelegate().setBackgroundColor(color);
     }
 
 //    public static void transformTimeForMemorialDayInHistory(TextView tv, long time) {

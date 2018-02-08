@@ -76,6 +76,7 @@
                 android:textColor="@color/white"
                 android:layout_width="0dp"
                 android:textStyle="bold"
+                app:rv_backgroundColor="@{item.mData.mGapBetweenTwoDay > 0 ? @color/after_day_color : @color/belong_day_color}"
                 android:layout_height="match_parent"/>
 
             <com.yazhi1992.yazhilib.widget.RoundView.RoundTextView
@@ -88,6 +89,7 @@
                 android:textSize="16sp"
                 android:textColor="@color/white"
                 android:layout_width="0dp"
+                app:rv_backgroundColor="@{item.mData.mGapBetweenTwoDay > 0 ? @color/after_day_color_deep : @color/belong_day_color_deep}"
                 android:layout_height="match_parent"/>
 
         </LinearLayout>

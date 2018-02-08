@@ -18,6 +18,7 @@ import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.AppUtils;
 import com.yazhi1992.moon.util.EditDataHelper;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
+import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.StatusBarUtils;
 
 import java.util.Date;
@@ -54,16 +55,23 @@ public class MemorialDayDetailActivity extends BaseActivity {
         mBinding.toolbar.setBackgroundDrawable(mDrawable);
         initToolBar(mBinding.toolbar);
 
-        MemorialBeanWrapper data = (MemorialBeanWrapper) EditDataHelper.getInstance().getIHistoryBean();
-        mBinding.setItem(data);
-
-        int gapBetweenTwoDay = Integer.parseInt(data.getData().getGapDayNum());
-        if (gapBetweenTwoDay > 0) {
-            mBinding.tvTitle.getDelegate().setBackgroundColor(getResources().getColor(R.color.after_day_color));
-        } else {
-            mBinding.tvTitle.getDelegate().setBackgroundColor(getResources().getColor(R.color.belong_day_color));
+        MemorialDayBean data = null;
+        if (EditDataHelper.getInstance().getData() instanceof MemorialDayBean) {
+            data = (MemorialDayBean) EditDataHelper.getInstance().getData();
         }
-        mBinding.tvTimeStr.setText(AppUtils.getTimeStrForMemorialDay(new Date(data.getData().getTime())));
+
+        if (data != null) {
+            mBinding.setItem(data);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(EditDataHelper.getInstance().getData() == null) {
+            //数据已删除
+            finish();
+        }
     }
 
     //添加右上角加编辑按钮
@@ -78,7 +86,7 @@ public class MemorialDayDetailActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.toolbar_edit:
                 //编辑
-                ActivityRouter.gotoAddMemorial();
+                ActivityRouter.gotoAddMemorial(false);
                 break;
             default:
                 break;

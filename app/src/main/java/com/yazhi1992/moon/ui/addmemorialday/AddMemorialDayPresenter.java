@@ -22,4 +22,13 @@ public class AddMemorialDayPresenter {
             }
         });
     }
+
+    public void edit(String id, String title, long time, final DataCallback<Boolean> dataCallback) {
+        Api.getInstance().editMemorialDay(id, title, time, dataCallback);
+    }
+
+    public void delete(String objId, DataCallback<Boolean> callback) {
+        Api.getInstance().deleteMemorialDayData(objId, callback);
+
+    }
 }

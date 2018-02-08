@@ -44,7 +44,7 @@
                 android:gravity="center"
                 android:textSize="18sp"
                 android:textColor="@color/white"
-                app:rv_backgroundColor="@color/belong_day_color"
+                app:rv_backgroundColor="@{item.mGapBetweenTwoDay > 0 ? @color/after_day_color : @color/belong_day_color}"
                 android:layout_width="0dp"
                 android:textStyle="bold"
                 android:layout_height="match_parent"/>
@@ -57,7 +57,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textSize="18sp"
-                app:rv_backgroundColor="@color/belong_day_color_deep"
+                app:rv_backgroundColor="@{item.mGapBetweenTwoDay > 0 ? @color/after_day_color_deep : @color/belong_day_color_deep}"
                 android:textColor="@color/white"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"/>

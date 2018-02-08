@@ -32,18 +32,13 @@ public class ActivityRouter {
         public static final String OBJECT_ID_KEY = "objectid";
         public static final String TITLE_KEY = "title";
         public static final String TIME_KEY = "time";
-
+        public static final String EDIT_MODE = "edit_mode";
     }
 
-    public static void gotoAddMemorial() {
+    public static void gotoAddMemorial(boolean isAdd) {
         ARouter.getInstance()
                 .build(ADD_MEMORIAL)
-                .navigation();
-    }
-
-    public static void gotoEditMemorial() {
-        ARouter.getInstance()
-                .build(ADD_MEMORIAL)
+                .withBoolean(KeyName.EDIT_MODE, !isAdd)
                 .navigation();
     }
 
@@ -92,14 +87,6 @@ public class ActivityRouter {
     public static void gotoAddText() {
         ARouter.getInstance()
                 .build(ADD_TEXT)
-                .navigation();
-    }
-
-    public static void gotoMemorialDayDetail(String title, long time) {
-        ARouter.getInstance()
-                .build(MEMORIAL_DAY_DETAIL)
-                .withString(KeyName.TITLE_KEY, title)
-                .withLong(KeyName.TIME_KEY, time)
                 .navigation();
     }
 

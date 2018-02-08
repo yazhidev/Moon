@@ -144,6 +144,26 @@ public class Api {
     }
 
     /**
+     * 修改纪念日
+     *
+     * @param title        标题
+     * @param time         时间
+     * @param dataCallback
+     */
+    public void editMemorialDay(String id, String title, long time, final DataCallback<Boolean> dataCallback) {
+        AVObject memorialDayData = AVObject.createWithoutData(TableConstant.MemorialDay.CLAZZ_NAME, id);
+        memorialDayData.put(TableConstant.MemorialDay.TITLE, title);
+        memorialDayData.put(TableConstant.MemorialDay.TIME, time);
+        memorialDayData.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+            }
+        });
+    }
+
+
+    /**
      * 与另一半绑定
      *
      * @param inviteNum    对方邀请码
@@ -408,7 +428,7 @@ public class Api {
      * @param objId
      * @param callback
      */
-    public void deleteHistoryData(String objId, @TypeConstant.DataTypeInHistory int type, String dayObjId, DataCallback<Boolean> callback) {
+    public void deleteMemorialDayData(String objId, @TypeConstant.DataTypeInHistory int type, String dayObjId, DataCallback<Boolean> callback) {
         final int[] num = {2};
         final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
         loveHistoryQuery.whereEqualTo(TableConstant.Common.OBJECT_ID, objId);
@@ -448,6 +468,44 @@ public class Api {
             }
         });
     }
+
+    /**
+     * 删除纪念日数据（不知道love_history ID）
+     *
+     * @param callback
+     */
+    public void deleteMemorialDayData(String memorialDayId, DataCallback<Boolean> callback) {
+        //先查该纪念日在history表中的对应数据
+        AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
+        AVObject memorialDay = AVObject.createWithoutData(TableConstant.MemorialDay.CLAZZ_NAME, memorialDayId);
+        memorialDay.deleteInBackground();
+        loveHistoryQuery.whereEqualTo(TableConstant.LoveHistory.MEMORIAL_DAY, memorialDay);
+        ArrayList<AVObject> todos = new ArrayList<>();
+        todos.add(memorialDay);
+        loveHistoryQuery.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        //开始删除
+                        AVObject.deleteAllInBackground(list, new DeleteCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                handleResult(e, callback, new onResultSuc() {
+                                    @Override
+                                    public void onSuc() {
+                                        callback.onSuccess(true);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
 
     /**
      * 获取纪念日列表
@@ -720,4 +778,6 @@ public class Api {
     private AVObject getUserObj(String objId) {
         return AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, objId);
     }
+
+
 }

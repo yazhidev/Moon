@@ -122,7 +122,7 @@ public class HistoryFragment extends Fragment {
             public void onClick(int position) {
                 //跳转内容详情页
                 IHistoryBean obj = (IHistoryBean) mItems.get(position);
-                EditDataHelper.getInstance().saveEditData(obj);
+                EditDataHelper.getInstance().saveData(obj.getData());
                 int type = obj.getType();
                 switch (type) {
                 case TypeConstant.TYPE_MEMORIAL_DAY:

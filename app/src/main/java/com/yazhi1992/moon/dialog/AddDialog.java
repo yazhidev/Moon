@@ -68,7 +68,7 @@ public class AddDialog extends DialogFragment {
     private void handleAction(@ActionConstant.AddAction String action) {
         switch (action) {
             case ActionConstant.ADD_MEMORIAL:
-                ActivityRouter.gotoAddMemorial();
+                ActivityRouter.gotoAddMemorial(true);
                 dismiss();
                 break;
             case ActionConstant.ADD_HOPE:

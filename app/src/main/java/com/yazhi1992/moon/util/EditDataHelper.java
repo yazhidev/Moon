@@ -21,13 +21,13 @@ public class EditDataHelper {
         return EditDataHelperHolder.INSTANCE;
     }
 
-    private IHistoryBean mIHistoryBean;
+    private Object mObject;
 
-    public void saveEditData(IHistoryBean historyBean) {
-        mIHistoryBean = historyBean;
+    public void saveData(Object data) {
+        mObject = data;
     }
 
-    public IHistoryBean getIHistoryBean() {
-        return mIHistoryBean;
+    public Object getData() {
+        return mObject;
     }
 }

@@ -26,17 +26,12 @@ public class MemorialDayInHistoryViewBinder extends HistoryWithCommentViewBinder
         super.BindViewHolder(holder, historyBean);
         ItemMemorialDayInHistoryBinding binding = (ItemMemorialDayInHistoryBinding) holder.getBinding();
         MemorialDayBean memorialBean = historyBean.getData();
-        int gapBetweenTwoDay = LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(memorialBean.getTime()));
-        String finalTitle = memorialBean.getTitle();
-        if (gapBetweenTwoDay > 0) {
-            finalTitle = (String.format(BaseApplication.getInstance().getString(R.string.memorial_after), finalTitle));
+        if (historyBean.getData().getGapBetweenTwoDay() > 0) {
             binding.tvDayNum.getDelegate().setBackgroundColor(binding.tvDayNum.getContext().getResources().getColor(R.color.after_day_color));
             binding.tvDayStr.getDelegate().setBackgroundColor(binding.tvDayStr.getContext().getResources().getColor(R.color.after_day_color_deep));
         } else {
-            finalTitle = String.format(BaseApplication.getInstance().getString(R.string.memorial_belong), finalTitle);
             binding.tvDayNum.getDelegate().setBackgroundColor(binding.tvDayNum.getContext().getResources().getColor(R.color.belong_day_color));
             binding.tvDayStr.getDelegate().setBackgroundColor(binding.tvDayStr.getContext().getResources().getColor(R.color.belong_day_color_deep));
         }
-        memorialBean.setFinalTitle(finalTitle);
     }
 }
