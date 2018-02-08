@@ -1,29 +1,31 @@
-package com.yazhi1992.moon.adapter;
+package com.yazhi1992.moon.adapter.history;
 
 import android.support.annotation.NonNull;
 
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.adapter.base.DataBindingViewBinder;
-import com.yazhi1992.moon.databinding.ItemMemorialDayListBinding;
+import com.yazhi1992.moon.adapter.base.HistoryWithCommentViewBinder;
+import com.yazhi1992.moon.databinding.ItemMemorialDayInHistoryBinding;
+import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibTimeUtils;
 
 import java.util.Date;
 
 /**
- * Created by zengyazhi on 2018/1/30.
+ * Created by zengyazhi on 2018/1/23.
  */
-public class MemorialDayListViewBinder extends DataBindingViewBinder<MemorialDayBean> {
+public class MemorialDayInHistoryViewBinder extends HistoryWithCommentViewBinder<MemorialBeanWrapper> {
 
-    public MemorialDayListViewBinder() {
-        super(R.layout.item_memorial_day_list);
+    public MemorialDayInHistoryViewBinder() {
+        super(R.layout.item_memorial_day_in_history);
     }
 
     @Override
-    protected void BindViewHolder(@NonNull DatabindingViewHolder holder, @NonNull MemorialDayBean memorialBean) {
-        super.BindViewHolder(holder, memorialBean);
-        ItemMemorialDayListBinding binding = (ItemMemorialDayListBinding) holder.getBinding();
+    protected void BindViewHolder(@NonNull HistoryWithCommentViewHolder holder, @NonNull MemorialBeanWrapper historyBean) {
+        super.BindViewHolder(holder, historyBean);
+        ItemMemorialDayInHistoryBinding binding = (ItemMemorialDayInHistoryBinding) holder.getBinding();
+        MemorialDayBean memorialBean = historyBean.getData();
         int gapBetweenTwoDay = LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(memorialBean.getTime()));
         String finalTitle = memorialBean.getTitle();
         if (gapBetweenTwoDay > 0) {
@@ -37,5 +39,4 @@ public class MemorialDayListViewBinder extends DataBindingViewBinder<MemorialDay
         }
         memorialBean.setFinalTitle(finalTitle);
     }
-
 }

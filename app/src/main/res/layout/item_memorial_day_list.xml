@@ -2,6 +2,12 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tool="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.viewmodel.MemorialDayBean"></variable>
+    </data>
+
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -18,7 +24,7 @@
 
             <com.yazhi1992.yazhilib.widget.RoundView.RoundTextView
                 android:id="@+id/tv_title"
-                android:text=""
+                android:text="@{item.mFinalTitle}"
                 app:rv_cornerRadius_TL="10dp"
                 app:rv_cornerRadius_BL="10dp"
                 app:rv_strokeColor="@color/color_d"
@@ -32,7 +38,7 @@
                 android:layout_height="match_parent"/>
 
             <com.yazhi1992.yazhilib.widget.RoundView.RoundTextView
-                android:text=""
+                android:text="@{item.mGapDayNum}"
                 android:id="@+id/tv_day_num"
                 android:layout_weight="1.8"
                 android:gravity="center"

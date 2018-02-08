@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
+import com.yazhi1992.moon.adapter.base.WithClicklistenerItemViewBinder;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
@@ -24,7 +24,7 @@ import com.yazhi1992.yazhilib.widget.YZRatingBar;
  *
  * 心愿列表 viewBinder
  */
-public class HopeListViewBinder extends CustomItemViewBinder<HopeItemDataBean, HopeListViewBinder.ViewHolder> {
+public class HopeListViewBinder extends WithClicklistenerItemViewBinder<HopeItemDataBean, HopeListViewBinder.ViewHolder> {
 
     @NonNull
     @Override

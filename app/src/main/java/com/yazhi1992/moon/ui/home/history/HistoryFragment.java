@@ -13,19 +13,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.adapter.FinishedHopeInHistoryViewBinder;
-import com.yazhi1992.moon.adapter.HopeInHistoryViewBinder;
-import com.yazhi1992.moon.adapter.MemorialDayInHistoryViewBinder;
-import com.yazhi1992.moon.adapter.TextInHistoryViewBinder;
-import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
 import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
+import com.yazhi1992.moon.adapter.base.WithClicklistenerItemViewBinder;
+import com.yazhi1992.moon.adapter.history.FinishedHopeInHistoryViewBinder;
+import com.yazhi1992.moon.adapter.history.HopeInHistoryViewBinder;
+import com.yazhi1992.moon.adapter.history.MemorialDayInHistoryViewBinder;
+import com.yazhi1992.moon.adapter.history.TextInHistoryViewBinder;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
 import com.yazhi1992.moon.dialog.AddDialog;
 import com.yazhi1992.moon.dialog.DeleteDialog;
 import com.yazhi1992.moon.event.AddHistoryDataEvent;
+import com.yazhi1992.moon.util.EditDataHelper;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
@@ -69,9 +71,9 @@ public class HistoryFragment extends Fragment {
     private Disposable mShowBottomInpulSubscribe;
     private int mKeyBoardHeight = 0;
     private int mAddCommentPosition;
-    private int mInputType; //0添加评论，1回复
-    private String mAddCommentInput;
-    private String mReplyCommentInput;
+    private int mInputType; //0添加评论，1回复。用于切换输入状态时缓存已输入的内容
+    private String mAddCommentInput; //缓存已输入的评论内容
+    private String mReplyCommentInput; //缓存已输入的回复内容
     private String mReplyCommentPeerId;
     private String mReplyCommentPeerName;
 
@@ -106,7 +108,7 @@ public class HistoryFragment extends Fragment {
         mMultiTypeAdapter.register(TextBeanWrapper.class, new TextInHistoryViewBinder());
 
         //添加长按删除功能
-        CustomItemViewBinder.OnItemLongClickListener onItemLongClickListener = new CustomItemViewBinder.OnItemLongClickListener() {
+        WithClicklistenerItemViewBinder.OnItemLongClickListener onItemLongClickListener = new WithClicklistenerItemViewBinder.OnItemLongClickListener() {
             @Override
             public void onLongClick(int position) {
                 //删除弹窗
@@ -114,23 +116,24 @@ public class HistoryFragment extends Fragment {
                 showDeleteDialog();
             }
         };
-        CustomItemViewBinder.OnItemClickListener onItemClickListener = new CustomItemViewBinder.OnItemClickListener() {
+        WithClicklistenerItemViewBinder.OnItemClickListener onItemClickListener = new WithClicklistenerItemViewBinder.OnItemClickListener() {
 
             @Override
             public void onClick(int position) {
                 //跳转内容详情页
                 IHistoryBean obj = (IHistoryBean) mItems.get(position);
+                EditDataHelper.getInstance().saveEditData(obj);
                 int type = obj.getType();
                 switch (type) {
                 case TypeConstant.TYPE_MEMORIAL_DAY:
-//                    ActivityRouter.gotoMemorialDayDetail();
+                    ActivityRouter.gotoMemorialDayDetail();
                     break;
                 default:
                     break;
                 }
             }
         };
-        CustomItemViewBinder.OnItemClickCommentListener onItemClickCommentListener = new CustomItemViewBinder.OnItemClickCommentListener() {
+        WithClicklistenerItemViewBinder.OnItemClickCommentListener onItemClickCommentListener = new WithClicklistenerItemViewBinder.OnItemClickCommentListener() {
             @Override
             public void onClick(int position) {
                 if (mShowKeyboard) {
@@ -171,7 +174,7 @@ public class HistoryFragment extends Fragment {
         };
         TypePool typePool = mMultiTypeAdapter.getTypePool();
         for (int i = 0; i < typePool.size(); i++) {
-            CustomItemViewBinder<?, ?> itemViewBinder = (CustomItemViewBinder<?, ?>) typePool.getItemViewBinder(i);
+            WithClicklistenerItemViewBinder<?, ?> itemViewBinder = (WithClicklistenerItemViewBinder<?, ?>) typePool.getItemViewBinder(i);
             itemViewBinder.setOnItemClickListener(onItemClickListener);
             itemViewBinder.setOnItemLongClickListener(onItemLongClickListener);
             itemViewBinder.setOnItemClickCommentListener(onItemClickCommentListener);

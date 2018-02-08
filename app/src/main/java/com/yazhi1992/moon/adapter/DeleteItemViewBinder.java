@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
+import com.yazhi1992.moon.adapter.base.WithClicklistenerItemViewBinder;
 import com.yazhi1992.moon.viewmodel.DeleteItemBean;
 
 /**
  * Created by zengyazhi on 2018/2/5
  */
-public class DeleteItemViewBinder extends CustomItemViewBinder<DeleteItemBean, DeleteItemViewBinder.ViewHolder> {
+public class DeleteItemViewBinder extends WithClicklistenerItemViewBinder<DeleteItemBean, DeleteItemViewBinder.ViewHolder> {
 
     @NonNull
     @Override

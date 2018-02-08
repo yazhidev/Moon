@@ -1,51 +1,44 @@
-package com.yazhi1992.moon.adapter;
+package com.yazhi1992.moon.adapter.base;
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.adapter.base.CommentViewHolder;
-import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
-import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
-import com.yazhi1992.moon.ui.ViewBindingUtils;
-import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.moon.BR;
+import com.yazhi1992.moon.adapter.history.CommentInHistoryViewBinder;
 import com.yazhi1992.moon.viewmodel.CommentBean;
-import com.yazhi1992.moon.viewmodel.TextBean;
-import com.yazhi1992.moon.viewmodel.TextBeanWrapper;
+import com.yazhi1992.moon.viewmodel.IHistoryBean;
 
 import java.util.List;
 
 import me.drakeet.multitype.Items;
 
 /**
- * Created by zengyazhi on 2018/2/6.
+ * Created by zengyazhi on 2018/2/8.
+ *
+ * 布局中 data 默认名为 item
+ * 默认初始化了关于评论列表的逻辑
  */
-public class TextInHistoryViewBinder extends CustomItemViewBinder<TextBeanWrapper, TextInHistoryViewBinder.ViewHolder> {
 
+public class HistoryWithCommentViewBinder<T extends IHistoryBean> extends WithClicklistenerItemViewBinder<T, HistoryWithCommentViewBinder.HistoryWithCommentViewHolder> {
+
+    private int mLayoutId;
     private CustomMultitypeAdapter mCommentAdapter;
     private Items mItems;
 
-    @NonNull
-    @Override
-    protected ViewHolder onCreateViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
-        View root = inflater.inflate(R.layout.item_text_in_history, parent, false);
-        return new ViewHolder(root);
+    public HistoryWithCommentViewBinder(int layoutId) {
+        mLayoutId = layoutId;
     }
 
+    // TODO: 2018/2/8 添加/删除评论的动画卡顿
+
     @Override
-    protected void BindViewHolder(@NonNull ViewHolder holder, @NonNull TextBeanWrapper historyBean) {
-        TextBean textBean = historyBean.getData();
-        holder.mTvName.setText(historyBean.getUserName());
-        ViewBindingUtils.imgUrl(holder.mIgUser, historyBean.getUserHeadUrl());
-        holder.mTvTime.setText(AppUtils.getTimeForHistory(historyBean.getCreateTime()));
-        holder.mTvContent.setText(textBean.getContent());
-
-
+    protected void BindViewHolder(@NonNull HistoryWithCommentViewHolder holder, @NonNull T historyBean) {
+        holder.binding.setVariable(BR.item, historyBean);
 
         //评论有数据，加载评论列表
         if (holder instanceof CommentViewHolder) {
@@ -56,7 +49,8 @@ public class TextInHistoryViewBinder extends CustomItemViewBinder<TextBeanWrappe
                     @Override
                     public void onDelete(long id) {
                         for (int i = 0; i < historyBean.getCommentDatas().size(); i++) {
-                            CommentBean commentBean = historyBean.getCommentDatas().get(i);
+                            List<CommentBean> commentDatas = historyBean.getCommentDatas();
+                            CommentBean commentBean = commentDatas.get(i);
                             if(commentBean.getId() == id) {
                                 historyBean.getCommentDatas().remove(i);
                             }
@@ -84,19 +78,24 @@ public class TextInHistoryViewBinder extends CustomItemViewBinder<TextBeanWrappe
         }
     }
 
-    static class ViewHolder extends CommentViewHolder {
+    @NonNull
+    @Override
+    protected HistoryWithCommentViewHolder onCreateViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
+        ViewDataBinding binding = DataBindingUtil.inflate(inflater, mLayoutId, parent, false);
+        return new HistoryWithCommentViewHolder(binding);
+    }
 
-        private final TextView mTvName;
-        private final ImageView mIgUser;
-        private TextView mTvContent;
-        private TextView mTvTime;
+    public static class HistoryWithCommentViewHolder<T extends ViewDataBinding> extends CommentViewHolder {
 
-        ViewHolder(View itemView) {
-            super(itemView);
-            mTvName = itemView.findViewById(R.id.tv_name);
-            mIgUser = itemView.findViewById(R.id.ig_user);
-            mTvTime = itemView.findViewById(R.id.tv_time);
-            mTvContent = itemView.findViewById(R.id.tv_content);
+        private T binding;
+
+        public HistoryWithCommentViewHolder(T binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public T getBinding() {
+            return binding;
         }
     }
 }

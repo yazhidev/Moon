@@ -1,4 +1,4 @@
-package com.yazhi1992.moon.adapter;
+package com.yazhi1992.moon.adapter.history;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
+import com.yazhi1992.moon.adapter.base.WithClicklistenerItemViewBinder;
 import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
@@ -20,7 +20,7 @@ import com.yazhi1992.yazhilib.utils.LibUtils;
 /**
  * Created by zengyazhi on 2018/2/6
  */
-public class CommentInHistoryViewBinder extends CustomItemViewBinder<CommentBean, CommentInHistoryViewBinder.ViewHolder> {
+public class CommentInHistoryViewBinder extends WithClicklistenerItemViewBinder<CommentBean, CommentInHistoryViewBinder.ViewHolder> {
 
     private OnCommentDeleteListener mOnCommentDeleteListener;
     private String mUserId;

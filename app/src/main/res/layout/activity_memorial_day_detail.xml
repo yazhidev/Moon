@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.viewmodel.MemorialBeanWrapper"></variable>
+    </data>
+
     <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -35,7 +41,7 @@
                 android:id="@+id/tv_title"
                 app:rv_cornerRadius_TL="10dp"
                 app:rv_cornerRadius_TR="10dp"
-                android:text="在一起已经"
+                android:text="@{item.mData.mFinalTitle}"
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="20sp"
@@ -50,7 +56,7 @@
                 android:layout_centerInParent="true"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:text="120"
+                android:text="@{item.mData.mGapDayNum}"
                 />
 
             <TextView
@@ -60,7 +66,6 @@
                 android:textSize="18sp"
                 android:layout_centerInParent="true"
                 android:textColor="@color/color_5"
-                android:text=""
                 android:layout_marginBottom="20dp"
                 android:layout_alignParentBottom="true"
                 />

@@ -7,6 +7,8 @@ import com.yazhi1992.moon.R;
 
 /**
  * Created by zengyazhi on 2018/2/6.
+ *
+ * 带评论按钮和评论列表
  */
 
 public class CommentViewHolder extends RecyclerView.ViewHolder {

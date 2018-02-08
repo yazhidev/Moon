@@ -1,5 +1,7 @@
 package com.yazhi1992.moon.viewmodel;
 
+import android.databinding.ObservableField;
+
 import java.util.Date;
 
 /**
@@ -10,7 +12,7 @@ import java.util.Date;
 
 public class IDataBean {
     private String mObjectId;
-    private Date mCreateTime;
+    public ObservableField<Date> mCreateTime = new ObservableField<>();;
     private Date mUpdateTime;
 
     public String getObjectId() {
@@ -22,11 +24,11 @@ public class IDataBean {
     }
 
     public Date getCreateTime() {
-        return mCreateTime;
+        return mCreateTime.get();
     }
 
     public void setCreateTime(Date createTime) {
-        mCreateTime = createTime;
+        mCreateTime.set(createTime);
     }
 
     public Date getUpdateTime() {

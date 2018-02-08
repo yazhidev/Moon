@@ -103,4 +103,10 @@ public class ActivityRouter {
                 .navigation();
     }
 
+    public static void gotoMemorialDayDetail() {
+        ARouter.getInstance()
+                .build(MEMORIAL_DAY_DETAIL)
+                .navigation();
+    }
+
 }

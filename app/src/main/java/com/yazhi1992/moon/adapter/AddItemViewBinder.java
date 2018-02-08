@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
+import com.yazhi1992.moon.adapter.base.WithClicklistenerItemViewBinder;
 import com.yazhi1992.moon.viewmodel.AddItemBean;
 
 /**
  * Created by zengyazhi on 2018/2/5
  */
-public class AddItemViewBinder extends CustomItemViewBinder<AddItemBean, AddItemViewBinder.ViewHolder> {
+public class AddItemViewBinder extends WithClicklistenerItemViewBinder<AddItemBean, AddItemViewBinder.ViewHolder> {
 
     @NonNull
     @Override

@@ -1,8 +1,9 @@
 package com.yazhi1992.moon.viewmodel;
 
+import android.databinding.ObservableField;
+
 import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.constant.TableConstant;
-import com.yazhi1992.moon.util.AppUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,10 +20,10 @@ import java.util.List;
 
 public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
     private int mId;
-    private String mUserName;
-    private String mUserHeadUrl;
+    public ObservableField<String> mUserName = new ObservableField<>();
+    public ObservableField<String> mUserHeadUrl = new ObservableField<>();
     private int mType;
-    private T mData;
+    public ObservableField<T> mData = new ObservableField<>();
     private List<CommentBean> mCommentDatas;
 
     public IHistoryBean(HistoryItemDataFromApi loveHistoryItemData) {
@@ -56,11 +57,11 @@ public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
                 }
             }
         }
-        mData = transformAvObject(loveHistoryItemData);
+        setData(transformAvObject(loveHistoryItemData));
     }
 
     public void setData(T data) {
-        mData = data;
+        mData.set(data);
     }
 
     public List<CommentBean> getCommentDatas() {
@@ -78,7 +79,7 @@ public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
     abstract T transformAvObject(HistoryItemDataFromApi loveHistoryItemData);
 
     public T getData() {
-        return mData;
+        return mData.get();
     }
 
     public int getId() {
@@ -90,19 +91,19 @@ public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
     }
 
     public String getUserName() {
-        return mUserName;
+        return mUserName.get();
     }
 
     public void setUserName(String userName) {
-        mUserName = userName;
+        mUserName.set(userName);
     }
 
     public String getUserHeadUrl() {
-        return mUserHeadUrl;
+        return mUserHeadUrl.get();
     }
 
     public void setUserHeadUrl(String userHeadUrl) {
-        mUserHeadUrl = userHeadUrl;
+        mUserHeadUrl.set(userHeadUrl);
     }
 
     public int getType() {

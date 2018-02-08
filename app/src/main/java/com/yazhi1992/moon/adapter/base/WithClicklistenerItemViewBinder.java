@@ -12,7 +12,7 @@ import me.drakeet.multitype.ItemViewBinder;
  * 增加了点击监听
  */
 
-public abstract class CustomItemViewBinder<T, VH extends RecyclerView.ViewHolder> extends ItemViewBinder<T, VH> {
+public abstract class WithClicklistenerItemViewBinder<T, VH extends RecyclerView.ViewHolder> extends ItemViewBinder<T, VH> {
 
     private OnItemClickListener mOnClickListener;
     private OnItemLongClickListener mOnLongClickListener;

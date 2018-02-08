@@ -1,20 +1,22 @@
 package com.yazhi1992.moon.viewmodel;
 
+import android.databinding.ObservableField;
+
 /**
  * Created by zengyazhi on 2018/1/24.
  */
 
 public class HopeItemDataBean extends IDataBean{
 
-    private String mTitle;
-    private int mLevel; //等级
+    public ObservableField<String> mTitle = new ObservableField<>();
+    public ObservableField<Integer> mLevel = new ObservableField<>(); //等级
     private String mUserName;
     private String mUserHeadUrl;
     private int mStatus; //0未完成，1已完成
 
     public HopeItemDataBean(String title, int level) {
-        this.mTitle = title;
-        this.mLevel = level;
+        this.mTitle.set(title);
+        this.mLevel.set(level);
     }
 
     public int getStatus() {
@@ -42,18 +44,18 @@ public class HopeItemDataBean extends IDataBean{
     }
 
     public String getTitle() {
-        return mTitle;
+        return mTitle.get();
     }
 
     public void setTitle(String title) {
-        this.mTitle = title;
+        this.mTitle.set(title);
     }
 
     public int getLevel() {
-        return mLevel;
+        return mLevel.get();
     }
 
     public void setLevel(int level) {
-        this.mLevel = level;
+        this.mLevel.set(level);
     }
 }

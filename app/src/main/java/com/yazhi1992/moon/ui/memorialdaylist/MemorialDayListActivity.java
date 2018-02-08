@@ -4,7 +4,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.MemorialDayListViewBinder;
-import com.yazhi1992.moon.adapter.base.CustomItemViewBinder;
+import com.yazhi1992.moon.adapter.base.WithClicklistenerItemViewBinder;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
@@ -23,8 +23,7 @@ public class MemorialDayListActivity extends BaseListActivity<MemorialDayBean> {
     public void adapterRegister(MultiTypeAdapter adapter) {
         mBinding.ry.setPadding(0, (int) LibCalcUtil.dp2px(this, 20), 0, 0);
         MemorialDayListViewBinder memorialDayListViewBinder = new MemorialDayListViewBinder();
-        // TODO: 2018/2/8 点击时背景颜色异常
-        memorialDayListViewBinder.setOnItemClickListener(new CustomItemViewBinder.OnItemClickListener() {
+        memorialDayListViewBinder.setOnItemClickListener(new WithClicklistenerItemViewBinder.OnItemClickListener() {
             @Override
             public void onClick(int position) {
                 MemorialDayBean bean = (MemorialDayBean) adapter.getItems().get(position);
