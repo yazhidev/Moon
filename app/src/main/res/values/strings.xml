@@ -20,6 +20,8 @@
     <string name="hope_title_in_history">许下小心愿</string>
     <string name="finish_hope_title_in_history">执子之手，心想事成。达成心愿</string>
 
+    <string name="finish_app">再按一次退出</string>
+
     <!--bind-->
     <string name="bind_error_code">请输入正确的邀请码</string>
     <string name="bind_error_code_peer">请输入对方的邀请码</string>

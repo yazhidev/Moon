@@ -64,6 +64,7 @@ public class TableConstant {
         public static final String LEVEL = "level";
         public static final String ID = "id";
         public static final String USER = "user";
+        public static final String FINISH_WORD = "finish_word";
     }
 
     //首页文本表

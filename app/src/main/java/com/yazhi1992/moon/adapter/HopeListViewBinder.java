@@ -56,6 +56,8 @@ public class HopeListViewBinder extends WithClicklistenerItemViewBinder<HopeItem
         holder.mBtnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //输入完成总结
+
                 TipDialogHelper.getInstance().showDialog(holder.mBtnFinish.getContext(), holder.mBtnFinish.getContext().getString(R.string.finish_hope), new TipDialogHelper.OnComfirmListener() {
                     @Override
                     public void comfirm() {
