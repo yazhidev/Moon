@@ -38,6 +38,7 @@ import com.yazhi1992.moon.viewmodel.TextBeanWrapper;
 import com.yazhi1992.yazhilib.utils.KeyBoardHeightUtil;
 import com.yazhi1992.yazhilib.utils.LibCalcUtil;
 import com.yazhi1992.yazhilib.utils.LibUtils;
+import com.yazhi1992.yazhilib.utils.StatusBarUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -76,6 +77,7 @@ public class HistoryFragment extends Fragment {
     private String mReplyCommentInput; //缓存已输入的回复内容
     private String mReplyCommentPeerId;
     private String mReplyCommentPeerName;
+    private int mTopBarAnimHeight;
 
     @Nullable
     @Override
@@ -87,6 +89,8 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mBinding.rlTop.setPadding(0, StatusBarUtils.getStatusBarHeight(getActivity()), 0, 0);
 
         mMultiTypeAdapter = new CustomMultitypeAdapter();
         //纪念日
@@ -125,11 +129,11 @@ public class HistoryFragment extends Fragment {
                 EditDataHelper.getInstance().saveData(obj.getData());
                 int type = obj.getType();
                 switch (type) {
-                case TypeConstant.TYPE_MEMORIAL_DAY:
-                    ActivityRouter.gotoMemorialDayDetail();
-                    break;
-                default:
-                    break;
+                    case TypeConstant.TYPE_MEMORIAL_DAY:
+                        ActivityRouter.gotoMemorialDayDetail();
+                        break;
+                    default:
+                        break;
                 }
             }
         };
@@ -397,5 +401,4 @@ public class HistoryFragment extends Fragment {
     public void addMemorial(AddHistoryDataEvent bean) {
         mBinding.smartRefresh.autoRefresh();
     }
-
 }

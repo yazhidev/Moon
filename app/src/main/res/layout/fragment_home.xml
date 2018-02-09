@@ -1,96 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/ig_home"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/color_d"
+            android:scaleType="fitStart"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <RelativeLayout
+            android:id="@+id/ll_memorial_day_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintTop_toBottomOf="@+id/ig_home"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/ll_hope_day_list">
 
             <ImageView
-                android:id="@+id/ig"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:id="@+id/ig_memorial_day_list"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/memorial_day_icon"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:layout_below="@+id/ig_memorial_day_list"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="纪念日"
+                android:textColor="@color/black"
+                android:textSize="13sp"/>
 
-                <android.support.v4.widget.Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+        </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/ll_memorial_day_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/ll_hope_day_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/ll_memorial_day_list"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ll_memorial_day_list">
 
-                    <ImageView
-                        android:id="@+id/ig_memorial_day_list"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@mipmap/memorial_day_icon"/>
+            <ImageView
+                android:id="@+id/ig_hope_day_list"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/hope_list_icon"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/ig_memorial_day_list"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="8dp"
-                        android:text="纪念日"
-                        android:textColor="@color/black"
-                        android:textSize="13sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ig_hope_day_list"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="小心愿"
+                android:textColor="@color/black"
+                android:textSize="13sp"/>
 
-                </RelativeLayout>
+        </RelativeLayout>
 
-                <android.support.v4.widget.Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-                <RelativeLayout
-                    android:id="@+id/ll_hope_day_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/ig_hope_day_list"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_centerHorizontal="true"
-                        android:src="@mipmap/hope_list_icon"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/ig_hope_day_list"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="8dp"
-                        android:text="小心愿"
-                        android:textColor="@color/black"
-                        android:textSize="13sp"/>
-
-                </RelativeLayout>
-
-                <android.support.v4.widget.Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

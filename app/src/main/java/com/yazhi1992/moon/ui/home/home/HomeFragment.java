@@ -35,7 +35,7 @@ public class HomeFragment extends Fragment {
 
         String URL = "http://upload-images.jianshu.io/upload_images/1929170-6a96a2a204b50559.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1080/q/50";
         Glide.with(view.getContext()).load(URL)
-                .into(mBinding.ig);
+                .into(mBinding.igHome);
 
         mBinding.llHopeDayList.setOnClickListener(v -> {
             ActivityRouter.gotoHopeList();
