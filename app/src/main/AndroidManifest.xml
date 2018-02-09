@@ -106,11 +106,11 @@
         </activity>
         <activity android:name=".ui.addhope.AddHopeActivity">
         </activity>
-        <activity android:name=".ui.hopelist.HopeListActivity">
-        </activity>
         <activity android:name=".ui.addtext.AddTextActivity">
         </activity>
         <activity android:name=".ui.memorialdaydetail.MemorialDayDetailActivity">
+        </activity>
+        <activity android:name=".ui.hopetab.HopeTabActivity">
         </activity>
     </application>
 

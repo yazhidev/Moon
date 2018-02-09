@@ -77,7 +77,6 @@ public class HistoryFragment extends Fragment {
     private String mReplyCommentInput; //缓存已输入的回复内容
     private String mReplyCommentPeerId;
     private String mReplyCommentPeerName;
-    private int mTopBarAnimHeight;
 
     @Nullable
     @Override

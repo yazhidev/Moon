@@ -16,4 +16,11 @@ public class TypeConstant {
 
     @IntDef({TYPE_TEXT, TYPE_MEMORIAL_DAY, TYPE_HOPE})
     public @interface DataTypeInHistory{}
+
+
+    public static final int HOPE_UNFINISH = 0; //未完成愿望
+    public static final int HOPE_DONE = 1; //已完成愿望
+
+    @IntDef({HOPE_UNFINISH, HOPE_DONE})
+    public @interface HopeType {}
 }

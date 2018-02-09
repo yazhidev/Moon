@@ -581,15 +581,17 @@ public class Api {
      *
      * @param callback
      */
-    public void getHopeList(int lastItemId, int size, DataCallback<List<HopeItemDataBean>> callback) {
+    public void getHopeList(@TypeConstant.HopeType int type, int lastItemId, int size, DataCallback<List<HopeItemDataBean>> callback) {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //查询自己或另一半的
         final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.Hope.CLAZZ_NAME);
         meQuery.whereEqualTo(TableConstant.Hope.USER, getUserObj(currentUser.getObjectId()));
+        meQuery.whereEqualTo(TableConstant.Hope.STATUS, type);
 
         final AVQuery<AVObject> loverQuery = new AVQuery<>(TableConstant.Hope.CLAZZ_NAME);
         loverQuery.whereEqualTo(TableConstant.Hope.USER, getUserObj(currentUser.getString(TableConstant.AVUserClass.LOVER_ID)));
+        loverQuery.whereEqualTo(TableConstant.Hope.STATUS, type);
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
         query.addAscendingOrder(TableConstant.Hope.STATUS); //已完成排在最下面
@@ -637,7 +639,7 @@ public class Api {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        object.put(TableConstant.Hope.STATUS, 1);
+                        object.put(TableConstant.Hope.STATUS, TypeConstant.HOPE_DONE);
                         object.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(AVException exc) {

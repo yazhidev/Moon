@@ -27,6 +27,8 @@ public class ActivityRouter {
     public static final String HOPE_LIST = "/app/hope_list";
     //添加文本
     public static final String ADD_TEXT = "/app/add_text";
+    //愿望列表
+    public static final String HOPE_TAB_LIST = "/app/hope_tab_list";
 
     public static class KeyName {
         public static final String OBJECT_ID_KEY = "objectid";
@@ -80,7 +82,7 @@ public class ActivityRouter {
 
     public static void gotoHopeList() {
         ARouter.getInstance()
-                .build(HOPE_LIST)
+                .build(HOPE_TAB_LIST)
                 .navigation();
     }
 
