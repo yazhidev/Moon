@@ -37,9 +37,7 @@ public class HomeFragment extends Fragment {
         Glide.with(view.getContext()).load(URL)
                 .into(mBinding.igHome);
 
-        mBinding.llHopeDayList.setOnClickListener(v -> {
-            ActivityRouter.gotoHopeList();
-        });
+        mBinding.llHopeDayList.setOnClickListener(v -> ActivityRouter.gotoHopeList());
 
         mBinding.llMemorialDayList.setOnClickListener(v -> ActivityRouter.gotoMemorialList());
     }

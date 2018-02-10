@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/add_memorial"
+        android:id="@+id/toolbar_finish_hope"
         app:showAsAction="always"
-        android:icon="@mipmap/toolbar_add"
-        android:title="add"/>
+        android:icon="@mipmap/hope_done"
+        android:title="finish"/>
 </menu>

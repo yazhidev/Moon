@@ -1,4 +1,4 @@
-package com.yazhi1992.moon.ui.memorialdaydetail;
+package com.yazhi1992.moon.ui.textdetail;
 
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
@@ -9,19 +9,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
-import com.yazhi1992.moon.databinding.ActivityMemorialDayDetailBinding;
+import com.yazhi1992.moon.databinding.ActivityTextDetailBinding;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.EditDataHelper;
-import com.yazhi1992.moon.viewmodel.MemorialDayBean;
+import com.yazhi1992.moon.viewmodel.TextBean;
 import com.yazhi1992.yazhilib.utils.StatusBarUtils;
 
-@Route(path = ActivityRouter.MEMORIAL_DAY_DETAIL)
-public class MemorialDayDetailActivity extends BaseActivity {
+@Route(path = ActivityRouter.TEXT_DETAIL)
+public class TextDetailActivity extends BaseActivity {
 
-    private ActivityMemorialDayDetailBinding mBinding;
+    // TODO: 2018/2/10 字体
+    ActivityTextDetailBinding mBinding;
 
     @Override
     protected void initStatusBar() {
@@ -32,12 +32,10 @@ public class MemorialDayDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ARouter.getInstance().inject(this);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_memorial_day_detail);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_text_detail);
 
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.toolbar.getLayoutParams();
         layoutParams.setMargins(0, StatusBarUtils.getStatusBarHeight(this), 0, 0);
-        mBinding.toolbar.setTitle(getString(R.string.memorial_day_detail_title));
         // 获取Drawable对象
         Drawable mDrawable = ContextCompat.getDrawable(this, R.drawable.bad);
         // 设置Drawable的透明度
@@ -46,22 +44,9 @@ public class MemorialDayDetailActivity extends BaseActivity {
         mBinding.toolbar.setBackgroundDrawable(mDrawable);
         initToolBar(mBinding.toolbar);
 
-        MemorialDayBean data = null;
-        if (EditDataHelper.getInstance().getData() instanceof MemorialDayBean) {
-            data = (MemorialDayBean) EditDataHelper.getInstance().getData();
-        }
-
-        if (data != null) {
-            mBinding.setItem(data);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(EditDataHelper.getInstance().getData() == null) {
-            //数据已删除
-            finish();
+        if(EditDataHelper.getInstance().getData() instanceof TextBean) {
+            TextBean editData = (TextBean) EditDataHelper.getInstance().getData();
+            mBinding.setItem(editData);
         }
     }
 
@@ -77,7 +62,7 @@ public class MemorialDayDetailActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.toolbar_edit:
                 //编辑
-                ActivityRouter.gotoAddMemorial(false);
+                ActivityRouter.gotoAddText(false);
                 break;
             default:
                 break;

@@ -72,11 +72,11 @@ public class AddDialog extends DialogFragment {
                 dismiss();
                 break;
             case ActionConstant.ADD_HOPE:
-                ActivityRouter.gotoAddHope();
+                ActivityRouter.gotoAddHope(true);
                 dismiss();
                 break;
             case ActionConstant.ADD_TEXT:
-                ActivityRouter.gotoAddText();
+                ActivityRouter.gotoAddText(true);
                 dismiss();
                 break;
             default:

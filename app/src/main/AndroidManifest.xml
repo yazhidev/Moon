@@ -110,7 +110,11 @@
         </activity>
         <activity android:name=".ui.memorialdaydetail.MemorialDayDetailActivity">
         </activity>
-        <activity android:name=".ui.hopetab.HopeTabActivity">
+        <activity android:name=".ui.hopelist.HopeListActivity">
+        </activity>
+        <activity android:name=".ui.hopedetail.HopeDetailActivity">
+        </activity>
+        <activity android:name=".ui.textdetail.TextDetailActivity">
         </activity>
     </application>
 

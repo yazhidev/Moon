@@ -6,41 +6,59 @@ import android.databinding.ObservableField;
  * Created by zengyazhi on 2018/1/24.
  */
 
-public class HopeItemDataBean extends IDataBean{
+public class HopeItemDataBean extends IDataBean {
 
     public ObservableField<String> mTitle = new ObservableField<>();
     public ObservableField<Integer> mLevel = new ObservableField<>(); //等级
-    private String mUserName;
-    private String mUserHeadUrl;
-    private int mStatus; //0未完成，1已完成
+    public ObservableField<String> mUserName = new ObservableField<>();
+    public ObservableField<String> mLink = new ObservableField<>(""); //链接
+    public ObservableField<String> mUserHeadUrl = new ObservableField<>();
+    public ObservableField<Integer> mStatus = new ObservableField<>(0); //0未完成，1已完成
+    public ObservableField<String> mFinishContent = new ObservableField<>("");
 
     public HopeItemDataBean(String title, int level) {
         this.mTitle.set(title);
         this.mLevel.set(level);
     }
 
+    public String getFinishContent() {
+        return mFinishContent.get();
+    }
+
+    public void setFinishContent(String content) {
+        this.mFinishContent.set(content == null ? "" : content);
+    }
+
     public int getStatus() {
-        return mStatus;
+        return mStatus.get();
     }
 
     public void setStatus(int status) {
-        this.mStatus = status;
+        this.mStatus.set(status);
+    }
+
+    public String getLink() {
+        return mLink.get();
+    }
+
+    public void setLink(String mlink) {
+        this.mLink.set(mlink == null ? "" : mlink);
     }
 
     public String getUserName() {
-        return mUserName;
+        return mUserName.get();
     }
 
     public void setUserName(String userName) {
-        mUserName = userName;
+        mUserName.set(userName);
     }
 
     public String getUserHeadUrl() {
-        return mUserHeadUrl;
+        return mUserHeadUrl.get();
     }
 
     public void setUserHeadUrl(String userHeadUrl) {
-        mUserHeadUrl = userHeadUrl;
+        mUserHeadUrl.set(userHeadUrl);
     }
 
     public String getTitle() {

@@ -29,6 +29,10 @@ public class ActivityRouter {
     public static final String ADD_TEXT = "/app/add_text";
     //愿望列表
     public static final String HOPE_TAB_LIST = "/app/hope_tab_list";
+    //愿望详情页
+    public static final String HOPE_DETAIL = "/app/hope_detail";
+    //文本详情页
+    public static final String TEXT_DETAIL = "/app/text_detail";
 
     public static class KeyName {
         public static final String OBJECT_ID_KEY = "objectid";
@@ -74,9 +78,10 @@ public class ActivityRouter {
                 .navigation();
     }
 
-    public static void gotoAddHope() {
+    public static void gotoAddHope(boolean isAdd) {
         ARouter.getInstance()
                 .build(ADD_HOPE)
+                .withBoolean(KeyName.EDIT_MODE, !isAdd)
                 .navigation();
     }
 
@@ -86,15 +91,28 @@ public class ActivityRouter {
                 .navigation();
     }
 
-    public static void gotoAddText() {
+    public static void gotoAddText(boolean isAdd) {
         ARouter.getInstance()
                 .build(ADD_TEXT)
+                .withBoolean(KeyName.EDIT_MODE, !isAdd)
                 .navigation();
     }
 
     public static void gotoMemorialDayDetail() {
         ARouter.getInstance()
                 .build(MEMORIAL_DAY_DETAIL)
+                .navigation();
+    }
+
+    public static void gotoHopeDetail() {
+        ARouter.getInstance()
+                .build(HOPE_DETAIL)
+                .navigation();
+    }
+
+    public static void gotoTextDetail() {
+        ARouter.getInstance()
+                .build(TEXT_DETAIL)
                 .navigation();
     }
 

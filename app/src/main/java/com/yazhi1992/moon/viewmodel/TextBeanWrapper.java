@@ -1,7 +1,12 @@
 package com.yazhi1992.moon.viewmodel;
 
 import com.avos.avoscloud.AVObject;
+import com.yazhi1992.moon.BaseApplication;
+import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.TableConstant;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by zengyazhi on 2018/2/6.
@@ -22,6 +27,15 @@ public class TextBeanWrapper extends IHistoryBean<TextBean> {
         AVObject textItemData = avObject.getAVObject(TableConstant.LoveHistory.TEXT);
         TextBean textBean = new TextBean(textItemData.getString(TableConstant.Text.CONTENT));
         textBean.setObjectId(textItemData.getObjectId());
+        AVObject user = avObject.getAVObject(TableConstant.LoveHistory.USER);
+        textBean.setUserName(user.getString(TableConstant.AVUserClass.USER_NAME));
+        Date createdAt = avObject.getCreatedAt();
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(createdAt);
+        int month = instance.get(Calendar.MONTH) + 1;
+        int day = instance.get(Calendar.DATE);
+        // TODO: 2018/2/10 获取中文
+        textBean.setTimeStr(String.format(BaseApplication.getInstance().getString(R.string.create_text_time), month, day));
         return textBean;
     }
 }

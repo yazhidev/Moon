@@ -8,17 +8,16 @@ import com.yazhi1992.moon.api.DataCallback;
  */
 
 public class AddHopePresenter {
-    public void addHope(String title, int level, DataCallback<Boolean> callback) {
-        Api.getInstance().addHope(title, level, new DataCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean data) {
-                callback.onSuccess(data);
-            }
 
-            @Override
-            public void onFailed(int code, String msg) {
-                callback.onFailed(code, msg);
-            }
-        });
+    public void addHope(String title, int level, String link, DataCallback<Boolean> callback) {
+        Api.getInstance().addHope(title, level, link, callback);
+    }
+
+    public void edit(String objId, String title, int level, String link, DataCallback<Boolean> dataCallback) {
+        Api.getInstance().editHope(objId, title, level, link, dataCallback);
+    }
+
+    public void delete(String objId, DataCallback<Boolean> callback) {
+        Api.getInstance().deleteHopeData(objId, callback);
     }
 }

@@ -9,7 +9,7 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.databinding.ActivityAddTextBinding;
-import com.yazhi1992.moon.event.AddHistoryDataEvent;
+import com.yazhi1992.moon.event.AddDataEvent;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -42,7 +42,7 @@ public class AddTextActivity extends BaseActivity {
             mPresenter.addText(title, new DataCallback<Boolean>() {
                 @Override
                 public void onSuccess(Boolean data) {
-                    EventBus.getDefault().post(new AddHistoryDataEvent(ActionConstant.ADD_TEXT));
+                    EventBus.getDefault().post(new AddDataEvent(ActionConstant.ADD_TEXT));
                     LibUtils.hideKeyboard(mBinding.etTitle);
                     mBinding.btnAdd.setLoading(false);
                     finish();

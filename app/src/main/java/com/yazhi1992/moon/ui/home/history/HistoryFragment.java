@@ -26,7 +26,7 @@ import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
 import com.yazhi1992.moon.dialog.AddDialog;
 import com.yazhi1992.moon.dialog.DeleteDialog;
-import com.yazhi1992.moon.event.AddHistoryDataEvent;
+import com.yazhi1992.moon.event.AddDataEvent;
 import com.yazhi1992.moon.util.EditDataHelper;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.CommentBean;
@@ -42,6 +42,7 @@ import com.yazhi1992.yazhilib.utils.StatusBarUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -99,7 +100,7 @@ public class HistoryFragment extends Fragment {
                 new HopeInHistoryViewBinder(),
                 new FinishedHopeInHistoryViewBinder()
         ).withClassLinker((position, hopeItemDataWrapper) -> {
-            if (hopeItemDataWrapper.getData().getStatus() == 0) {
+            if (hopeItemDataWrapper.getType() == TypeConstant.TYPE_HOPE) {
                 //未完成
                 return HopeInHistoryViewBinder.class;
             } else {
@@ -130,6 +131,13 @@ public class HistoryFragment extends Fragment {
                 switch (type) {
                     case TypeConstant.TYPE_MEMORIAL_DAY:
                         ActivityRouter.gotoMemorialDayDetail();
+                        break;
+                    case TypeConstant.TYPE_HOPE:
+                    case TypeConstant.TYPE_HOPE_FINISHED:
+                        ActivityRouter.gotoHopeDetail();
+                        break;
+                    case TypeConstant.TYPE_TEXT:
+                        ActivityRouter.gotoTextDetail();
                         break;
                     default:
                         break;
@@ -294,6 +302,7 @@ public class HistoryFragment extends Fragment {
                 data = new MemorialBeanWrapper(itemData);
                 break;
             case TypeConstant.TYPE_HOPE:
+            case TypeConstant.TYPE_HOPE_FINISHED:
                 data = new HopeItemDataWrapper(itemData);
                 break;
             case TypeConstant.TYPE_TEXT:
@@ -313,10 +322,14 @@ public class HistoryFragment extends Fragment {
                 TipDialogHelper.getInstance().showDialog(getActivity(), getString(R.string.delete_data), new TipDialogHelper.OnComfirmListener() {
                     @Override
                     public void comfirm() {
-                        mPresenter.delete(data.getObjectId(), data.getType(), data.getData().getObjectId(), new DataCallback<Boolean>() {
+                        mPresenter.delete(data.getType(), data.getData().getObjectId(), new DataCallback<Boolean>() {
                             @Override
-                            public void onSuccess(Boolean data) {
-                                mMultiTypeAdapter.remove(mDeletePosition);
+                            public void onSuccess(Boolean needAutoRefresh) {
+                                if (needAutoRefresh) {
+                                    mBinding.smartRefresh.autoRefresh();
+                                } else {
+                                    mMultiTypeAdapter.remove(mDeletePosition);
+                                }
                             }
 
                             @Override
@@ -396,8 +409,8 @@ public class HistoryFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe
-    public void addMemorial(AddHistoryDataEvent bean) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void addMemorial(AddDataEvent bean) {
         mBinding.smartRefresh.autoRefresh();
     }
 }

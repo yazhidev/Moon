@@ -425,46 +425,57 @@ public class Api {
     /**
      * 删除纪念日数据
      *
-     * @param objId
      * @param callback
      */
-    public void deleteMemorialDayData(String objId, @TypeConstant.DataTypeInHistory int type, String dayObjId, DataCallback<Boolean> callback) {
-        final int[] num = {2};
-        final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
-        loveHistoryQuery.whereEqualTo(TableConstant.Common.OBJECT_ID, objId);
-        loveHistoryQuery.deleteAllInBackground(new DeleteCallback() {
-            @Override
-            public void done(AVException e) {
-                num[0]--;
-                if (num[0] == 0) {
-                    handleResult(e, callback, () -> callback.onSuccess(true));
-                }
-            }
-        });
-
+    public void deleteHistoryData(@TypeConstant.DataTypeInHistory int type, String dataObjId, DataCallback<Boolean> callback) {
+        //先删除对应类型的数据
         String clazzName = null;
+        String clazzInhistoryName = null;
         switch (type) {
             case TypeConstant.TYPE_MEMORIAL_DAY:
                 clazzName = TableConstant.MemorialDay.CLAZZ_NAME;
+                clazzInhistoryName = TableConstant.LoveHistory.MEMORIAL_DAY;
                 break;
             case TypeConstant.TYPE_HOPE:
+            case TypeConstant.TYPE_HOPE_FINISHED:
                 clazzName = TableConstant.Hope.CLAZZ_NAME;
+                clazzInhistoryName = TableConstant.LoveHistory.HOPE;
                 break;
             case TypeConstant.TYPE_TEXT:
                 clazzName = TableConstant.Text.CLAZZ_NAME;
+                clazzInhistoryName = TableConstant.LoveHistory.TEXT;
                 break;
             default:
                 break;
         }
-        final AVQuery<AVObject> dayQuery = new AVQuery<>(clazzName);
-        dayQuery.whereEqualTo(TableConstant.Common.OBJECT_ID, dayObjId);
-        dayQuery.deleteAllInBackground(new DeleteCallback() {
+        AVObject data = AVObject.createWithoutData(clazzName, dataObjId);
+        String finalClazzInhistoryName = clazzInhistoryName;
+        data.deleteInBackground(new DeleteCallback() {
             @Override
             public void done(AVException e) {
-                num[0]--;
-                if (num[0] == 0) {
-                    handleResult(e, callback, () -> callback.onSuccess(true));
-                }
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        //删除history表数据
+                        final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
+                        loveHistoryQuery.whereEqualTo(finalClazzInhistoryName, data);
+                        loveHistoryQuery.deleteAllInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                handleResult(e, callback, new onResultSuc() {
+                                    @Override
+                                    public void onSuc() {
+                                        if(type == TypeConstant.TYPE_HOPE || type == TypeConstant.TYPE_HOPE_FINISHED) {
+                                            callback.onSuccess(true);
+                                        } else {
+                                            callback.onSuccess(false);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             }
         });
     }
@@ -474,14 +485,47 @@ public class Api {
      *
      * @param callback
      */
-    public void deleteMemorialDayData(String memorialDayId, DataCallback<Boolean> callback) {
+    public void deleteHistoryData(String memorialDayId, DataCallback<Boolean> callback) {
         //先查该纪念日在history表中的对应数据
         AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
         AVObject memorialDay = AVObject.createWithoutData(TableConstant.MemorialDay.CLAZZ_NAME, memorialDayId);
         memorialDay.deleteInBackground();
         loveHistoryQuery.whereEqualTo(TableConstant.LoveHistory.MEMORIAL_DAY, memorialDay);
-        ArrayList<AVObject> todos = new ArrayList<>();
-        todos.add(memorialDay);
+        loveHistoryQuery.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        //开始删除
+                        AVObject.deleteAllInBackground(list, new DeleteCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                handleResult(e, callback, new onResultSuc() {
+                                    @Override
+                                    public void onSuc() {
+                                        callback.onSuccess(true);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 删除心愿（不知道love_history ID）
+     *
+     * @param callback
+     */
+    public void deleteHopeData(String hopeId, DataCallback<Boolean> callback) {
+        //先查在history表中的对应数据
+        AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
+        AVObject hope = AVObject.createWithoutData(TableConstant.Hope.CLAZZ_NAME, hopeId);
+        hope.deleteInBackground();
+        loveHistoryQuery.whereEqualTo(TableConstant.LoveHistory.HOPE, hope);
         loveHistoryQuery.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
@@ -551,15 +595,17 @@ public class Api {
      *
      * @param title        标题
      * @param level        等级
+     * @param link         链接
      * @param dataCallback
      */
-    public void addHope(String title, int level, final DataCallback<Boolean> dataCallback) {
+    public void addHope(String title, int level, String link, final DataCallback<Boolean> dataCallback) {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //存到心愿表 + 首页历史列表
         AVObject hopeObj = new AVObject(TableConstant.Hope.CLAZZ_NAME);
         hopeObj.put(TableConstant.Hope.TITLE, title);
         hopeObj.put(TableConstant.Hope.LEVEL, level);
+        hopeObj.put(TableConstant.Hope.LINK, link);
         hopeObj.put(TableConstant.Hope.USER, getUserObj(currentUser.getObjectId()));
 
         AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
@@ -569,6 +615,22 @@ public class Api {
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
         loveHistoryObj.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+            }
+        });
+    }
+
+    /**
+     * 修改心愿
+     */
+    public void editHope(String objId, String title, int level, String link, final DataCallback<Boolean> dataCallback) {
+        AVObject hopeData = AVObject.createWithoutData(TableConstant.Hope.CLAZZ_NAME, objId);
+        hopeData.put(TableConstant.Hope.TITLE, title);
+        hopeData.put(TableConstant.Hope.LEVEL, level);
+        hopeData.put(TableConstant.Hope.LINK, link);
+        hopeData.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
@@ -618,6 +680,8 @@ public class Api {
                         hopeData.setCreateTime(object.getDate(TableConstant.Common.CREATE_TIME));
                         hopeData.setUpdateTime(object.getDate(TableConstant.Common.UPDATE_TIME));
                         hopeData.setStatus(object.getInt(TableConstant.Hope.STATUS));
+                        hopeData.setLink(object.getString(TableConstant.Hope.LINK));
+                        hopeData.setFinishContent(object.getString(TableConstant.Hope.FINISH_WORD));
                         dataList.add(hopeData);
                     }
                     callback.onSuccess(dataList);
@@ -630,34 +694,42 @@ public class Api {
 
     /**
      * 心愿达成
+     * @param objectId
+     * @param content
+     * @param dataCallback
      */
-    public void finishHope(String objectId, DataCallback<Boolean> callback) {
-        AVQuery<AVObject> query = new AVQuery<>(TableConstant.Hope.CLAZZ_NAME);
-        query.getInBackground(objectId, new GetCallback<AVObject>() {
+    public void finishHope(String objectId, String content, final DataCallback<Boolean> dataCallback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        AVObject hopeObj = AVObject.createWithoutData(TableConstant.Hope.CLAZZ_NAME, objectId);
+        //更改心愿状态
+        hopeObj.put(TableConstant.Hope.STATUS, TypeConstant.HOPE_DONE);
+        hopeObj.put(TableConstant.Hope.FINISH_WORD, content);
+
+        //首页历史列表插入一条心愿达成数据
+        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
+        loveHistoryObj.put(TableConstant.LoveHistory.HOPE, hopeObj);
+        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_HOPE_FINISHED);
+        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+
+        ArrayList<AVObject> todos = new ArrayList<>();
+        todos.add(hopeObj);
+        todos.add(loveHistoryObj);
+        AVObject.saveAllInBackground(todos, new SaveCallback() {
             @Override
-            public void done(AVObject object, AVException e) {
-                handleResult(e, callback, new onResultSuc() {
-                    @Override
-                    public void onSuc() {
-                        object.put(TableConstant.Hope.STATUS, TypeConstant.HOPE_DONE);
-                        object.saveInBackground(new SaveCallback() {
+            public void done(AVException e) {
+                Observable.just(0)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<Integer>() {
                             @Override
-                            public void done(AVException exc) {
-                                handleResult(exc, callback, new onResultSuc() {
-                                    @Override
-                                    public void onSuc() {
-                                        callback.onSuccess(true);
-                                    }
-                                });
+                            public void accept(Integer integer) throws Exception {
+                                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
                             }
                         });
-                    }
-                });
             }
         });
 
     }
-
 
     /**
      * 添加文本

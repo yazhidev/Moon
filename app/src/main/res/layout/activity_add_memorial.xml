@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/btn_comfirm"
             app:layout_constraintTop_toBottomOf="@+id/tv_date"
@@ -88,6 +88,7 @@
             app:layout_constraintTop_toTopOf="@+id/btn_delete"
             app:layout_goneMarginTop="30dp"
             app:layout_goneMarginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
             android:layout_height="wrap_content"
             app:rv_text="@string/add_text"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>

@@ -23,7 +23,9 @@ public class HopeItemDataWrapper extends IHistoryBean<HopeItemDataBean> {
         HopeItemDataBean hopeBean = new HopeItemDataBean(hopeItemData.getString(TableConstant.Hope.TITLE)
                 , hopeItemData.getInt(TableConstant.Hope.LEVEL));
         hopeBean.setStatus(hopeItemData.getInt(TableConstant.Hope.STATUS));
+        hopeBean.setLink(hopeItemData.getString(TableConstant.Hope.LINK));
         hopeBean.setObjectId(hopeItemData.getObjectId());
+        hopeBean.setFinishContent(hopeItemData.getString(TableConstant.Hope.FINISH_WORD));
         return hopeBean;
     }
 }

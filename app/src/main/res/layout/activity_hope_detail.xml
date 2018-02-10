@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.viewmodel.HopeItemDataBean"></variable>
+    </data>
+    <android.support.constraint.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.yazhi1992.moon.ui.hopedetail.HopeDetailActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:elevation="4dp"
+            app:title="小心愿"
+            style="@style/toolbar"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="?attr/actionBarSize"></android.support.v7.widget.Toolbar>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            android:layout_marginTop="50dp"
+            android:visibility="@{item.mStatus==0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="50dp"
+            android:src="@mipmap/finish_hope"
+            />
+
+        <TextView
+            android:id="@+id/tv_title"
+            app:layout_constraintVertical_bias=".2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="20sp"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/color_5"
+            android:gravity="center"
+            android:text="@{item.mTitle}"
+            />
+
+        <com.yazhi1992.yazhilib.widget.YZRatingBar
+            android:id="@+id/ratingbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="30dp"
+            app:canEdit="false"
+            app:emptyStarResId="@mipmap/hope_star"
+            app:fullStarResId="@mipmap/hope_star_choosed"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            app:marginDistance="10dp"
+            app:totalNum="5"
+            app:selectedNum="@{item.mLevel}"
+            app:widthAndHeight="30dp"></com.yazhi1992.yazhilib.widget.YZRatingBar>
+
+        <ImageView
+            android:id="@+id/ig_link"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/ratingbar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="@{item.mLink.equals(``) ? View.GONE : View.VISIBLE}"
+            android:src="@{item.mLink.startsWith(`http`) ? @drawable/url_link : @drawable/taobao_icon}"
+            />
+
+        <TextView
+            android:id="@+id/tv_link"
+            app:layout_constraintTop_toBottomOf="@+id/ig_link"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点击查看心愿链接"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:visibility="@{item.mLink.equals(``) ? View.GONE : View.VISIBLE}"
+            />
+
+        <TextView
+            android:id="@+id/tv_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_link"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="@{item.mFinishContent}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
+

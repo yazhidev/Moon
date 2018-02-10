@@ -13,7 +13,7 @@ import java.util.Date;
 public class IDataBean {
     private String mObjectId;
     public ObservableField<Date> mCreateTime = new ObservableField<>();;
-    private Date mUpdateTime;
+    public ObservableField<Date> mUpdateTime = new ObservableField<>();;
 
     public String getObjectId() {
         return mObjectId;
@@ -32,10 +32,10 @@ public class IDataBean {
     }
 
     public Date getUpdateTime() {
-        return mUpdateTime;
+        return mUpdateTime.get();
     }
 
     public void setUpdateTime(Date updateTime) {
-        mUpdateTime = updateTime;
+        mUpdateTime.set(updateTime);
     }
 }

@@ -13,12 +13,13 @@ import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.databinding.ActivityBaseListBinding;
-import com.yazhi1992.moon.event.AddHistoryDataEvent;
+import com.yazhi1992.moon.event.AddDataEvent;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -126,14 +127,14 @@ public abstract class BaseListActivity<T> extends BaseActivity{
     //添加右上角加号按钮
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.memorial_list, menu);
+        getMenuInflater().inflate(R.menu.add, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add_memorial:
+            case R.id.menu_add:
                 onClickAddData();
                 break;
             default:
@@ -148,8 +149,8 @@ public abstract class BaseListActivity<T> extends BaseActivity{
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe
-    public void addData(AddHistoryDataEvent bean) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void addData(AddDataEvent bean) {
         if(getDataType().equals(bean.getAction())) {
             mBinding.smartRefresh.autoRefresh();
         }

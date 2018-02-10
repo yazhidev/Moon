@@ -12,9 +12,10 @@ public class TypeConstant {
 
     public static final int TYPE_TEXT = 0; //文本
     public static final int TYPE_MEMORIAL_DAY = 1; //纪念日
-    public static final int TYPE_HOPE = 2; //心愿
+    public static final int TYPE_HOPE = 2; //新增心愿
+    public static final int TYPE_HOPE_FINISHED = 3; //完成心愿
 
-    @IntDef({TYPE_TEXT, TYPE_MEMORIAL_DAY, TYPE_HOPE})
+    @IntDef({TYPE_TEXT, TYPE_MEMORIAL_DAY, TYPE_HOPE, TYPE_HOPE_FINISHED})
     public @interface DataTypeInHistory{}
 
 

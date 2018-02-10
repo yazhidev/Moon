@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.constraint.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.yazhi1992.moon.ui.addhope.AddHopeActivity">
@@ -47,33 +47,89 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <EditText
+            android:id="@+id/et_link"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="15dp"
+            android:gravity="left|center_vertical"
+            android:hint="@string/input_taobao_hint"
+            android:lineSpacingExtra="3dp"
+            android:padding="3dp"
+            android:singleLine="true"
+            app:layout_constraintTop_toBottomOf="@+id/titleLayout"
+            android:textSize="15sp"/>
+
+        <ImageView
+            android:id="@+id/ig_link_tip"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@mipmap/tip_icon"
+            app:layout_constraintTop_toTopOf="@+id/tv_link_tip"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_link_tip"
+            app:layout_constraintLeft_toLeftOf="@+id/et_link"
+            />
+
+        <TextView
+            android:id="@+id/tv_link_tip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:text="@string/taobao_link_tip"
+            android:textColor="@color/color_9"
+            android:textSize="11sp"
+            android:lineSpacingExtra="2dp"
+            app:layout_constraintLeft_toRightOf="@+id/ig_link_tip"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_link"
+            />
+
         <com.yazhi1992.yazhilib.widget.YZRatingBar
             android:id="@+id/ratingbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             app:canEdit="true"
             app:emptyStarResId="@mipmap/hope_star"
             app:fullStarResId="@mipmap/hope_star_choosed"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleLayout"
+            app:layout_constraintTop_toBottomOf="@+id/tv_link_tip"
             app:marginDistance="10dp"
             app:totalNum="5"
             app:widthAndHeight="30dp"></com.yazhi1992.yazhilib.widget.YZRatingBar>
 
         <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
-            android:id="@+id/btn_add"
-            style="@style/loading_btn"
+            android:id="@+id/btn_delete"
+            style="@style/loading_delete_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/add_margin"
-            android:layout_marginRight="@dimen/add_margin"
             android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/btn_comfirm"
             app:layout_constraintTop_toBottomOf="@+id/ratingbar"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            android:visibility="gone"
+            app:rv_text="@string/delete_text"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
+            android:id="@+id/btn_comfirm"
+            style="@style/loading_btn"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toRightOf="@+id/btn_delete"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btn_delete"
+            app:layout_goneMarginTop="30dp"
+            android:layout_marginLeft="10dp"
+            app:layout_goneMarginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
             app:rv_text="@string/add_text"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
 
     </android.support.constraint.ConstraintLayout>

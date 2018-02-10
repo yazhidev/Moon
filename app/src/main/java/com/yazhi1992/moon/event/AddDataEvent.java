@@ -6,10 +6,10 @@ import com.yazhi1992.moon.constant.ActionConstant;
  * Created by zengyazhi on 2018/1/29.
  */
 
-public class AddHistoryDataEvent {
+public class AddDataEvent {
     private String action;
 
-    public AddHistoryDataEvent(@ActionConstant.AddAction String action) {
+    public AddDataEvent(@ActionConstant.AddAction String action) {
         this.action = action;
     }
 

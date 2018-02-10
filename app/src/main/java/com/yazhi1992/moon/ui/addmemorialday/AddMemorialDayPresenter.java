@@ -10,17 +10,7 @@ import com.yazhi1992.moon.api.DataCallback;
 public class AddMemorialDayPresenter {
 
     public void addMemorialDay(String title, long time, final DataCallback<Boolean> dataCallback) {
-        Api.getInstance().addMemorialDay(title, time, new DataCallback<Boolean>() {
-            @Override
-            public void onSuccess(Boolean data) {
-                dataCallback.onSuccess(data);
-            }
-
-            @Override
-            public void onFailed(int code, String msg) {
-                dataCallback.onFailed(code, msg);
-            }
-        });
+        Api.getInstance().addMemorialDay(title, time, dataCallback);
     }
 
     public void edit(String id, String title, long time, final DataCallback<Boolean> dataCallback) {
@@ -28,7 +18,6 @@ public class AddMemorialDayPresenter {
     }
 
     public void delete(String objId, DataCallback<Boolean> callback) {
-        Api.getInstance().deleteMemorialDayData(objId, callback);
-
+        Api.getInstance().deleteHistoryData(objId, callback);
     }
 }

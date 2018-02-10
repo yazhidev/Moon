@@ -1,14 +1,18 @@
-package com.yazhi1992.moon.ui.hopetab;
+package com.yazhi1992.moon.ui.hopelist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.adapter.HopeListViewBinder;
+import com.yazhi1992.moon.adapter.base.WithClicklistenerItemViewBinder;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
+import com.yazhi1992.moon.dialog.FinishHopeDialog;
 import com.yazhi1992.moon.ui.base.BaseListFragment;
+import com.yazhi1992.moon.util.EditDataHelper;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 
 import java.util.List;
@@ -23,6 +27,7 @@ public class HopeTabFragment extends BaseListFragment<HopeItemDataBean> {
 
     private @TypeConstant.HopeType int mType;
     public static final String TYPE = "type";
+    private FinishHopeDialog mFinishHopeDialog;
 
     public static HopeTabFragment newInstance(@TypeConstant.HopeType int type) {
         HopeTabFragment hopeTabFragment = new HopeTabFragment();
@@ -41,6 +46,24 @@ public class HopeTabFragment extends BaseListFragment<HopeItemDataBean> {
     @Override
     public void adapterRegister(MultiTypeAdapter adapter) {
         HopeListViewBinder hopeListViewBinder = new HopeListViewBinder();
+        hopeListViewBinder.setOnFinishListener(new HopeListViewBinder.OnFinishHopeListener() {
+
+            @Override
+            public void finish(int position, String id) {
+                if(mFinishHopeDialog == null) {
+                    mFinishHopeDialog = new FinishHopeDialog();
+                }
+                mFinishHopeDialog.showDialog(getActivity().getFragmentManager(), id);
+            }
+        });
+        hopeListViewBinder.setOnItemClickListener(new WithClicklistenerItemViewBinder.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                //前往心愿详情页
+                EditDataHelper.getInstance().saveData(adapter.getItems().get(position));
+                ActivityRouter.gotoHopeDetail();
+            }
+        });
         adapter.register(HopeItemDataBean.class, hopeListViewBinder);
     }
 

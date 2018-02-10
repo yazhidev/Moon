@@ -13,7 +13,7 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.databinding.ActivityAddMemorialBinding;
 import com.yazhi1992.moon.dialog.DatePickerDialog;
-import com.yazhi1992.moon.event.AddHistoryDataEvent;
+import com.yazhi1992.moon.event.AddDataEvent;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.AppUtils;
 import com.yazhi1992.moon.util.EditDataHelper;
@@ -45,8 +45,7 @@ public class AddMemorialActivity extends BaseActivity {
         ARouter.getInstance().inject(this);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_memorial);
 
-        setSupportActionBar(mBinding.toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initToolBar(mBinding.toolbar);
 
         mBinding.tvDate.setOnClickListener(v -> {
             if (mDialog == null) {
@@ -85,7 +84,6 @@ public class AddMemorialActivity extends BaseActivity {
                 chooseDate = new Date(mEditData.getTime());
                 mBinding.tvDate.setText(mEditData.getTimeStr());
                 mBinding.btnDelete.setVisibility(View.VISIBLE);
-                MemorialDayBean finalData = mEditData;
                 mBinding.btnDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -94,10 +92,10 @@ public class AddMemorialActivity extends BaseActivity {
                             public void comfirm() {
                                 mBinding.btnDelete.setLoading(true);
                                 //删除倒数日
-                                mPresenter.delete(finalData.getObjectId(), new DataCallback<Boolean>() {
+                                mPresenter.delete(mEditData.getObjectId(), new DataCallback<Boolean>() {
                                     @Override
                                     public void onSuccess(Boolean data) {
-                                        EventBus.getDefault().post(new AddHistoryDataEvent(ActionConstant.ADD_MEMORIAL));
+                                        EventBus.getDefault().post(new AddDataEvent(ActionConstant.ADD_MEMORIAL));
                                         mBinding.btnDelete.setLoading(false);
                                         EditDataHelper.getInstance().saveData(null);
                                         finish();
@@ -153,7 +151,7 @@ public class AddMemorialActivity extends BaseActivity {
                 mPresenter.addMemorialDay(title, chooseDate.getTime(), new DataCallback<Boolean>() {
                     @Override
                     public void onSuccess(Boolean data) {
-                        EventBus.getDefault().post(new AddHistoryDataEvent(ActionConstant.ADD_MEMORIAL));
+                        EventBus.getDefault().post(new AddDataEvent(ActionConstant.ADD_MEMORIAL));
                         LibUtils.hideKeyboard(mBinding.etTitle);
                         mBinding.btnComfirm.setLoading(false);
                         finish();

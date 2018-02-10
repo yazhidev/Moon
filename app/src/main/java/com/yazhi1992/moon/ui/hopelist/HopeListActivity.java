@@ -1,10 +1,10 @@
-package com.yazhi1992.moon.ui.hopetab;
+package com.yazhi1992.moon.ui.hopelist;
 
+import android.app.Fragment;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.ActivityRouter;
@@ -12,16 +12,17 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.ActivityHopeTabBinding;
 import com.yazhi1992.moon.ui.BaseActivity;
+import com.yazhi1992.yazhilib.utils.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Route(path = ActivityRouter.HOPE_TAB_LIST)
-public class HopeTabActivity extends BaseActivity {
+public class HopeListActivity extends BaseActivity {
 
     private ActivityHopeTabBinding mBinding;
     private List<Fragment> mFragments = new ArrayList<>();
-    private HopeTabAdapter mAdapter;
+    private FragmentPagerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class HopeTabActivity extends BaseActivity {
         mBinding.tabLayout.addTab(mBinding.tabLayout.newTab());
         mBinding.tabLayout.addTab(mBinding.tabLayout.newTab());
 
-        mAdapter = new HopeTabAdapter(getSupportFragmentManager());
+        mAdapter = new FragmentPagerAdapter(getFragmentManager(), mFragments);
 
         mFragments.add(HopeTabFragment.newInstance(TypeConstant.HOPE_UNFINISH));
         mFragments.add(HopeTabFragment.newInstance(TypeConstant.HOPE_DONE));
@@ -42,23 +43,27 @@ public class HopeTabActivity extends BaseActivity {
 
         mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
         mBinding.tabLayout.getTabAt(0).setText("念念不忘");
-        mBinding.tabLayout.getTabAt(1).setText("心想事成");
+        mBinding.tabLayout.getTabAt(1).setText("求仁得仁");
     }
 
-    class HopeTabAdapter extends FragmentPagerAdapter {
 
-        public HopeTabAdapter(FragmentManager fm) {
-            super(fm);
-        }
+    //添加右上角加编辑按钮
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_add:
+                //编辑
+                ActivityRouter.gotoAddHope(true);
+                break;
+            default:
+                break;
         }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
+        return true;
     }
 }

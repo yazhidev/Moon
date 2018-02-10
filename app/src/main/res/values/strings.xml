@@ -18,7 +18,7 @@
     <string name="delete_comment">是否删除该评论？</string>
 
     <string name="hope_title_in_history">许下小心愿</string>
-    <string name="finish_hope_title_in_history">执子之手，心想事成。达成心愿</string>
+    <string name="finish_hope_title_in_history">达成心愿</string>
 
     <string name="finish_app">再按一次退出</string>
 
@@ -57,6 +57,8 @@
     <string name="add_hope_lable">许愿</string>
     <string name="add_hope_title">我所有的向往都是你</string>
     <string name="title_add_hope">请输入心愿</string>
+    <string name="input_taobao_hint">心愿链接（选填）</string>
+    <string name="taobao_link_tip">如需链接淘宝商品，请前往淘宝商品详情页，点击分享-复制链接后填写至心愿链接中</string>
     <string name="add_tip_choose_level">还没有选小心心~</string>
     <string name="add_hope_empty_title">标题不能为空</string>
     <!--add hope-->
@@ -77,11 +79,15 @@
 
     <!--tip-->
     <string name="delete_data">是否要删除该数据？</string>
-
+    <string name="finish_hope_hint">梦想成真之际，想说点什么吗？</string>
+    <string name="finish_hope_hint_empty">内容不能为空</string>
+    <string name="finish_hope_btn">完成心愿</string>
     <string name="finish_hope">是否已达成心愿？</string>
 
     <string name="comment_suc">评论成功！</string>
 
+    <string name="taobao_not_install">请先安装淘宝</string>
+    <string name="goto_taobao">是否前往淘宝？</string>
 
     <!--notification-->
     <string name="notification_add_memorial_title">ta 添加了纪念日</string>
@@ -91,6 +97,8 @@
     <string name="pushmanager_init_failed">推送初始化失败</string>
 
     <string name="about_us_developer">Designed by D &#038; Lina in Hangzhou\nPowered by Love</string>
+
+    <string name="create_text_time">%d月%d日</string>
 
     <string name="week_mon">星期一</string>
     <string name="week_tue">星期二</string>

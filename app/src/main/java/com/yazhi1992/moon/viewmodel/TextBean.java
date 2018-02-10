@@ -9,9 +9,23 @@ import android.databinding.ObservableField;
 public class TextBean extends IDataBean{
 
     public ObservableField<String> mContent = new ObservableField<>();
+    public ObservableField<String> mUserName = new ObservableField<>();
+    public ObservableField<String> mTimeStr = new ObservableField<>(); //例如五月十二日
 
     public TextBean(String content) {
         this.mContent.set(content);
+    }
+
+    public String getUserName() {
+        return mUserName.get();
+    }
+
+    public void setUserName(String userName) {
+        mUserName.set(userName);
+    }
+
+    public void setTimeStr(String timeStr) {
+        mTimeStr.set(timeStr);
     }
 
     public String getContent() {
