@@ -166,6 +166,8 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.ext.daggerVersion"
 
     compile "org.greenrobot:greendao:$rootProject.green_dao_version"
+
+    compile 'com.zhihu.android:matisse:0.4.3'
 }
 
 //apply from: 'tinker-support.gradle'

@@ -1,5 +1,6 @@
 package com.yazhi1992.moon.ui.home.home;
 
+import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,16 @@ import com.bumptech.glide.Glide;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
+import com.yazhi1992.moon.event.AddDataEvent;
+import com.yazhi1992.moon.event.AddHomeImg;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.filter.Filter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -32,14 +43,36 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        EventBus.getDefault().register(this);
 
         String URL = "http://upload-images.jianshu.io/upload_images/1929170-6a96a2a204b50559.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1080/q/50";
         Glide.with(view.getContext()).load(URL)
                 .into(mBinding.igHome);
 
+        mBinding.igHome.setOnClickListener(v -> {
+            Matisse.from(getActivity())
+                    .choose(MimeType.of(MimeType.JPEG))
+                    .countable(true)
+                    .maxSelectable(1)
+                    .imageEngine(new GlideEngine())
+                    .forResult(10);
+        });
+
         mBinding.llHopeDayList.setOnClickListener(v -> ActivityRouter.gotoHopeList());
 
         mBinding.llMemorialDayList.setOnClickListener(v -> ActivityRouter.gotoMemorialList());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void addMemorial(AddHomeImg bean) {
+        Glide.with(getActivity()).load(bean.getUrl())
+                .into(mBinding.igHome);
     }
 
 }

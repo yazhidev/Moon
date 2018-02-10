@@ -54,6 +54,8 @@ public class TableConstant {
         public static final String USER_ID = "user_id";
         public static final String LOVER_ID = "lover_id";
         public static final String USER_NAME = "user_name";
+        public static final String HOME_IMG_URL = "home_img_url";
+        public static final String HOME_IMG = "home_img";
     }
 
     //心愿表
