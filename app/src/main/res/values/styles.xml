@@ -83,8 +83,6 @@
 
     <style name="rl_in_history">
         <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingBottom">10dp</item>
-        <item name="android:paddingRight">15dp</item>
     </style>
 
     <style name="user_name_in_history">
@@ -106,7 +104,6 @@
     </style>
 
     <style name="comment_in_history">
-        <item name="android:layout_marginTop">@dimen/comment_margin</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>

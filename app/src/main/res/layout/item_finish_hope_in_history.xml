@@ -33,7 +33,8 @@
 
         <TextView
             android:id="@+id/tv_finish_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginRight="@dimen/history_margin_right"
             android:layout_height="wrap_content"
             android:text="@{item.mData.mFinishContent}"
             android:layout_below="@+id/tv_name"
@@ -45,7 +46,7 @@
             android:id="@+id/rl_hope"
             android:layout_alignLeft="@+id/tv_finish_content"
             android:layout_below="@+id/tv_finish_content"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="@dimen/history_margin_right"
             android:layout_marginTop="@dimen/history_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -63,30 +64,19 @@
                 android:layout_toRightOf="@+id/ig_finish_icon"
                 android:layout_marginLeft="8dp"
                 android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_marginRight="@dimen/history_margin_right"
                 android:layout_height="wrap_content"
-                android:text="@string/finish_hope_title_in_history"
+                android:textSize="16sp"
+                android:text="@{@string/finish_hope_title_in_history(item.mData.mTitle)}"
                 android:textColor="@color/color_3"
                 />
 
         </com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/rl_hope"
-            android:layout_width="match_parent"
-            android:layout_alignLeft="@+id/rl_hope"
-            android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:lineSpacingExtra="3dp"
-            android:textColor="@color/color_3"
-            android:text="@{item.mData.mTitle}"
-            />
-
         <include
             android:layout_alignLeft="@+id/rl_hope"
-            android:layout_below="@+id/tv_title"
+            android:layout_below="@+id/rl_hope"
             app:createtime="@{item.mCreateTime}"
             layout="@layout/include_history_comment"
             style="@style/comment_in_history"

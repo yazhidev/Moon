@@ -38,7 +38,7 @@ import com.yazhi1992.moon.viewmodel.TextBeanWrapper;
 import com.yazhi1992.yazhilib.utils.KeyBoardHeightUtil;
 import com.yazhi1992.yazhilib.utils.LibCalcUtil;
 import com.yazhi1992.yazhilib.utils.LibUtils;
-import com.yazhi1992.yazhilib.utils.StatusBarUtils;
+import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -90,7 +90,7 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mBinding.rlTop.setPadding(0, StatusBarUtils.getStatusBarHeight(getActivity()), 0, 0);
+        mBinding.rlTop.setPadding(0, LibStatusBarUtils.getStatusBarHeight(getActivity()), 0, 0);
 
         mMultiTypeAdapter = new CustomMultitypeAdapter();
         //纪念日

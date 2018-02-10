@@ -3,6 +3,8 @@
         xmlns:tool="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
+
         <variable
             name="item"
             type="com.yazhi1992.moon.viewmodel.HopeItemDataWrapper"></variable>
@@ -46,6 +48,7 @@
             android:layout_alignLeft="@+id/tv_type"
             android:layout_below="@+id/tv_type"
             app:rv_backgroundColor="@color/color_f3"
+            android:layout_marginRight="@dimen/history_margin_right"
             android:layout_marginTop="@dimen/history_margin"
             android:padding="10dp"
             android:layout_width="match_parent"
@@ -74,6 +77,15 @@
                 app:marginDistance="3dp"
                 app:totalNum="5"
                 app:widthAndHeight="18dp"></com.yazhi1992.yazhilib.widget.YZRatingBar>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/ratingbar"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@mipmap/link_icon"
+                android:visibility="@{item.mData.mLink.equals(``) ? View.GONE : View.VISIBLE}"
+                />
 
         </com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout>
 

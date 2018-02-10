@@ -21,7 +21,7 @@ import com.yazhi1992.moon.ui.home.history.HistoryFragment;
 import com.yazhi1992.moon.ui.home.home.HomeFragment;
 import com.yazhi1992.moon.ui.home.set.SetFragment;
 import com.yazhi1992.yazhilib.utils.LibUtils;
-import com.yazhi1992.yazhilib.utils.StatusBarUtils;
+import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class HomeActivity extends AbsUpgrateActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarUtils.with(this).init();
+        LibStatusBarUtils.with(this).init();
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 

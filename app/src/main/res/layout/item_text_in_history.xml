@@ -36,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="5dp"
+            android:layout_marginRight="@dimen/history_margin_right"
             android:layout_below="@+id/tv_name"
             android:layout_alignLeft="@+id/tv_name"
             style="@style/content_in_history"

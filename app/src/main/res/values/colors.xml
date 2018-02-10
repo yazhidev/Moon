@@ -18,6 +18,8 @@
     <color name="color_e">#eeeeee</color>
     <color name="test">#eee222</color>
     <color name="gray">#555555</color>
+    <color name="comment_name">#5d6b8d</color>
+
     <color name="white_pressed">#dddddd</color>
 
     <color name="belong_day_color">#2196F3</color>

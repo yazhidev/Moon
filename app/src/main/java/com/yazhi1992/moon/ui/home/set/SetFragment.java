@@ -18,7 +18,7 @@ import com.yazhi1992.moon.databinding.FragmentSetBinding;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.util.PushManager;
-import com.yazhi1992.yazhilib.utils.StatusBarUtils;
+import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -43,7 +43,7 @@ public class SetFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mBinding.rlTop.setPadding(0, StatusBarUtils.getStatusBarHeight(getActivity()), 0, 0);
+        mBinding.rlTop.setPadding(0, LibStatusBarUtils.getStatusBarHeight(getActivity()), 0, 0);
 
         mUserDaoUtil = new UserDaoUtil();
         User user = mUserDaoUtil.getUserDao();

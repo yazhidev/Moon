@@ -1,7 +1,13 @@
 package com.yazhi1992.moon.adapter.history;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,13 +50,20 @@ public class CommentInHistoryViewBinder extends WithClicklistenerItemViewBinder<
 
     @Override
     protected void BindViewHolder(@NonNull ViewHolder holder, @NonNull CommentBean bean) {
-//        SpannableString spannableString = new SpannableString("默认颜色红颜色");
-//        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FF0000")), 4,spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        tv.setText(spannableString);
         if (LibUtils.notNullNorEmpty(bean.getReplyName()) && !bean.getReplyName().equals("null")) {
-            holder.mTvTitle.setText(bean.getUserName() + "回复" + bean.getReplyName() + "：" + bean.getContent());
+            String text = bean.getUserName() + "回复" + bean.getReplyName() + "：" + bean.getContent();
+            SpannableString spannableString = new SpannableString(text);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#5d6b8d")), text.indexOf(bean.getUserName()), text.indexOf("回复"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new StyleSpan(Typeface.BOLD), text.indexOf(bean.getUserName()), text.indexOf("回复"), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#5d6b8d")), text.indexOf(bean.getReplyName()), text.indexOf(bean.getReplyName()) + bean.getReplyName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new StyleSpan(Typeface.BOLD), text.indexOf(bean.getReplyName()), text.indexOf(bean.getReplyName()) + bean.getReplyName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.mTvTitle.setText(spannableString);
         } else {
-            holder.mTvTitle.setText(bean.getUserName() + "：" + bean.getContent());
+            String text = bean.getUserName() + "：" + bean.getContent();
+            SpannableString spannableString = new SpannableString(text);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#5d6b8d")), 0, bean.getUserName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, bean.getUserName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.mTvTitle.setText(spannableString);
         }
 
         //删除评论

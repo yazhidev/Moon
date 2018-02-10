@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.yazhi1992.moon.R;
-import com.yazhi1992.yazhilib.utils.StatusBarUtils;
+import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +26,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void initStatusBar() {
-        StatusBarUtils.with(this)
+        LibStatusBarUtils.with(this)
                 .setColor(getResources().getColor(R.color.colorAccent))
                 .init();
     }

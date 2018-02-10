@@ -13,13 +13,15 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/ry_comment"
             android:visibility="gone"
+            android:layout_marginRight="@dimen/history_margin_right"
             android:paddingTop="@dimen/comment_item_margin"
             android:background="@color/color_f3"
-            android:layout_marginBottom="@dimen/comment_margin"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
 
         <RelativeLayout
+            android:id="@+id/ll_comment"
             android:layout_below="@+id/ry_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -34,10 +36,11 @@
                 />
 
             <ImageView
-                android:id="@+id/ig_comment"
+                android:padding="12dp"
+                android:layout_marginRight="3dp"
                 android:layout_centerVertical="true"
-                android:layout_width="21dp"
-                android:layout_height="21dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_alignParentRight="true"
                 android:src="@mipmap/comment_icon"
                 />

@@ -18,7 +18,7 @@
     <string name="delete_comment">是否删除该评论？</string>
 
     <string name="hope_title_in_history">许下小心愿</string>
-    <string name="finish_hope_title_in_history">达成心愿</string>
+    <string name="finish_hope_title_in_history">达成心愿：%s</string>
 
     <string name="finish_app">再按一次退出</string>
 
@@ -98,7 +98,7 @@
 
     <string name="about_us_developer">Designed by D &#038; Lina in Hangzhou\nPowered by Love</string>
 
-    <string name="create_text_time">%d月%d日</string>
+    <string name="create_text_time">%s月%s日</string>
 
     <string name="week_mon">星期一</string>
     <string name="week_tue">星期二</string>

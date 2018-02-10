@@ -706,6 +706,13 @@ public class Api {
         hopeObj.put(TableConstant.Hope.STATUS, TypeConstant.HOPE_DONE);
         hopeObj.put(TableConstant.Hope.FINISH_WORD, content);
 
+        hopeObj.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+
+            }
+        });
+
         //首页历史列表插入一条心愿达成数据
         AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
         loveHistoryObj.put(TableConstant.LoveHistory.HOPE, hopeObj);

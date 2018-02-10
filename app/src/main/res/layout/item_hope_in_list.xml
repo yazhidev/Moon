@@ -49,6 +49,16 @@
                 android:layout_centerVertical="true"
                 />
 
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@mipmap/link_icon"
+                android:layout_toRightOf="@+id/tv_name"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50dp"
+                android:visibility="@{item.mLink.equals(``) ? View.GONE : View.VISIBLE}"
+                />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -91,7 +101,7 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:lineSpacingExtra="3dp"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="@color/color_3"
             android:text="@{item.mTitle}"
             tool:text="哈哈哈哈哈哈哈"

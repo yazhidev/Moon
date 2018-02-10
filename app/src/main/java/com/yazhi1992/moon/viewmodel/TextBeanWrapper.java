@@ -4,6 +4,7 @@ import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.TableConstant;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -34,8 +35,7 @@ public class TextBeanWrapper extends IHistoryBean<TextBean> {
         instance.setTime(createdAt);
         int month = instance.get(Calendar.MONTH) + 1;
         int day = instance.get(Calendar.DATE);
-        // TODO: 2018/2/10 获取中文
-        textBean.setTimeStr(String.format(BaseApplication.getInstance().getString(R.string.create_text_time), month, day));
+        textBean.setTimeStr(String.format(BaseApplication.getInstance().getString(R.string.create_text_time), LibUtils.numberToChinese(month), LibUtils.numberToChinese(day)));
         return textBean;
     }
 }

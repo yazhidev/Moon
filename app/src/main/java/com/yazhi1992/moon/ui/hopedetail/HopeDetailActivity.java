@@ -59,13 +59,26 @@ public class HopeDetailActivity extends BaseActivity {
         if (EditDataHelper.getInstance().getData() == null) {
             //数据已删除
             finish();
+        } else {
+            HopeItemDataBean dataBean = (HopeItemDataBean) EditDataHelper.getInstance().getData();
+            if (dataBean.getStatus() == 1) {
+                //已完成，隐藏编辑按钮
+                MenuItem item = mBinding.toolbar.getMenu().findItem(R.id.toolbar_edit);
+                if(item != null) {
+                    item.setVisible(false);
+                }
+            }
         }
     }
 
     //添加右上角加编辑按钮
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.edit, menu);
+        HopeItemDataBean dataBean = (HopeItemDataBean) EditDataHelper.getInstance().getData();
+        if (dataBean.getStatus() == 0) {
+            //未完成
+            getMenuInflater().inflate(R.menu.edit, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

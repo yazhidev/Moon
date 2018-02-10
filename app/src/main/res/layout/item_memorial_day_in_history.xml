@@ -48,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/history_margin"
             android:layout_alignLeft="@+id/tv_type"
+            android:layout_marginRight="@dimen/history_margin_right"
             android:layout_below="@+id/tv_type"
             android:layout_height="36dp">
 

@@ -16,7 +16,7 @@ import com.yazhi1992.moon.databinding.ActivityMemorialDayDetailBinding;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.EditDataHelper;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
-import com.yazhi1992.yazhilib.utils.StatusBarUtils;
+import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 
 @Route(path = ActivityRouter.MEMORIAL_DAY_DETAIL)
 public class MemorialDayDetailActivity extends BaseActivity {
@@ -25,7 +25,7 @@ public class MemorialDayDetailActivity extends BaseActivity {
 
     @Override
     protected void initStatusBar() {
-        StatusBarUtils.with(this)
+        LibStatusBarUtils.with(this)
                 .init();
     }
 
@@ -36,7 +36,7 @@ public class MemorialDayDetailActivity extends BaseActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_memorial_day_detail);
 
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.toolbar.getLayoutParams();
-        layoutParams.setMargins(0, StatusBarUtils.getStatusBarHeight(this), 0, 0);
+        layoutParams.setMargins(0, LibStatusBarUtils.getStatusBarHeight(this), 0, 0);
         mBinding.toolbar.setTitle(getString(R.string.memorial_day_detail_title));
         // 获取Drawable对象
         Drawable mDrawable = ContextCompat.getDrawable(this, R.drawable.bad);

@@ -1,6 +1,7 @@
 package com.yazhi1992.moon.ui.textdetail;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -15,17 +16,17 @@ import com.yazhi1992.moon.databinding.ActivityTextDetailBinding;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.EditDataHelper;
 import com.yazhi1992.moon.viewmodel.TextBean;
-import com.yazhi1992.yazhilib.utils.StatusBarUtils;
+import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 
 @Route(path = ActivityRouter.TEXT_DETAIL)
 public class TextDetailActivity extends BaseActivity {
 
-    // TODO: 2018/2/10 字体
     ActivityTextDetailBinding mBinding;
 
     @Override
     protected void initStatusBar() {
-        StatusBarUtils.with(this)
+        LibStatusBarUtils.with(this)
+                .setIsDarkStatusBar(true)
                 .init();
     }
 
@@ -35,14 +36,19 @@ public class TextDetailActivity extends BaseActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_text_detail);
 
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.toolbar.getLayoutParams();
-        layoutParams.setMargins(0, StatusBarUtils.getStatusBarHeight(this), 0, 0);
+        layoutParams.setMargins(0, LibStatusBarUtils.getStatusBarHeight(this), 0, 0);
         // 获取Drawable对象
         Drawable mDrawable = ContextCompat.getDrawable(this, R.drawable.bad);
         // 设置Drawable的透明度
         mDrawable.setAlpha(0);
         // 给Toolbar设置背景图
         mBinding.toolbar.setBackgroundDrawable(mDrawable);
+
         initToolBar(mBinding.toolbar);
+
+        Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
+        getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         if(EditDataHelper.getInstance().getData() instanceof TextBean) {
             TextBean editData = (TextBean) EditDataHelper.getInstance().getData();
