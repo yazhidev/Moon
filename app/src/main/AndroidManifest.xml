@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.yazhi1992.moon">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -117,6 +118,21 @@
         </activity>
         <activity android:name=".ui.textdetail.TextDetailActivity">
         </activity>
+
+        <provider
+            android:name=".util.MyFileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="name,authorities,exported,grantUriPermissions">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"
+                tools:replace="name,resource" />
+        </provider>
+
     </application>
+
+
 
 </manifest>

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.yazhi1992.moon.ActivityRouter;
+import com.yazhi1992.moon.BuildConfig;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
@@ -20,6 +21,7 @@ import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,7 +50,7 @@ public class HomeFragment extends Fragment {
         mPresenter.getImgUrl(new DataCallback<String>() {
             @Override
             public void onSuccess(String data) {
-                if(LibUtils.notNullNorEmpty(data)) {
+                if (LibUtils.notNullNorEmpty(data)) {
                     Glide.with(view.getContext()).load(data)
                             .into(mBinding.igHome);
                 }
@@ -61,21 +63,27 @@ public class HomeFragment extends Fragment {
         });
 
         mBinding.igHome.setOnClickListener(v -> {
-            Matisse.from(getActivity())
-                    .choose(MimeType.ofImage())
-                    .showSingleMediaType(true)
-                    .countable(true)
-                    .maxSelectable(1)
-                    .setForceRatio(1, 1)
-                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                    .thumbnailScale(0.85f)
-                    .imageEngine(new GlideEngine())
-                    .forResult(10);
+            takePic();
         });
 
         mBinding.llHopeDayList.setOnClickListener(v -> ActivityRouter.gotoHopeList());
 
         mBinding.llMemorialDayList.setOnClickListener(v -> ActivityRouter.gotoMemorialList());
+    }
+
+    void takePic() {
+        Matisse.from(getActivity())
+                .choose(MimeType.ofImage())
+                .showSingleMediaType(true)
+                .capture(true)
+                .captureStrategy(new CaptureStrategy(true, BuildConfig.DEBUG ? "com.yazhi1992.moon.debug.provider" : "com.yazhi1992.moon.provider"))
+                .countable(true)
+                .maxSelectable(1)
+                .setForceRatio(1, 1)
+                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                .thumbnailScale(0.85f)
+                .imageEngine(new GlideEngine())
+                .forResult(10);
     }
 
     @Override
