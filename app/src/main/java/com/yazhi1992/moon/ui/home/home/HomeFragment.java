@@ -13,13 +13,13 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
-import com.yazhi1992.moon.event.AddDataEvent;
 import com.yazhi1992.moon.event.AddHomeImg;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.filter.Filter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding mBinding;
+    private HomeFragmentPresenter mPresenter = new HomeFragmentPresenter();
 
     @Nullable
     @Override
@@ -43,17 +44,31 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        EventBus.getDefault().register(this);
 
-        String URL = "http://upload-images.jianshu.io/upload_images/1929170-6a96a2a204b50559.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1080/q/50";
-        Glide.with(view.getContext()).load(URL)
-                .into(mBinding.igHome);
+        mPresenter.getImgUrl(new DataCallback<String>() {
+            @Override
+            public void onSuccess(String data) {
+                if(LibUtils.notNullNorEmpty(data)) {
+                    Glide.with(view.getContext()).load(data)
+                            .into(mBinding.igHome);
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+
+            }
+        });
 
         mBinding.igHome.setOnClickListener(v -> {
             Matisse.from(getActivity())
-                    .choose(MimeType.of(MimeType.JPEG))
+                    .choose(MimeType.ofImage())
+                    .showSingleMediaType(true)
                     .countable(true)
                     .maxSelectable(1)
+                    .setForceRatio(1, 1)
+                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                    .thumbnailScale(0.85f)
                     .imageEngine(new GlideEngine())
                     .forResult(10);
         });
@@ -64,13 +79,19 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void addMemorial(AddHomeImg bean) {
+    public void uploadImg(AddHomeImg bean) {
         Glide.with(getActivity()).load(bean.getUrl())
                 .into(mBinding.igHome);
     }

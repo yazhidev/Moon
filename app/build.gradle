@@ -167,7 +167,9 @@ dependencies {
 
     compile "org.greenrobot:greendao:$rootProject.green_dao_version"
 
-    compile 'com.zhihu.android:matisse:0.4.3'
+    compile (project(":matisse")) {
+        exclude group: 'com.github.bumptech.glide', module: 'glide'
+    }
 }
 
 //apply from: 'tinker-support.gradle'

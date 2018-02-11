@@ -1,6 +1,7 @@
 package com.yazhi1992.moon.api;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
@@ -14,6 +15,8 @@ import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
+import com.yazhi1992.moon.sql.User;
+import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
@@ -25,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -465,7 +469,7 @@ public class Api {
                                 handleResult(e, callback, new onResultSuc() {
                                     @Override
                                     public void onSuc() {
-                                        if(type == TypeConstant.TYPE_HOPE || type == TypeConstant.TYPE_HOPE_FINISHED) {
+                                        if (type == TypeConstant.TYPE_HOPE || type == TypeConstant.TYPE_HOPE_FINISHED) {
                                             callback.onSuccess(true);
                                         } else {
                                             callback.onSuccess(false);
@@ -694,6 +698,7 @@ public class Api {
 
     /**
      * 心愿达成
+     *
      * @param objectId
      * @param content
      * @param dataCallback
@@ -819,13 +824,13 @@ public class Api {
                     public void onSuc() {
                         //先更新数据再删除
                         JSONArray jsonArray = avObject.getJSONArray(TableConstant.LoveHistory.COMMENT_LIST);
-                        if(jsonArray != null && jsonArray.length() > 0) {
+                        if (jsonArray != null && jsonArray.length() > 0) {
                             //评论有数据
                             List<CommentBean> list = new ArrayList<>();
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 try {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    if(jsonObject.getLong(CommentBean.ID) == commentId) {
+                                    if (jsonObject.getLong(CommentBean.ID) == commentId) {
                                         continue;
                                     }
                                     CommentBean commentBean = new CommentBean(jsonObject.getString(CommentBean.CONTENT), jsonObject.getString(CommentBean.USER_NAME));
@@ -860,5 +865,114 @@ public class Api {
         return AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, objId);
     }
 
+    public void uploadHomeImg(String filePath, DataCallback<String> callback) {
+        String name = "img.jpg";
+        if(filePath.contains("/")) {
+            name = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+        }
+        try {
+            AVFile file = AVFile.withAbsoluteLocalPath(name, filePath);
+            file.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        //保存到home表
+                        final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
+                        meQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
+                        meQuery.findInBackground(new FindCallback<AVObject>() {
+                            @Override
+                            public void done(List<AVObject> list, AVException e) {
+                                handleResult(e, callback, new onResultSuc() {
+                                    @Override
+                                    public void onSuc() {
+                                        AVObject object = null;
+                                        if (list == null || list.size() == 0) {
+                                            //没找到，添加
+                                            object = new AVObject(TableConstant.Home.CLAZZ_NAME);
+                                            object.put(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
+                                            object.put(TableConstant.Home.HOME_IMG_FILE, file);
+                                            object.saveInBackground(new SaveCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    handleResult(e, callback, new onResultSuc() {
+                                                        @Override
+                                                        public void onSuc() {
+                                                            callback.onSuccess(file.getUrl());
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        } else {
+                                            object = list.get(0);
+                                            //先删除旧数据，节约空间
+                                            AVFile avFile = object.getAVFile(TableConstant.Home.HOME_IMG_FILE);
+                                            AVObject finalObject = object;
+                                            avFile.deleteInBackground(new DeleteCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    //再存储
+                                                    finalObject.put(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
+                                                    finalObject.put(TableConstant.Home.HOME_IMG_FILE, file);
+                                                    finalObject.saveInBackground(new SaveCallback() {
+                                                        @Override
+                                                        public void done(AVException e) {
+                                                            handleResult(e, callback, new onResultSuc() {
+                                                                @Override
+                                                                public void onSuc() {
+                                                                    callback.onSuccess(file.getUrl());
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
 
+                            }
+                        });
+
+                    }
+                }
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            callback.onFailed(-1, e.toString());
+        }
+    }
+
+    public void getHomeImg(DataCallback<String> callback) {
+        final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
+        meQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
+
+        User userDao = new UserDaoUtil().getUserDao();
+
+        final AVQuery<AVObject> loverQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
+        meQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(userDao.getLoverId()));
+
+        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        if(list != null && list.size() > 0) {
+                            handleResult(e, callback, new onResultSuc() {
+                                @Override
+                                public void onSuc() {
+                                    AVObject object = list.get(0);
+                                    callback.onSuccess(object.getAVFile(TableConstant.Home.HOME_IMG_FILE).getUrl());
+                                }
+                            });
+                        } else {
+                            callback.onSuccess("");
+                        }
+                    }
+                });
+            }
+        });
+
+    }
 }

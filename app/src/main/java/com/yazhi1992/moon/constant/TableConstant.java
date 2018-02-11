@@ -54,8 +54,6 @@ public class TableConstant {
         public static final String USER_ID = "user_id";
         public static final String LOVER_ID = "lover_id";
         public static final String USER_NAME = "user_name";
-        public static final String HOME_IMG_URL = "home_img_url";
-        public static final String HOME_IMG = "home_img";
     }
 
     //心愿表
@@ -76,5 +74,13 @@ public class TableConstant {
         public static final String CONTENT = "content";
         public static final String ID = "id";
         public static final String USER = "user";
+    }
+
+    //首页信息
+    public static class Home {
+        public static final String CLAZZ_NAME = "lover_home";
+        public static final String HOME_IMG = "home_img_url";
+        public static final String HOME_IMG_FILE = "home_img_file";
+        public static final String UPLOADER = "latest_uploader";
     }
 }

@@ -1,3 +1,5 @@
 include ':app'
 include ':yazhilib'
+include ':matisse'
 project(':yazhilib').projectDir = new File('../LibraryProject/yazhilib')
+project(':matisse').projectDir = new File('../Matisse/Matisse/matisse')

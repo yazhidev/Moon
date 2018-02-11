@@ -11,9 +11,7 @@ buildscript {
         google()
         mavenCentral()
         jcenter()
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/public" // LeanCloud 的包仓库
-        }
+        maven { url "http://mvn.leancloud.cn/nexus/content/repositories/public" } // LeanCloud 的包仓库
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$android_gradle_tool_version"
@@ -26,9 +24,8 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/public" // LeanCloud 的包仓库
-        }
+        maven { url "http://mvn.leancloud.cn/nexus/content/repositories/public" } // LeanCloud 的包仓库
+        maven { url "https://jitpack.io" }
     }
 }
 
