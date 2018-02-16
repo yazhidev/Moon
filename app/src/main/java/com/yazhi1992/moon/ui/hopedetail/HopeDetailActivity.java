@@ -1,7 +1,10 @@
 package com.yazhi1992.moon.ui.hopedetail;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +16,7 @@ import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.EditDataHelper;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
+import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 @Route(path = ActivityRouter.HOPE_DETAIL)
@@ -21,9 +25,25 @@ public class HopeDetailActivity extends BaseActivity {
     private ActivityHopeDetailBinding mBinding;
 
     @Override
+    protected void initStatusBar() {
+        LibStatusBarUtils.with(this)
+                .init();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_hope_detail);
+
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.toolbar.getLayoutParams();
+        layoutParams.setMargins(0, LibStatusBarUtils.getStatusBarHeight(this), 0, 0);
+        mBinding.toolbar.setTitle(getString(R.string.memorial_day_detail_title));
+        // 获取Drawable对象
+        Drawable mDrawable = ContextCompat.getDrawable(this, R.drawable.bad);
+        // 设置Drawable的透明度
+        mDrawable.setAlpha(0);
+        // 给Toolbar设置背景图
+        mBinding.toolbar.setBackgroundDrawable(mDrawable);
 
         initToolBar(mBinding.toolbar);
 

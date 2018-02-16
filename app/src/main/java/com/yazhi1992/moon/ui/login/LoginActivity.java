@@ -9,6 +9,7 @@ import com.yazhi1992.moon.BuildConfig;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.data.CheckUserDataChain;
 import com.yazhi1992.moon.databinding.ActivityLoginBinding;
 import com.yazhi1992.moon.dialog.LoadingDialog;
 import com.yazhi1992.moon.dialog.LoadingHelper;
@@ -31,12 +32,8 @@ public class LoginActivity extends AbsUpgrateActivity {
             public void onSuccess(Boolean haveLover) {
                 PushManager.getInstance().register();
                 LoadingHelper.getInstance().closeLoading();
-                if(haveLover) {
-                    ActivityRouter.gotoHomePage();
-                } else {
-                    ActivityRouter.gotoBindLover();
-                }
-                finish();
+                //继续检查下一个
+                CheckUserDataChain.getInstance().processChain();
             }
 
             @Override

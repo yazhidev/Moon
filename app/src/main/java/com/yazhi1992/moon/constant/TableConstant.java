@@ -23,6 +23,7 @@ public class TableConstant {
         public static final String LOVER_ID = "lover_id";
         public static final String LOVER_NAME = "lover_name";
         public static final String LOVER_HEAD_URL = "lover_head_url";
+        public static final String GENDER = "gender"; //0 未设置，1男性，2女性
     }
 
     //纪念日表
@@ -43,8 +44,8 @@ public class TableConstant {
         public static final String ID = "id";
         public static final String HOPE = "hope";
         public static final String USER = "user";
-        public static final String HAVE_COMMENT = "have_comment";
         public static final String COMMENT_LIST = "comment_list";
+        public static final String MC = "menstrual_cycle";
     }
 
     //绑定表
@@ -82,5 +83,14 @@ public class TableConstant {
         public static final String HOME_IMG = "home_img_url";
         public static final String HOME_IMG_FILE = "home_img_file";
         public static final String UPLOADER = "latest_uploader";
+    }
+
+    //首页mc表
+    public static class MC {
+        public static final String CLAZZ_NAME = "menstrual_cycle";
+        public static final String STATUS = "status"; //0 正常状态，1 正在来例假
+        public static final String ID = "id";
+        public static final String USER = "user";
+        public static final String TIME = "time";
     }
 }

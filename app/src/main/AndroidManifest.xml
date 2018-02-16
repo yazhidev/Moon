@@ -128,11 +128,13 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
-                tools:replace="name,resource" />
+                tools:replace="name,resource"/>
         </provider>
 
+        <activity android:name=".ui.mc.McDetailActivity">
+        </activity>
+        <activity android:name=".ui.setgender.SetGenderActivity">
+        </activity>
     </application>
-
-
 
 </manifest>

@@ -23,7 +23,6 @@ public class TextBeanWrapper extends IHistoryBean<TextBean> {
 
     @Override
     TextBean transformAvObject(HistoryItemDataFromApi loveHistoryItemData) {
-        //纪念日类型
         AVObject avObject = loveHistoryItemData.getAvObject();
         AVObject textItemData = avObject.getAVObject(TableConstant.LoveHistory.TEXT);
         TextBean textBean = new TextBean(textItemData.getString(TableConstant.Text.CONTENT));

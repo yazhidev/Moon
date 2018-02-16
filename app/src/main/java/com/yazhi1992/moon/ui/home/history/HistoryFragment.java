@@ -19,6 +19,7 @@ import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
 import com.yazhi1992.moon.adapter.base.WithClicklistenerItemViewBinder;
 import com.yazhi1992.moon.adapter.history.FinishedHopeInHistoryViewBinder;
 import com.yazhi1992.moon.adapter.history.HopeInHistoryViewBinder;
+import com.yazhi1992.moon.adapter.history.McInHistoryViewBinder;
 import com.yazhi1992.moon.adapter.history.MemorialDayInHistoryViewBinder;
 import com.yazhi1992.moon.adapter.history.TextInHistoryViewBinder;
 import com.yazhi1992.moon.api.DataCallback;
@@ -33,6 +34,8 @@ import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataWrapper;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
+import com.yazhi1992.moon.viewmodel.McBean;
+import com.yazhi1992.moon.viewmodel.McBeanWrapper;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
 import com.yazhi1992.moon.viewmodel.TextBeanWrapper;
 import com.yazhi1992.yazhilib.utils.KeyBoardHeightUtil;
@@ -110,6 +113,8 @@ public class HistoryFragment extends Fragment {
         });
         //文本
         mMultiTypeAdapter.register(TextBeanWrapper.class, new TextInHistoryViewBinder());
+        //小姨妈
+        mMultiTypeAdapter.register(McBeanWrapper.class, new McInHistoryViewBinder());
 
         //添加长按删除功能
         WithClicklistenerItemViewBinder.OnItemLongClickListener onItemLongClickListener = new WithClicklistenerItemViewBinder.OnItemLongClickListener() {
@@ -138,6 +143,9 @@ public class HistoryFragment extends Fragment {
                         break;
                     case TypeConstant.TYPE_TEXT:
                         ActivityRouter.gotoTextDetail();
+                        break;
+                    case TypeConstant.TYPE_MC:
+                        // TODO: 2018/2/12 前往微信
                         break;
                     default:
                         break;
@@ -307,6 +315,9 @@ public class HistoryFragment extends Fragment {
                 break;
             case TypeConstant.TYPE_TEXT:
                 data = new TextBeanWrapper(itemData);
+                break;
+            case TypeConstant.TYPE_MC:
+                data = new McBeanWrapper(itemData);
                 break;
             default:
                 break;

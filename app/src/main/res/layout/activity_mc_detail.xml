@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <import type="android.view.View"></import>
+
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.ui.mc.McDetailViewModel"></variable>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.yazhi1992.moon.ui.mc.McDetailActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/toolbar"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/mc_lable"></android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tv_last_time_title"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="最近一次来姨妈："
+            />
+
+        <TextView
+            android:id="@+id/tv_last_time"
+            app:layout_constraintTop_toBottomOf="@+id/tv_last_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.mTimeStr}"
+            />
+
+        <TextView
+            android:id="@+id/tv_gap_time_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_last_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="已经过去了"
+            />
+
+        <TextView
+            android:id="@+id/tv_gap_time"
+            app:layout_constraintTop_toBottomOf="@+id/tv_gap_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.mGapDayNumStr}"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:visibility="@{item.mGender == 1 ? View.GONE : View.VISIBLE}"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="@dimen/add_margin"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:textColor="@color/theme_color"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_save"
+            tools:text="test"/>
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
+            android:id="@+id/btn_save"
+            style="@style/loading_btn"
+            android:visibility="@{item.mGender == 1 ? View.GONE : View.VISIBLE}"
+            app:rv_text="@{item.mStatus == 1 ? @string/mc_go_for_woman : @string/mc_come_for_women}"
+            android:layout_width="0dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+
+        <RelativeLayout
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{item.mFetching ? View.VISIBLE : View.GONE}"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp">
+
+            <ProgressBar
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{item.mEmpty ? View.VISIBLE : View.GONE}"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:text="空"
+            android:gravity="center"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
+

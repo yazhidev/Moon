@@ -17,6 +17,7 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
 import com.yazhi1992.moon.event.AddHomeImg;
+import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -62,6 +63,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        HomeViewModel homeViewModel = new HomeViewModel();
+        homeViewModel.mGender.set(new UserDaoUtil().getUserDao().getGender());
+        mBinding.setItem(homeViewModel);
+
         mBinding.igHome.setOnClickListener(v -> {
             takePic();
         });
@@ -69,6 +74,10 @@ public class HomeFragment extends Fragment {
         mBinding.llHopeDayList.setOnClickListener(v -> ActivityRouter.gotoHopeList());
 
         mBinding.llMemorialDayList.setOnClickListener(v -> ActivityRouter.gotoMemorialList());
+
+        mBinding.llMonthComming.setOnClickListener(v -> ActivityRouter.gotoMcDetail());
+
+
     }
 
     void takePic() {

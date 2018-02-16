@@ -39,11 +39,13 @@ public class User {
     @Property(nameInDb = "loverName")
     private String loverName;
 
+    @Property(nameInDb = "gender")
+    private int gender;
 
-    @Generated(hash = 289403547)
+    @Generated(hash = 1112212378)
     public User(Long id, String name, String objectId, String headUrl,
             String inviteNumber, boolean haveLover, String loverId,
-            String loverHeadUrl, String loverName) {
+            String loverHeadUrl, String loverName, int gender) {
         this.id = id;
         this.name = name;
         this.objectId = objectId;
@@ -53,6 +55,7 @@ public class User {
         this.loverId = loverId;
         this.loverHeadUrl = loverHeadUrl;
         this.loverName = loverName;
+        this.gender = gender;
     }
 
     @Generated(hash = 586692638)
@@ -129,5 +132,13 @@ public class User {
 
     public void setLoverName(String loverName) {
         this.loverName = loverName;
+    }
+
+    public int getGender() {
+        return this.gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
     }
 }

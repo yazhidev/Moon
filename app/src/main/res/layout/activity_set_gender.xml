@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.ui.setgender.SetGenderViewModel"></variable>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.yazhi1992.moon.ui.setgender.SetGenderActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/toolbar"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/set_gender_lable"></android.support.v7.widget.Toolbar>
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout
+            android:id="@+id/rl_man"
+            android:layout_marginTop="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:rv_strokeWidth="1dp"
+            app:rv_cornerRadius="5dp"
+            app:rv_strokeColor="@{item.mGender == 1 ? @color/black : @color/white}"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/rl_women">
+
+            <ImageView
+                android:id="@+id/ig_hope_day_list"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/hope_list_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ig_hope_day_list"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="我是男生"
+                android:textColor="@color/black"
+                android:textSize="13sp"/>
+
+        </com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout>
+
+        <ImageView
+            android:src="@mipmap/hope_finish"
+            android:visibility="@{item.mGender == 1 ? View.VISIBLE : View.GONE}"
+            android:layout_width="30dp"
+            app:layout_constraintRight_toRightOf="@+id/rl_man"
+            app:layout_constraintTop_toTopOf="@+id/rl_man"
+            android:layout_height="30dp"/>
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout
+            android:id="@+id/rl_women"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:rv_strokeWidth="1dp"
+            app:rv_cornerRadius="5dp"
+            app:rv_strokeColor="@{item.mGender == 2 ? @color/black : @color/white}"
+            app:layout_constraintLeft_toRightOf="@+id/rl_man"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rl_man">
+
+            <ImageView
+                android:id="@+id/ig_month"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/hope_list_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ig_month"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="我是女生"
+                android:textColor="@color/black"
+                android:textSize="13sp"/>
+
+        </com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout>
+
+        <ImageView
+            android:src="@mipmap/hope_finish"
+            android:visibility="@{item.mGender == 1 ? View.GONE : View.VISIBLE}"
+            android:layout_width="30dp"
+            app:layout_constraintRight_toRightOf="@+id/rl_women"
+            app:layout_constraintTop_toTopOf="@+id/rl_women"
+            android:layout_height="30dp"/>
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
+            android:id="@+id/btn_comfirm"
+            style="@style/loading_btn"
+            android:layout_width="0dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rl_women"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            app:rv_text="@string/save_text"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

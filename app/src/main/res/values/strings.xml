@@ -100,6 +100,13 @@
 
     <string name="create_text_time">%s月%s日</string>
 
+    <string name="mc_name">小姨妈</string>
+    <string name="mc_come_for_man">她的姨妈来了，要加倍呵护她哦</string>
+    <string name="mc_go_for_man">她的姨妈走了，和她一起happy吧~</string>
+    <string name="mc_lable">小姨妈</string>
+    <string name="mc_come_for_women">告诉他姨妈来了</string>
+    <string name="mc_go_for_woman">告诉他姨妈走了</string>
+
     <string name="week_mon">星期一</string>
     <string name="week_tue">星期二</string>
     <string name="week_wed">星期三</string>
@@ -107,5 +114,7 @@
     <string name="week_fri">星期五</string>
     <string name="week_sat">星期六</string>
     <string name="week_sun">星期日</string>
+
+    <string name="set_gender_lable">设置性别</string>
 
 </resources>

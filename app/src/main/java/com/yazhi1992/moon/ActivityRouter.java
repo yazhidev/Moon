@@ -1,5 +1,7 @@
 package com.yazhi1992.moon;
 
+import android.content.Intent;
+
 import com.alibaba.android.arouter.launcher.ARouter;
 
 /**
@@ -33,6 +35,10 @@ public class ActivityRouter {
     public static final String HOPE_DETAIL = "/app/hope_detail";
     //文本详情页
     public static final String TEXT_DETAIL = "/app/text_detail";
+    //小姨妈设置页面
+    public static final String MC_DETAIL = "/app/mc_detail";
+    //性别设置页面
+    public static final String SET_GENDER = "/app/set_gender";
 
     public static class KeyName {
         public static final String OBJECT_ID_KEY = "objectid";
@@ -51,18 +57,28 @@ public class ActivityRouter {
     public static void gotoHomePage() {
         ARouter.getInstance()
                 .build(HOME_PAGE)
+                .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                 .navigation();
     }
 
     public static void gotoLogin() {
         ARouter.getInstance()
                 .build(LOGIN)
+                .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
+                .navigation();
+    }
+
+    public static void gotoSetGender() {
+        ARouter.getInstance()
+                .build(SET_GENDER)
+                .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                 .navigation();
     }
 
     public static void gotoBindLover() {
         ARouter.getInstance()
                 .build(BIND_LOVER)
+                .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                 .navigation();
     }
 
@@ -116,4 +132,9 @@ public class ActivityRouter {
                 .navigation();
     }
 
+    public static void gotoMcDetail() {
+        ARouter.getInstance()
+                .build(MC_DETAIL)
+                .navigation();
+    }
 }

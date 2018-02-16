@@ -12,6 +12,7 @@ buildscript {
         mavenCentral()
         jcenter()
         maven { url "http://mvn.leancloud.cn/nexus/content/repositories/public" } // LeanCloud 的包仓库
+        maven { url "https://jitpack.io" } //greenDao升级helper
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$android_gradle_tool_version"

@@ -17,12 +17,18 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
+import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.databinding.ActivityHomeBinding;
 import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.event.AddHomeImg;
 import com.yazhi1992.moon.ui.home.history.HistoryFragment;
 import com.yazhi1992.moon.ui.home.home.HomeFragment;
 import com.yazhi1992.moon.ui.home.set.SetFragment;
+import com.yazhi1992.moon.ui.mc.McDetailPresenter;
+import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.moon.util.TipDialogHelper;
+import com.yazhi1992.moon.viewmodel.McBean;
+import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.zhihu.matisse.Matisse;
@@ -30,6 +36,7 @@ import com.zhihu.matisse.Matisse;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Route(path = ActivityRouter.HOME_PAGE)
@@ -55,6 +62,7 @@ public class HomeActivity extends AbsUpgrateActivity {
         mFragments.add(new SetFragment());
 
         mBinding.viewPager.setAdapter(mHomeAdapter);
+        mBinding.viewPager.setOffscreenPageLimit(mFragments.size());
 
         mBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -85,6 +93,35 @@ public class HomeActivity extends AbsUpgrateActivity {
                     mBinding.viewPager.setCurrentItem(1);
                     mBinding.bottomNavigation.setSelectedItemId(R.id.item_history);
                 }
+            }
+        }
+
+        if (LibSPUtils.getBoolean(SPKeyConstant.TIP_BAD_MOOD_ENABLE, true)) {
+            String lastTipTime = LibSPUtils.getString(SPKeyConstant.TIP_BAD_MOOD_TIME, "");
+            String todayTime = AppUtils.memorialDayYmdFormat.format(new Date());
+            if(!lastTipTime.equals(todayTime)) {
+                //今天未提醒
+                new McDetailPresenter().getLastMcRecord(new DataCallback<McBean>() {
+                    @Override
+                    public void onSuccess(McBean data) {
+                        LibSPUtils.setString(SPKeyConstant.TIP_BAD_MOOD_TIME, todayTime);
+                        Integer gapDayNum = Integer.valueOf(data.mGapDayNumStr.get());
+                        if(gapDayNum > 25 || gapDayNum < 3) {
+                            //即将来和刚来mc时，提示对方可能心情烦躁
+                            TipDialogHelper.getInstance().showDialog(HomeActivity.this, "test", new TipDialogHelper.OnComfirmListener() {
+                                @Override
+                                public void comfirm() {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(int code, String msg) {
+
+                    }
+                });
             }
         }
     }

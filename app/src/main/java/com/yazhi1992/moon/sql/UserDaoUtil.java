@@ -44,6 +44,12 @@ public class UserDaoUtil extends BaseDao<User> {
         update(userDao);
     }
 
+    public void updateGender(int gender) {
+        User userDao = getUserDao();
+        userDao.setGender(gender);
+        update(userDao);
+    }
+
     public void update(User user) {
         updateSingle(user);
     }

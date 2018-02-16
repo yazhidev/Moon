@@ -52,6 +52,8 @@ public class LoginPresenter {
                                     public void done(AVException e) {
                                         if (e == null) {
                                             //插入数据库
+                                            UserDaoUtil userDaoUtil = new UserDaoUtil();
+                                            userDaoUtil.clear();
                                             User user = new User();
                                             user.setName(nickname);
                                             user.setHeadUrl(headUrl);
@@ -63,7 +65,7 @@ public class LoginPresenter {
                                                 user.setLoverName(avUser.getString(TableConstant.AVUserClass.LOVER_NAME));
                                                 user.setLoverHeadUrl(avUser.getString(TableConstant.AVUserClass.LOVER_HEAD_URL));
                                             }
-                                            new UserDaoUtil().insert(user);
+                                            userDaoUtil.insert(user);
 
                                             if (mCallback != null) {
                                                 mCallback.onSuccess(user.getHaveLover());

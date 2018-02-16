@@ -10,6 +10,10 @@ import com.avos.avoscloud.GetCallback;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.TableConstant;
+import com.yazhi1992.moon.data.CheckIsBindLoverFilter;
+import com.yazhi1992.moon.data.CheckIsLoginFilter;
+import com.yazhi1992.moon.data.CheckIsSetGenderFilter;
+import com.yazhi1992.moon.data.CheckUserDataChain;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.util.PushManager;
 
@@ -35,40 +39,9 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void start() {
-        UserDaoUtil userDaoUtil = new UserDaoUtil();
-        if(userDaoUtil.getUserDao() == null) {
-            //未登录
-            ActivityRouter.gotoLogin();
-            finish();
-        } else {
-            PushManager.getInstance().register();
-            if(userDaoUtil.getUserDao().getHaveLover()) {
-                //已绑定
-                ActivityRouter.gotoHomePage();
-                finish();
-            } else {
-                AVUser.getCurrentUser().fetchInBackground(new GetCallback<AVObject>() {
-                    @Override
-                    public void done(AVObject object, AVException e) {
-                        if(e == null) {
-                            if(object.getBoolean(TableConstant.AVUserClass.HAVE_LOVER)) {
-                                userDaoUtil.updateLoveInfo(object.getString(TableConstant.AVUserClass.LOVER_ID)
-                                        , object.getString(TableConstant.AVUserClass.LOVER_NAME)
-                                        , object.getString(TableConstant.AVUserClass.LOVER_HEAD_URL));
-                                //已绑定
-                                ActivityRouter.gotoHomePage();
-                            } else {
-                                //未绑定
-                                ActivityRouter.gotoBindLover();
-                            }
-                        } else {
-                            //异常
-                            ActivityRouter.gotoLogin();
-                        }
-                        finish();
-                    }
-                });
-            }
-        }
+        CheckUserDataChain.getInstance().add(new CheckIsLoginFilter());
+        CheckUserDataChain.getInstance().add(new CheckIsBindLoverFilter());
+        CheckUserDataChain.getInstance().add(new CheckIsSetGenderFilter());
+        CheckUserDataChain.getInstance().processChain();
     }
 }

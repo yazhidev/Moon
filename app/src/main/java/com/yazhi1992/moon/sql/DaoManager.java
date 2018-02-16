@@ -25,7 +25,9 @@ public class DaoManager {
 
     public DaoSession getDaoSession() {
         if(mDaoSession == null) {
-            mDaoSession = new DaoMaster(new DaoMaster.DevOpenHelper(BaseApplication.getInstance(), "greendao_moon.db").getWritableDb()).newSession();
+            MySQLiteOpenHelper helper = new MySQLiteOpenHelper(BaseApplication.getInstance(), "greendao_moon.db",
+                    null);
+            mDaoSession = new DaoMaster(helper.getWritableDatabase()).newSession();
         }
         return mDaoSession;
     }

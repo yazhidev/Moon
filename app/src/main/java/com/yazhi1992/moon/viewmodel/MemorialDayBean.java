@@ -18,8 +18,8 @@ public class MemorialDayBean extends IDataBean{
     private String mTitle;
     public ObservableField<String> mFinalTitle = new ObservableField<>();
     public ObservableField<Long> mTime = new ObservableField<>(); //纪念日的时间
-    public ObservableField<String> mGapDayNum = new ObservableField<>(); //纪念日的时间
-    public ObservableField<Integer> mGapBetweenTwoDay = new ObservableField<>();
+    public ObservableField<String> mGapDayNum = new ObservableField<>(); //纪念日的距离天数（字符串类型）
+    public ObservableField<Integer> mGapBetweenTwoDay = new ObservableField<>(); //纪念日的距离天数（数值类型）
     public ObservableField<String> mTimeStr = new ObservableField<>(); //纪念日时间格式化后字符串
 
     public MemorialDayBean(String title, long time) {

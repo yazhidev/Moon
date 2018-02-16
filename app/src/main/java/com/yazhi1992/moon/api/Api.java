@@ -21,6 +21,7 @@ import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
+import com.yazhi1992.moon.viewmodel.McBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
@@ -84,6 +85,7 @@ public class Api {
      */
     public void getLoveHistory(int lastItemId, int size, final DataCallback<List<HistoryItemDataFromApi>> dataCallback) {
         AVUser currentUser = AVUser.getCurrentUser();
+        int gender = new UserDaoUtil().getUserDao().getGender();
 
         //查询自己或另一半的
         final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
@@ -97,6 +99,7 @@ public class Api {
         query.include(TableConstant.LoveHistory.MEMORIAL_DAY);
         query.include(TableConstant.LoveHistory.HOPE);
         query.include(TableConstant.LoveHistory.TEXT);
+        query.include(TableConstant.LoveHistory.MC);
         query.orderByDescending(TableConstant.Common.CREATE_TIME);
         query.limit(size);
         if (lastItemId != -1) {
@@ -108,7 +111,12 @@ public class Api {
                 handleResult(e, dataCallback, () -> {
                     List<HistoryItemDataFromApi> dataList = new ArrayList<>();
                     for (AVObject object : list) {
-                        HistoryItemDataFromApi historyItemDataFromApi = new HistoryItemDataFromApi(object.getInt(TableConstant.LoveHistory.TYPE), object);
+                        int type = object.getInt(TableConstant.LoveHistory.TYPE);
+                        if(type == TypeConstant.TYPE_MC && gender == TypeConstant.WOMEN) {
+                            //女性不需要显示mc信息
+                            continue;
+                        }
+                        HistoryItemDataFromApi historyItemDataFromApi = new HistoryItemDataFromApi(type, object);
                         dataList.add(historyItemDataFromApi);
                     }
                     dataCallback.onSuccess(dataList);
@@ -165,7 +173,6 @@ public class Api {
             }
         });
     }
-
 
     /**
      * 与另一半绑定
@@ -448,6 +455,10 @@ public class Api {
             case TypeConstant.TYPE_TEXT:
                 clazzName = TableConstant.Text.CLAZZ_NAME;
                 clazzInhistoryName = TableConstant.LoveHistory.TEXT;
+                break;
+            case TypeConstant.TYPE_MC:
+                clazzName = TableConstant.MC.CLAZZ_NAME;
+                clazzInhistoryName = TableConstant.LoveHistory.MC;
                 break;
             default:
                 break;
@@ -942,6 +953,10 @@ public class Api {
         }
     }
 
+    /**
+     * 获得首页图片地址
+     * @param callback
+     */
     public void getHomeImg(DataCallback<String> callback) {
         final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
         meQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
@@ -973,6 +988,90 @@ public class Api {
                 });
             }
         });
+    }
 
+    /**
+     * 设置性别
+     * @param gender
+     * @param callback
+     */
+    public void setGender(@TypeConstant.Gender int gender, DataCallback<Integer> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+        currentUser.put(TableConstant.AVUserClass.GENDER, gender);
+        currentUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(gender);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 获取情侣中女性最近一条mc记录
+     * @param callback
+     */
+    public void getLastMcRecord(DataCallback<McBean> callback) {
+        User userDao = new UserDaoUtil().getUserDao();
+        AVObject userObj = null;
+        if(userDao.getGender() == TypeConstant.MEN) {
+            //获取另一半
+            String loverId = userDao.getLoverId();
+            userObj = getUserObj(loverId);
+        } else {
+            //获取自己
+            userObj = getUserObj(userDao.getObjectId());
+        }
+        AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
+        mcQuery.addDescendingOrder(TableConstant.MC.TIME); //先按照更新状态的时间排序
+        mcQuery.addDescendingOrder(TableConstant.Common.CREATE_TIME);
+        mcQuery.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                //获取最新一条
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        McBean mcBean = null;
+                        if(avObject != null) {
+                            mcBean = new McBean(avObject.getInt(TableConstant.MC.STATUS));
+                            mcBean.setTime(avObject.getLong(TableConstant.MC.TIME));
+                        }
+                        callback.onSuccess(mcBean);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 更新mc状态
+     */
+    public void updateMcStatus(@TypeConstant.McStatus int status, long time, DataCallback<Boolean> dataCallback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        //存到mc表 + 首页历史列表
+        AVObject mcObj = new AVObject(TableConstant.MC.CLAZZ_NAME);
+        mcObj.put(TableConstant.MC.STATUS, status);
+        mcObj.put(TableConstant.MC.USER, getUserObj(currentUser.getObjectId()));
+        mcObj.put(TableConstant.MC.TIME, time);
+
+        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
+        loveHistoryObj.put(TableConstant.LoveHistory.MC, mcObj);
+        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_MC);
+        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+
+        //保存关联对象的同时，被关联的对象也会随之被保存到云端。
+        loveHistoryObj.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+            }
+        });
     }
 }

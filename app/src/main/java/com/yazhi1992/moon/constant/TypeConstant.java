@@ -14,8 +14,9 @@ public class TypeConstant {
     public static final int TYPE_MEMORIAL_DAY = 1; //纪念日
     public static final int TYPE_HOPE = 2; //新增心愿
     public static final int TYPE_HOPE_FINISHED = 3; //完成心愿
+    public static final int TYPE_MC = 4; //mc
 
-    @IntDef({TYPE_TEXT, TYPE_MEMORIAL_DAY, TYPE_HOPE, TYPE_HOPE_FINISHED})
+    @IntDef({TYPE_TEXT, TYPE_MEMORIAL_DAY, TYPE_HOPE, TYPE_HOPE_FINISHED, TYPE_MC})
     public @interface DataTypeInHistory{}
 
 
@@ -24,4 +25,16 @@ public class TypeConstant {
 
     @IntDef({HOPE_UNFINISH, HOPE_DONE})
     public @interface HopeType {}
+
+    public static final int MEN = 1; //男
+    public static final int WOMEN = 2; //女
+
+    @IntDef({MEN, WOMEN})
+    public @interface Gender {}
+
+    public static final int MC_NORMAL = 0; //0 正常状态，1 正在来例假
+    public static final int MC_LIVING = 1;
+
+    @IntDef({MC_NORMAL, MC_LIVING})
+    public @interface McStatus {}
 }

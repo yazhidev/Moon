@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.viewmodel.McBeanWrapper"></variable>
+    </data>
+
+    <com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/rl_in_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ig_user"
+            style="@style/user_ig_in_history"
+            android:src="@mipmap/ic_launcher"
+            />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/ig_user"
+            android:layout_toRightOf="@+id/ig_user"
+            style="@style/user_name_in_history"
+            android:text="@string/mc_name"
+            />
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="5dp"
+            android:layout_marginRight="@dimen/history_margin_right"
+            android:layout_below="@+id/tv_name"
+            android:layout_alignLeft="@+id/tv_name"
+            style="@style/content_in_history"
+            android:text="@{item.mData.mStatus == 0 ? @string/mc_go_for_man : @string/mc_come_for_man}"
+            />
+
+        <include
+            android:layout_alignLeft="@+id/tv_content"
+            android:layout_below="@+id/tv_content"
+            app:createtime="@{item.mCreateTime}"
+            layout="@layout/include_history_comment"
+            style="@style/comment_in_history"
+            ></include>
+
+    </com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout>
+</layout>

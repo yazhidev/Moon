@@ -13,6 +13,7 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
+import com.yazhi1992.moon.data.CheckUserDataChain;
 import com.yazhi1992.moon.databinding.ActivityBindLoverBinding;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ActivityRouter;
@@ -91,9 +92,8 @@ public class BindLoverActivity extends AbsUpgrateActivity {
                         mUserDaoUtil.updateLoveInfo(data.getLoverId()
                                 , data.getLoverName()
                                 , data.getLoverHeadUrl());
-                        //绑定成功，跳转
-                        ActivityRouter.gotoHomePage();
-                        finish();
+
+                        CheckUserDataChain.getInstance().processChain();
                     } else {
                         mBinding.tvState.setText(getString(R.string.bind_state_single));
                     }
@@ -129,8 +129,7 @@ public class BindLoverActivity extends AbsUpgrateActivity {
                     case 0:
                         mBinding.tvState.setText(getString(R.string.bind_state_suc));
                         //绑定成功，跳转
-                        ActivityRouter.gotoHomePage();
-                        finish();
+                        CheckUserDataChain.getInstance().processChain();
                         break;
                     case 1:
                         mBinding.tvState.setText(getString(R.string.bind_state_single));

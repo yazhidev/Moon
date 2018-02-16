@@ -95,7 +95,7 @@ android {
 
 //greendao配置
 greendao {
-    schemaVersion 1  //版本号
+    schemaVersion 2  //版本号
 }
 
 dependencies {
@@ -166,8 +166,9 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.ext.daggerVersion"
 
     compile "org.greenrobot:greendao:$rootProject.green_dao_version"
+    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.2'
 
-    compile (project(":matisse")) {
+    compile(project(":matisse")) {
         exclude group: 'com.github.bumptech.glide', module: 'glide'
     }
 }

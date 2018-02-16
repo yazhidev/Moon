@@ -96,6 +96,7 @@ public class BaseApplication extends Application {
 
             }
         });
+
     }
 
     private Activity mTopActivity;
