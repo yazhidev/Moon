@@ -11,6 +11,7 @@ public class TextBean extends IDataBean{
     public ObservableField<String> mContent = new ObservableField<>();
     public ObservableField<String> mUserName = new ObservableField<>();
     public ObservableField<String> mTimeStr = new ObservableField<>(); //例如五月十二日
+    public ObservableField<String> mImgUrl = new ObservableField<>();
 
     public TextBean(String content) {
         this.mContent.set(content);
@@ -26,6 +27,10 @@ public class TextBean extends IDataBean{
 
     public void setTimeStr(String timeStr) {
         mTimeStr.set(timeStr);
+    }
+
+    public void setImgUrl(String url) {
+        mImgUrl.set(url);
     }
 
     public String getContent() {

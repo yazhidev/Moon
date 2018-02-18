@@ -61,15 +61,16 @@ public class McDetailActivity extends BaseActivity {
             mDialog.show(getFragmentManager());
         });
 
-        mPresenter.getLastMcRecord(new DataCallback<McBean>() {
+        mPresenter.getData(new DataCallback<McData>() {
             @Override
-            public void onSuccess(McBean data) {
+            public void onSuccess(McData data) {
                 mModel.mFetching.set(false);
                 if(data != null) {
-                    mModel.mStatus.set(data.mStatus.get());
-                    mModel.mGapDayNumStr.set(data.mGapDayNumStr.get());
-                    mModel.mTimeStr.set(data.mTimeStr.get());
+                    mModel.mStatus.set(data.getStatus());
+                    mModel.mGapDayNumStr.set(data.getGapDayNumStr());
+                    mModel.mTimeStr.set(data.getTimeStr());
                 } else {
+                    mModel.mStatus.set(0);
                     mModel.mEmpty.set(true);
                 }
             }

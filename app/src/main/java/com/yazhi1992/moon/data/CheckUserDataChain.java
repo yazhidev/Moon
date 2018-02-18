@@ -33,6 +33,11 @@ public class CheckUserDataChain {
         mChainList.add(filter);
     }
 
+    public void reset() {
+        mChainList.clear();
+        mChainIndex = 0;
+    }
+
     public void processChain() {
         if (mChainList.size() > 0 && mChainList.size() > mChainIndex) {
             ICheckDataFilter iCheckDataFilter = mChainList.get(mChainIndex);

@@ -39,6 +39,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void start() {
+        CheckUserDataChain.getInstance().reset();
         CheckUserDataChain.getInstance().add(new CheckIsLoginFilter());
         CheckUserDataChain.getInstance().add(new CheckIsBindLoverFilter());
         CheckUserDataChain.getInstance().add(new CheckIsSetGenderFilter());

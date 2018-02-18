@@ -142,7 +142,13 @@ public class HistoryFragment extends Fragment {
                         ActivityRouter.gotoHopeDetail();
                         break;
                     case TypeConstant.TYPE_TEXT:
-                        ActivityRouter.gotoTextDetail();
+                        // TODO: 2018/2/19 过度动画
+                        TextBeanWrapper data = (TextBeanWrapper) obj;
+                        if(LibUtils.isNullOrEmpty(data.getData().mImgUrl.get() )) {
+                            ActivityRouter.gotoTextDetail();
+                        } else {
+                            ActivityRouter.gotoImgPreview();
+                        }
                         break;
                     case TypeConstant.TYPE_MC:
                         // TODO: 2018/2/12 前往微信

@@ -37,7 +37,6 @@ public class HopeDetailActivity extends BaseActivity {
 
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.toolbar.getLayoutParams();
         layoutParams.setMargins(0, LibStatusBarUtils.getStatusBarHeight(this), 0, 0);
-        mBinding.toolbar.setTitle(getString(R.string.memorial_day_detail_title));
         // 获取Drawable对象
         Drawable mDrawable = ContextCompat.getDrawable(this, R.drawable.bad);
         // 设置Drawable的透明度

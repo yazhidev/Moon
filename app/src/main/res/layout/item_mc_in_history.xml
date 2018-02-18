@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/ig_user"
             style="@style/user_ig_in_history"
-            android:src="@mipmap/ic_launcher"
+            android:src="@mipmap/icon_mc"
             />
 
         <TextView

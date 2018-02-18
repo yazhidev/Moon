@@ -41,6 +41,8 @@ public class ActivityRouter {
     public static final String SET_GENDER = "/app/set_gender";
     //配置页面
     public static final String CONFIGURATION = "/app/configuration";
+    //预览图片
+    public static final String IMG_PREVIEW = "/app/img_preview";
 
     public static class KeyName {
         public static final String OBJECT_ID_KEY = "objectid";
@@ -143,6 +145,12 @@ public class ActivityRouter {
     public static void gotoConfiguration() {
         ARouter.getInstance()
                 .build(CONFIGURATION)
+                .navigation();
+    }
+
+    public static void gotoImgPreview() {
+        ARouter.getInstance()
+                .build(IMG_PREVIEW)
                 .navigation();
     }
 }

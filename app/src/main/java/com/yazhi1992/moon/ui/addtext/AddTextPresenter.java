@@ -9,8 +9,8 @@ import com.yazhi1992.moon.api.DataCallback;
 
 public class AddTextPresenter {
 
-    public void addText(String content, DataCallback<Boolean> callback) {
-        Api.getInstance().addText(content, new DataCallback<Boolean>() {
+    public void addText(String content, String imgPath, DataCallback<Boolean> callback) {
+        Api.getInstance().addText(content, imgPath, new DataCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean data) {
                 callback.onSuccess(data);

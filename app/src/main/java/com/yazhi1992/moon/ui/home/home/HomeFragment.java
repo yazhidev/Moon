@@ -19,6 +19,7 @@ import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
 import com.yazhi1992.moon.event.AddHomeImg;
 import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.moon.util.StorageUtil;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.zhihu.matisse.Matisse;
@@ -95,7 +96,7 @@ public class HomeFragment extends Fragment {
                 .captureStrategy(new CaptureStrategy(true, BuildConfig.DEBUG ? "com.yazhi1992.moon.debug.provider" : "com.yazhi1992.moon.provider"))
                 .countable(true)
                 .maxSelectable(1)
-                .setForceRatio(1, 1)
+                .setForceRatio(1, 1, StorageUtil.getPath(StorageUtil.DirectoryName.IMAGE_DIRECTORY_NAME))
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                 .thumbnailScale(0.85f)
                 .imageEngine(new GlideEngine())

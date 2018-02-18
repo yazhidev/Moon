@@ -11,6 +11,10 @@ import com.yazhi1992.moon.viewmodel.McBean;
 
 public class McDetailPresenter {
 
+    public void getData(DataCallback<McData> callback) {
+        Api.getInstance().getMcDetailInitData(callback);
+    }
+
     public void getLastMcRecord(DataCallback<McBean> callback) {
         Api.getInstance().getLastMcRecord(callback);
     }

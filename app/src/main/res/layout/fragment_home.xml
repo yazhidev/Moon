@@ -67,7 +67,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
-                android:src="@mipmap/hope_list_icon"/>
+                android:src="@mipmap/icon_hope"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                 android:layout_below="@+id/ig_hope_day_list"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:text="小心愿"
+                android:text="许愿树"
                 android:textColor="@color/black"
                 android:textSize="13sp"/>
 
@@ -94,7 +94,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
-                android:src="@mipmap/hope_list_icon"/>
+                android:src="@mipmap/icon_mc"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -102,7 +102,7 @@
                 android:layout_below="@+id/ig_month"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:text="羞羞哒"
+                android:text="@string/mc_name"
                 android:textColor="@color/black"
                 android:textSize="13sp"/>
 

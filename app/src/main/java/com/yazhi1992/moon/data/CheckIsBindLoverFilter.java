@@ -6,6 +6,7 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.GetCallback;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.constant.TableConstant;
+import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.util.PushManager;
 
@@ -20,7 +21,8 @@ public class CheckIsBindLoverFilter implements ICheckDataFilter {
     @Override
     public void check(ICheckDataCallBack callBack) {
         UserDaoUtil userDaoUtil = new UserDaoUtil();
-        if(userDaoUtil.getUserDao().getHaveLover()) {
+        User userDao = userDaoUtil.getUserDao();
+        if(userDao != null && userDao.getHaveLover()) {
             //通过，传给下一级继续检验
             callBack.doContinue();
         } else {

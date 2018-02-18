@@ -75,6 +75,7 @@ public class TableConstant {
         public static final String CONTENT = "content";
         public static final String ID = "id";
         public static final String USER = "user";
+        public static final String IMG_URL = "img_url";
     }
 
     //首页信息
@@ -88,7 +89,7 @@ public class TableConstant {
     //首页mc表
     public static class MC {
         public static final String CLAZZ_NAME = "menstrual_cycle";
-        public static final String STATUS = "status"; //0 正常状态，1 正在来例假
+        public static final String STATUS = "status"; //0 正常状态（姨妈走了），1 例假中（姨妈来了）
         public static final String ID = "id";
         public static final String USER = "user";
         public static final String TIME = "time";

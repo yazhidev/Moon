@@ -26,8 +26,10 @@ import com.yazhi1992.moon.ui.home.home.HomeFragment;
 import com.yazhi1992.moon.ui.home.set.SetFragment;
 import com.yazhi1992.moon.ui.mc.McDetailPresenter;
 import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.moon.util.StorageUtil;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.McBean;
+import com.yazhi1992.yazhilib.utils.LibFileUtils;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -35,9 +37,23 @@ import com.zhihu.matisse.Matisse;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 @Route(path = ActivityRouter.HOME_PAGE)
 public class HomeActivity extends AbsUpgrateActivity {
@@ -85,10 +101,10 @@ public class HomeActivity extends AbsUpgrateActivity {
         });
 
         Intent intent = getIntent();
-        if(intent != null) {
+        if (intent != null) {
             String action = intent.getStringExtra(ActionConstant.Notification.ACTION_KEY);
-            if(LibUtils.notNullNorEmpty(action)) {
-                if(action.equals(ActionConstant.Notification.ACTION_VALUE_HISTORY)) {
+            if (LibUtils.notNullNorEmpty(action)) {
+                if (action.equals(ActionConstant.Notification.ACTION_VALUE_HISTORY)) {
                     //跳转到回忆页
                     mBinding.viewPager.setCurrentItem(1);
                     mBinding.bottomNavigation.setSelectedItemId(R.id.item_history);
@@ -99,21 +115,23 @@ public class HomeActivity extends AbsUpgrateActivity {
         if (LibSPUtils.getBoolean(SPKeyConstant.TIP_BAD_MOOD_ENABLE, true)) {
             String lastTipTime = LibSPUtils.getString(SPKeyConstant.TIP_BAD_MOOD_TIME, "");
             String todayTime = AppUtils.memorialDayYmdFormat.format(new Date());
-            if(!lastTipTime.equals(todayTime)) {
+            if (!lastTipTime.equals(todayTime)) {
                 //今天未提醒
                 new McDetailPresenter().getLastMcRecord(new DataCallback<McBean>() {
                     @Override
                     public void onSuccess(McBean data) {
-                        LibSPUtils.setString(SPKeyConstant.TIP_BAD_MOOD_TIME, todayTime);
-                        Integer gapDayNum = Integer.valueOf(data.mGapDayNumStr.get());
-                        if(gapDayNum > 25 || gapDayNum < 3) {
-                            //即将来和刚来mc时，提示对方可能心情烦躁
-                            TipDialogHelper.getInstance().showDialog(HomeActivity.this, "test", new TipDialogHelper.OnComfirmListener() {
-                                @Override
-                                public void comfirm() {
+                        if (data != null) {
+                            LibSPUtils.setString(SPKeyConstant.TIP_BAD_MOOD_TIME, todayTime);
+                            Integer gapDayNum = Integer.valueOf(data.mGapDayNumStr.get());
+                            if ((gapDayNum < 37 && gapDayNum > 25) || gapDayNum < 3) {
+                                //即将来和刚来mc时，提示对方可能心情烦躁
+                                TipDialogHelper.getInstance().showDialog(HomeActivity.this, "test", new TipDialogHelper.OnComfirmListener() {
+                                    @Override
+                                    public void comfirm() {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
                         }
                     }
 
@@ -165,20 +183,78 @@ public class HomeActivity extends AbsUpgrateActivity {
             List<String> uris = Matisse.obtainPathResult(data);
             String path = uris.get(0);
             //开始上传
-            if(LibUtils.notNullNorEmpty(path)) {
-                LoadingHelper.getInstance().showLoading(this);
-                mPresenter.uploadHomeImg(path, new DataCallback<String>() {
-                    @Override
-                    public void onSuccess(String data) {
-                        EventBus.getDefault().post(new AddHomeImg(data));
-                        LoadingHelper.getInstance().closeLoading();
-                    }
+            if (LibUtils.notNullNorEmpty(path)) {
+                Observable.just(path)
+                        .observeOn(Schedulers.io())
+                        .concatMap(new Function<String, ObservableSource<File>>() {
+                            @Override
+                            public ObservableSource<File> apply(String s) throws Exception {
+                                return Observable.create(new ObservableOnSubscribe<File>() {
+                                    @Override
+                                    public void subscribe(ObservableEmitter<File> emitter) throws Exception {
+                                        Luban.with(HomeActivity.this)
+                                                .load(uris)                                   // 传人要压缩的图片列表
+                                                .ignoreBy(100)                                  // 忽略不压缩图片的大小
+                                                .setTargetDir(StorageUtil.getPath(StorageUtil.DirectoryName.IMAGE_DIRECTORY_NAME))   // 设置压缩后文件存储位置
+                                                .setCompressListener(new OnCompressListener() { //设置回调
+                                                    @Override
+                                                    public void onStart() {
+                                                        LoadingHelper.getInstance().showLoading(HomeActivity.this);
+                                                    }
 
-                    @Override
-                    public void onFailed(int code, String msg) {
-                        LoadingHelper.getInstance().closeLoading();
-                    }
-                });
+                                                    @Override
+                                                    public void onSuccess(File file) {
+                                                        LibFileUtils.deleteFile(path);
+                                                        emitter.onNext(file);
+                                                    }
+
+                                                    @Override
+                                                    public void onError(Throwable e) {
+                                                        emitter.onError(e);
+                                                    }
+                                                }).launch();    //启动压缩
+                                    }
+                                });
+                            }
+                        })
+                        .observeOn(Schedulers.io())
+                        .concatMap(new Function<File, ObservableSource<String>>() {
+                            @Override
+                            public ObservableSource<String> apply(File file) throws Exception {
+                                return Observable.create(new ObservableOnSubscribe<String>() {
+                                    @Override
+                                    public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                                        mPresenter.uploadHomeImg(file.getPath(), new DataCallback<String>() {
+                                            @Override
+                                            public void onSuccess(String data) {
+                                                //上传成功，删除本地图片
+                                                LibFileUtils.deleteFile(file.getPath());
+                                                emitter.onNext(data);
+                                            }
+
+                                            @Override
+                                            public void onFailed(int code, String msg) {
+                                                emitter.onError(new Throwable(code + msg));
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String path) throws Exception {
+                                EventBus.getDefault().post(new AddHomeImg(path));
+                                LoadingHelper.getInstance().closeLoading();
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                LibUtils.showToast(HomeActivity.this, throwable.getMessage());
+                                LoadingHelper.getInstance().closeLoading();
+                            }
+                        });
             }
         }
     }

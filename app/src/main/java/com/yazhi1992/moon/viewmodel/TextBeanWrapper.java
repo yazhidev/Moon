@@ -29,6 +29,7 @@ public class TextBeanWrapper extends IHistoryBean<TextBean> {
         textBean.setObjectId(textItemData.getObjectId());
         AVObject user = avObject.getAVObject(TableConstant.LoveHistory.USER);
         textBean.setUserName(user.getString(TableConstant.AVUserClass.USER_NAME));
+        textBean.setImgUrl(textItemData.getString(TableConstant.Text.IMG_URL));
         Date createdAt = avObject.getCreatedAt();
         Calendar instance = Calendar.getInstance();
         instance.setTime(createdAt);

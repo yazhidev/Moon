@@ -171,6 +171,8 @@ dependencies {
     compile(project(":matisse")) {
         exclude group: 'com.github.bumptech.glide', module: 'glide'
     }
+
+    compile 'top.zibin:Luban:1.1.3'
 }
 
 //apply from: 'tinker-support.gradle'

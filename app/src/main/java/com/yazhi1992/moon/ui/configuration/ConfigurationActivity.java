@@ -1,9 +1,8 @@
 package com.yazhi1992.moon.ui.configuration;
 
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.CompoundButton;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.ActivityRouter;
@@ -27,17 +26,30 @@ public class ConfigurationActivity extends BaseActivity {
         initToolBar(mBinding.toolbar);
 
         mBinding.setItem(mViewModel);
-        mViewModel.mcTipEnable.set(LibSPUtils.getBoolean(SPKeyConstant.TIP_BAD_MOOD_ENABLE, true));
         mViewModel.mcEnable.set(LibSPUtils.getBoolean(SPKeyConstant.MC_ENABLE, true));
+        mViewModel.mcTipSwitchBtnEnable.set(mViewModel.mcEnable.get());
+        mViewModel.mcTipEnable.set(LibSPUtils.getBoolean(SPKeyConstant.TIP_BAD_MOOD_ENABLE, true));
+
+        mBinding.switchMcEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mViewModel.setMcEnable(isChecked);
+            }
+        });
+
+        mBinding.switchMcTipEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mViewModel.setTipEnable(isChecked);
+            }
+        });
 
         mBinding.rlMcEnable.setOnClickListener(v -> {
-            mViewModel.mcEnable.set(!mBinding.switchMcEnable.isChecked());
-            LibSPUtils.setBoolean(SPKeyConstant.MC_ENABLE, mViewModel.mcEnable.get());
+            mBinding.switchMcEnable.setChecked(!mBinding.switchMcEnable.isChecked());
         });
 
         mBinding.rlMcTipEnable.setOnClickListener(v -> {
-            mViewModel.mcTipEnable.set(!mBinding.switchMcTipEnable.isChecked());
-            LibSPUtils.setBoolean(SPKeyConstant.TIP_BAD_MOOD_ENABLE, mViewModel.mcTipEnable.get());
+            mBinding.switchMcTipEnable.setChecked(!mBinding.switchMcTipEnable.isChecked());
         });
     }
 }

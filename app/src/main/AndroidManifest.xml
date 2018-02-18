@@ -137,6 +137,8 @@
         </activity>
         <activity android:name=".ui.configuration.ConfigurationActivity">
         </activity>
+        <activity android:name=".ui.imgpreview.ImgPreviewActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -39,7 +39,7 @@
                 android:id="@+id/tv_mc_enable_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="是否启动"
+                android:text="是否启用小姨妈功能"
                 android:textSize="@dimen/config_text_size"
                 android:textColor="@color/dark_text_color"
                 />
@@ -49,8 +49,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_mc_enable_title"
                 android:layout_alignLeft="@+id/tv_mc_enable_title"
-                android:text="adsfadsfasdf"
-                android:textSize="16sp"
+                android:text="记录经期时间"
+                android:textSize="14sp"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/light_text_color"
                 />
@@ -71,6 +71,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rl_mc_enable"
+            android:clickable="@{item.mcTipSwitchBtnEnable}"
             android:padding="@dimen/config_padding"
             android:background="@drawable/theme_white_press_selector"
             android:layout_height="wrap_content">
@@ -79,7 +80,7 @@
                 android:id="@+id/tv_mc_tip_enable_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="是否提醒"
+                android:text="是否启用心烦预警功能"
                 android:textSize="@dimen/config_text_size"
                 android:textColor="@color/dark_text_color"
                 />
@@ -89,10 +90,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_mc_tip_enable_title"
                 android:layout_alignLeft="@+id/tv_mc_tip_enable_title"
-                android:text="adsfadsfasdf"
-                android:textSize="16sp"
+                android:text="在经期来临的附近几天提醒自己要心平气和（或多多包容她）"
+                android:lineSpacingExtra="3dp"
+                android:textSize="14sp"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/light_text_color"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/switch_mc_tip_enable"
                 />
 
             <Switch
@@ -101,6 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
+                android:enabled="@{item.mcTipSwitchBtnEnable}"
                 android:checked="@{item.mcTipEnable}"/>
 
         </RelativeLayout>

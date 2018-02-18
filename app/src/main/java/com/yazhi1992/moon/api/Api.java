@@ -1,5 +1,7 @@
 package com.yazhi1992.moon.api;
 
+import android.util.Log;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
@@ -17,6 +19,7 @@ import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.moon.ui.mc.McData;
 import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
@@ -76,6 +79,15 @@ public class Api {
         }
     }
 
+    private void handleRxjavaResult(AVException e, ObservableEmitter emitter, onResultSuc onResultSuc) {
+        if (e == null) {
+            onResultSuc.onSuc();
+        } else {
+            LibUtils.showToast(BaseApplication.getInstance(), e.getCode() + e.getMessage());
+            emitter.onError(new Throwable(e.getCode() + e.getMessage()));
+        }
+    }
+
     /**
      * 获取历史列表数据
      *
@@ -112,7 +124,7 @@ public class Api {
                     List<HistoryItemDataFromApi> dataList = new ArrayList<>();
                     for (AVObject object : list) {
                         int type = object.getInt(TableConstant.LoveHistory.TYPE);
-                        if(type == TypeConstant.TYPE_MC && gender == TypeConstant.WOMEN) {
+                        if (type == TypeConstant.TYPE_MC && gender == TypeConstant.WOMEN) {
                             //女性不需要显示mc信息
                             continue;
                         }
@@ -760,26 +772,68 @@ public class Api {
      * @param content      内容
      * @param dataCallback
      */
-    public void addText(String content, final DataCallback<Boolean> dataCallback) {
-        AVUser currentUser = AVUser.getCurrentUser();
+    public void addText(String content, String filePath, final DataCallback<Boolean> dataCallback) {
+        if (LibUtils.isNullOrEmpty(filePath)) {
+            //保存到text表
+            AVUser currentUser = AVUser.getCurrentUser();
 
-        //存到文本表 + 首页历史列表
-        AVObject hopeObj = new AVObject(TableConstant.Text.CLAZZ_NAME);
-        hopeObj.put(TableConstant.Text.CONTENT, content);
-        hopeObj.put(TableConstant.Text.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
+            //存到文本表 + 首页历史列表
+            AVObject hopeObj = new AVObject(TableConstant.Text.CLAZZ_NAME);
+            hopeObj.put(TableConstant.Text.CONTENT, content);
+            hopeObj.put(TableConstant.Text.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
 
-        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
-        loveHistoryObj.put(TableConstant.LoveHistory.TEXT, hopeObj);
-        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_TEXT);
-        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+            AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
+            loveHistoryObj.put(TableConstant.LoveHistory.TEXT, hopeObj);
+            loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_TEXT);
+            loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
 
-        //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-        loveHistoryObj.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+            //保存关联对象的同时，被关联的对象也会随之被保存到云端。
+            loveHistoryObj.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+                }
+            });
+        } else {
+            String name = "img.jpg";
+            if (filePath.contains("/")) {
+                name = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
             }
-        });
+            try {
+                AVFile file = AVFile.withAbsoluteLocalPath(name, filePath);
+                file.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (e == null) {
+                            //保存到text表
+                            AVUser currentUser = AVUser.getCurrentUser();
+
+                            //存到文本表 + 首页历史列表
+                            AVObject hopeObj = new AVObject(TableConstant.Text.CLAZZ_NAME);
+                            hopeObj.put(TableConstant.Text.CONTENT, content);
+                            hopeObj.put(TableConstant.Text.IMG_URL, file.getUrl());
+                            hopeObj.put(TableConstant.Text.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
+
+                            AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
+                            loveHistoryObj.put(TableConstant.LoveHistory.TEXT, hopeObj);
+                            loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_TEXT);
+                            loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+
+                            //保存关联对象的同时，被关联的对象也会随之被保存到云端。
+                            loveHistoryObj.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(AVException e) {
+                                    handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+                                }
+                            });
+                        }
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                dataCallback.onFailed(-1, e.toString());
+            }
+        }
     }
 
     /**
@@ -878,7 +932,7 @@ public class Api {
 
     public void uploadHomeImg(String filePath, DataCallback<String> callback) {
         String name = "img.jpg";
-        if(filePath.contains("/")) {
+        if (filePath.contains("/")) {
             name = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
         }
         try {
@@ -888,9 +942,13 @@ public class Api {
                 public void done(AVException e) {
                     if (e == null) {
                         //保存到home表
+                        User userDao = new UserDaoUtil().getUserDao();
                         final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
-                        meQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
-                        meQuery.findInBackground(new FindCallback<AVObject>() {
+                        meQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(userDao.getObjectId()));
+                        final AVQuery<AVObject> loverQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
+                        loverQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(userDao.getLoverId()));
+                        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
+                        query.findInBackground(new FindCallback<AVObject>() {
                             @Override
                             public void done(List<AVObject> list, AVException e) {
                                 handleResult(e, callback, new onResultSuc() {
@@ -955,6 +1013,7 @@ public class Api {
 
     /**
      * 获得首页图片地址
+     *
      * @param callback
      */
     public void getHomeImg(DataCallback<String> callback) {
@@ -973,7 +1032,7 @@ public class Api {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        if(list != null && list.size() > 0) {
+                        if (list != null && list.size() > 0) {
                             handleResult(e, callback, new onResultSuc() {
                                 @Override
                                 public void onSuc() {
@@ -992,6 +1051,7 @@ public class Api {
 
     /**
      * 设置性别
+     *
      * @param gender
      * @param callback
      */
@@ -1011,14 +1071,139 @@ public class Api {
         });
     }
 
+    public void getMcDetailInitData(DataCallback<McData> callback) {
+        final McData[] data = {null};
+        Observable.just(1)
+                .observeOn(Schedulers.io())
+                .concatMap(new Function<Integer, ObservableSource<McData>>() {
+                    @Override
+                    public ObservableSource<McData> apply(Integer integer) throws Exception {
+                        //获取情侣中女性最近一条mc记录，用来设置按钮状态
+                        return Observable.create(new ObservableOnSubscribe<McData>() {
+                            @Override
+                            public void subscribe(ObservableEmitter<McData> emitter) throws Exception {
+                                User userDao = new UserDaoUtil().getUserDao();
+                                AVObject userObj = null;
+                                if (userDao.getGender() == TypeConstant.MEN) {
+                                    //获取另一半
+                                    String loverId = userDao.getLoverId();
+                                    userObj = getUserObj(loverId);
+                                } else {
+                                    //获取自己
+                                    userObj = getUserObj(userDao.getObjectId());
+                                }
+                                AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+                                mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
+                                mcQuery.addDescendingOrder(TableConstant.MC.TIME); //先按照更新状态的时间排序
+                                mcQuery.addDescendingOrder(TableConstant.Common.CREATE_TIME);
+                                mcQuery.getFirstInBackground(new GetCallback<AVObject>() {
+                                    @Override
+                                    public void done(AVObject avObject, AVException e) {
+                                        //获取最新一条
+                                        handleRxjavaResult(e, emitter, new onResultSuc() {
+                                            @Override
+                                            public void onSuc() {
+                                                if (avObject != null) {
+                                                    data[0] = new McData();
+                                                    data[0].setStatus(avObject.getInt(TableConstant.MC.STATUS));
+                                                    emitter.onNext(data[0]);
+                                                } else {
+                                                    emitter.onComplete();
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                })
+                .filter(new Predicate<McData>() {
+                    @Override
+                    public boolean test(McData mcData) throws Exception {
+                        return mcData != null;
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .concatMap(new Function<McData, ObservableSource<McData>>() {
+                    @Override
+                    public ObservableSource<McData> apply(McData mcData) throws Exception {
+                        //获取情侣中女性最近一次来mc的时间
+                        return Observable.create(new ObservableOnSubscribe<McData>() {
+                            @Override
+                            public void subscribe(ObservableEmitter<McData> emitter) throws Exception {
+                                User userDao = new UserDaoUtil().getUserDao();
+                                AVObject userObj = null;
+                                if (userDao.getGender() == TypeConstant.MEN) {
+                                    //获取另一半
+                                    String loverId = userDao.getLoverId();
+                                    userObj = getUserObj(loverId);
+                                } else {
+                                    //获取自己
+                                    userObj = getUserObj(userDao.getObjectId());
+                                }
+
+                                AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+                                mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
+
+                                AVQuery<AVObject> statusQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+                                mcQuery.whereEqualTo(TableConstant.MC.STATUS, 1);
+
+                                AVQuery<AVObject> query = AVQuery.and(Arrays.asList(mcQuery, statusQuery));
+
+                                query.addDescendingOrder(TableConstant.MC.TIME); //先按照更新状态的时间排序
+                                query.addDescendingOrder(TableConstant.Common.CREATE_TIME);
+                                query.getFirstInBackground(new GetCallback<AVObject>() {
+                                    @Override
+                                    public void done(AVObject avObject, AVException e) {
+                                        //获取最新一条
+                                        handleRxjavaResult(e, emitter, new onResultSuc() {
+                                            @Override
+                                            public void onSuc() {
+                                                if (avObject != null && data[0] != null) {
+                                                    data[0].setTime(avObject.getLong(TableConstant.MC.TIME));
+                                                }
+                                                emitter.onNext(data[0]);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        MyLog.log("complete");
+                        if (data[0] == null) {
+                            callback.onSuccess(null);
+                        }
+                    }
+                })
+                .subscribe(new Consumer<McData>() {
+                    @Override
+                    public void accept(McData mcData) throws Exception {
+                        callback.onSuccess(mcData);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callback.onFailed(-1, throwable.getMessage());
+                    }
+                });
+    }
+
     /**
      * 获取情侣中女性最近一条mc记录
+     *
      * @param callback
      */
     public void getLastMcRecord(DataCallback<McBean> callback) {
         User userDao = new UserDaoUtil().getUserDao();
         AVObject userObj = null;
-        if(userDao.getGender() == TypeConstant.MEN) {
+        if (userDao.getGender() == TypeConstant.MEN) {
             //获取另一半
             String loverId = userDao.getLoverId();
             userObj = getUserObj(loverId);
@@ -1038,7 +1223,7 @@ public class Api {
                     @Override
                     public void onSuc() {
                         McBean mcBean = null;
-                        if(avObject != null) {
+                        if (avObject != null) {
                             mcBean = new McBean(avObject.getInt(TableConstant.MC.STATUS));
                             mcBean.setTime(avObject.getLong(TableConstant.MC.TIME));
                         }
