@@ -15,4 +15,11 @@
     <dimen name="comment_margin">8dp</dimen>
     <dimen name="comment_item_margin">6dp</dimen>
 
+    <dimen name="set_margin">15dp</dimen>
+    <dimen name="set_text_size">16sp</dimen>
+    <dimen name="set_icon_size">28dp</dimen>
+
+    <dimen name="config_text_size">18sp</dimen>
+    <dimen name="config_padding">15dp</dimen>
+
 </resources>

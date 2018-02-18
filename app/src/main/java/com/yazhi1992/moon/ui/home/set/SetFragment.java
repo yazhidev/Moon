@@ -54,17 +54,7 @@ public class SetFragment extends Fragment {
             mViewModel.loverName.set(user.getLoverName());
         }
 
-        mBinding.igLover.setOnClickListener(v -> {
-        });
-
-        mBinding.tvName.setOnClickListener(v -> {
-
-        });
-
-        mBinding.btnHopeList.setOnClickListener(v -> {
-        });
-
-        mBinding.btnLogout.setOnClickListener(v -> {
+        mBinding.rlLogout.setOnClickListener(v -> {
             new AlertDialog.Builder(getContext())
                     .setMessage(getString(R.string.logout))
                     .setNegativeButton(getString(R.string.cancel), null)
@@ -89,11 +79,11 @@ public class SetFragment extends Fragment {
                     .show();
         });
 
-        mBinding.btnAboutUs.setOnClickListener(v -> {
+        mBinding.rlAboutUs.setOnClickListener(v -> {
             ActivityRouter.gotoAboutUs();
         });
 
-//        mBinding.btnMemorialDay.setOnItemClickListener(v -> );
+        mBinding.rlConfiguration.setOnClickListener(v -> ActivityRouter.gotoConfiguration());
 
     }
 

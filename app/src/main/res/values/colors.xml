@@ -29,4 +29,7 @@
 
     <color name="history_tv_color">#000000</color>
 
+    <color name="dark_text_color">#1e2d44</color>
+    <color name="light_text_color">#adb0b4</color>
+
 </resources>

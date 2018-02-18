@@ -26,14 +26,14 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <RelativeLayout
-            android:id="@+id/ll_memorial_day_list"
+            android:id="@+id/rl_memorial_day_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintTop_toBottomOf="@+id/ig_home"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/ll_hope_day_list">
+            app:layout_constraintRight_toLeftOf="@+id/rl_hope_day_list">
 
             <ImageView
                 android:id="@+id/ig_memorial_day_list"
@@ -55,12 +55,12 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/ll_hope_day_list"
+            android:id="@+id/rl_hope_day_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@+id/ll_memorial_day_list"
-            app:layout_constraintRight_toLeftOf="@+id/ll_month_comming"
-            app:layout_constraintTop_toTopOf="@+id/ll_memorial_day_list">
+            app:layout_constraintLeft_toRightOf="@+id/rl_memorial_day_list"
+            app:layout_constraintRight_toLeftOf="@+id/rl_mc_comming"
+            app:layout_constraintTop_toTopOf="@+id/rl_memorial_day_list">
 
             <ImageView
                 android:id="@+id/ig_hope_day_list"
@@ -82,12 +82,12 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/ll_month_comming"
+            android:id="@+id/rl_mc_comming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@+id/ll_hope_day_list"
+            app:layout_constraintLeft_toRightOf="@+id/rl_hope_day_list"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ll_hope_day_list">
+            app:layout_constraintTop_toTopOf="@+id/rl_hope_day_list">
 
             <ImageView
                 android:id="@+id/ig_month"

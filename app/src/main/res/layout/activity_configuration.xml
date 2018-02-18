@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.ui.configuration.ConfigurationViewModel"></variable>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.yazhi1992.moon.ui.configuration.ConfigurationActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/toolbar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="0dp"
+            app:title="@string/configuration"
+            android:layout_height="wrap_content"></android.support.v7.widget.Toolbar>
+
+        <RelativeLayout
+            android:id="@+id/rl_mc_enable"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            android:background="@drawable/theme_white_press_selector"
+            android:layout_marginTop="15dp"
+            android:padding="@dimen/config_padding"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_mc_enable_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="是否启动"
+                android:textSize="@dimen/config_text_size"
+                android:textColor="@color/dark_text_color"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_mc_enable_title"
+                android:layout_alignLeft="@+id/tv_mc_enable_title"
+                android:text="adsfadsfasdf"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/light_text_color"
+                />
+
+            <Switch
+                android:id="@+id/switch_mc_enable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:checked="@{item.mcEnable}"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_mc_tip_enable"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rl_mc_enable"
+            android:padding="@dimen/config_padding"
+            android:background="@drawable/theme_white_press_selector"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_mc_tip_enable_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="是否提醒"
+                android:textSize="@dimen/config_text_size"
+                android:textColor="@color/dark_text_color"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_mc_tip_enable_title"
+                android:layout_alignLeft="@+id/tv_mc_tip_enable_title"
+                android:text="adsfadsfasdf"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/light_text_color"
+                />
+
+            <Switch
+                android:id="@+id/switch_mc_tip_enable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:checked="@{item.mcTipEnable}"/>
+
+        </RelativeLayout>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

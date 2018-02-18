@@ -106,6 +106,7 @@
     <string name="mc_lable">小姨妈</string>
     <string name="mc_come_for_women">告诉他姨妈来了</string>
     <string name="mc_go_for_woman">告诉他姨妈走了</string>
+    <string name="configuration">配置</string>
 
     <string name="week_mon">星期一</string>
     <string name="week_tue">星期二</string>
@@ -116,5 +117,7 @@
     <string name="week_sun">星期日</string>
 
     <string name="set_gender_lable">设置性别</string>
+
+    <string name="sp_key_mc_enable">sp_key_mc_enable</string>
 
 </resources>

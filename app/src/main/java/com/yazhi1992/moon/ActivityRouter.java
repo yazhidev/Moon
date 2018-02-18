@@ -39,6 +39,8 @@ public class ActivityRouter {
     public static final String MC_DETAIL = "/app/mc_detail";
     //性别设置页面
     public static final String SET_GENDER = "/app/set_gender";
+    //配置页面
+    public static final String CONFIGURATION = "/app/configuration";
 
     public static class KeyName {
         public static final String OBJECT_ID_KEY = "objectid";
@@ -135,6 +137,12 @@ public class ActivityRouter {
     public static void gotoMcDetail() {
         ARouter.getInstance()
                 .build(MC_DETAIL)
+                .navigation();
+    }
+
+    public static void gotoConfiguration() {
+        ARouter.getInstance()
+                .build(CONFIGURATION)
                 .navigation();
     }
 }

@@ -135,6 +135,8 @@
         </activity>
         <activity android:name=".ui.setgender.SetGenderActivity">
         </activity>
+        <activity android:name=".ui.configuration.ConfigurationActivity">
+        </activity>
     </application>
 
 </manifest>
