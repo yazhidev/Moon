@@ -48,6 +48,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@mipmap/add_img_icon"
+            android:visibility="gone"
             android:layout_marginTop="20dp"
             app:layout_constraintLeft_toLeftOf="@+id/et_title"
             app:layout_constraintTop_toBottomOf="@+id/et_title"

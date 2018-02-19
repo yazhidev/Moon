@@ -43,7 +43,7 @@ public class HopeListActivity extends BaseActivity {
 
         mBinding.tabLayout.setupWithViewPager(mBinding.viewPager);
         mBinding.tabLayout.getTabAt(0).setText("念念不忘");
-        mBinding.tabLayout.getTabAt(1).setText("求仁得仁");
+        mBinding.tabLayout.getTabAt(1).setText("心想事成");
     }
 
 

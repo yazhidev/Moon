@@ -93,4 +93,10 @@ public class TableConstant {
         public static final String USER = "user";
         public static final String TIME = "time";
     }
+
+    //配置表
+    public static class CONFIGURATION {
+        public static final String CLAZZ_NAME = "configuration";
+        public static final String ADD_IMG_ENABLE = "add_img_enable"; //说说是否可以传图
+    }
 }

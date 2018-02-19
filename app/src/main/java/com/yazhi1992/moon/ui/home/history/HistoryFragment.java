@@ -151,7 +151,7 @@ public class HistoryFragment extends Fragment {
                         }
                         break;
                     case TypeConstant.TYPE_MC:
-                        // TODO: 2018/2/12 前往微信
+                        ActivityRouter.gotoMcDetail();
                         break;
                     default:
                         break;

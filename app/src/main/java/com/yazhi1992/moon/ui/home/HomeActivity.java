@@ -19,6 +19,7 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.constant.CodeConstant;
 import com.yazhi1992.moon.constant.SPKeyConstant;
+import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.ActivityHomeBinding;
 import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.event.AddHomeImg;
@@ -130,7 +131,14 @@ public class HomeActivity extends AbsUpgrateActivity {
                             Integer gapDayNum = Integer.valueOf(data.mGapDayNumStr.get());
                             if ((gapDayNum < 37 && gapDayNum > 25) || gapDayNum < 3) {
                                 //即将来和刚来mc时，提示对方可能心情烦躁
-                                TipDialogHelper.getInstance().showDialog(HomeActivity.this, "test", new TipDialogHelper.OnComfirmListener() {
+                                String tipStr;
+                                int gender = new UserDaoUtil().getUserDao().getGender();
+                                if(gender == TypeConstant.MEN) {
+                                    tipStr = getString(R.string.mc_tip_for_man);
+                                } else {
+                                    tipStr = getString(R.string.mc_tip_for_woman);
+                                }
+                                TipDialogHelper.getInstance().showOneBtnDialog(HomeActivity.this, tipStr, new TipDialogHelper.OnComfirmListener() {
                                     @Override
                                     public void comfirm() {
 

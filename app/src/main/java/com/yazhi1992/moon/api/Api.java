@@ -1,7 +1,5 @@
 package com.yazhi1992.moon.api;
 
-import android.util.Log;
-
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
@@ -20,10 +18,10 @@ import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.home.set.LoverInfo;
-import com.yazhi1992.moon.ui.home.set.SetPresenter;
 import com.yazhi1992.moon.ui.mc.McData;
 import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.CommentBean;
+import com.yazhi1992.moon.viewmodel.ConfigBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 import com.yazhi1992.moon.viewmodel.McBean;
@@ -37,7 +35,6 @@ import org.json.JSONObject;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -534,30 +531,47 @@ public class Api {
     private void doRealDelete(@TypeConstant.DataTypeInHistory int type, String dataObjId, DataCallback<Boolean> callback, String clazzName, String clazzInhistoryName) {
         AVObject data = AVObject.createWithoutData(clazzName, dataObjId);
         String finalClazzInhistoryName = clazzInhistoryName;
-        data.deleteInBackground(new DeleteCallback() {
+        if(type == TypeConstant.TYPE_MC) {
+            //只删除history表数据
+            deleteHistoryItemData(finalClazzInhistoryName, data, callback, type);
+        } else{
+            data.deleteInBackground(new DeleteCallback() {
+                @Override
+                public void done(AVException e) {
+                    handleResult(e, callback, new onResultSuc() {
+                        @Override
+                        public void onSuc() {
+                            deleteHistoryItemData(finalClazzInhistoryName, data, callback, type);
+
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    /**
+     * 删除history表数据
+     * @param finalClazzInhistoryName
+     * @param data
+     * @param callback
+     * @param type
+     */
+    private void deleteHistoryItemData(String finalClazzInhistoryName, AVObject data, DataCallback<Boolean> callback, @TypeConstant.DataTypeInHistory int type) {
+        //删除history表数据
+        final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
+        loveHistoryQuery.whereEqualTo(finalClazzInhistoryName, data);
+        loveHistoryQuery.deleteAllInBackground(new DeleteCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        //删除history表数据
-                        final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
-                        loveHistoryQuery.whereEqualTo(finalClazzInhistoryName, data);
-                        loveHistoryQuery.deleteAllInBackground(new DeleteCallback() {
-                            @Override
-                            public void done(AVException e) {
-                                handleResult(e, callback, new onResultSuc() {
-                                    @Override
-                                    public void onSuc() {
-                                        if (type == TypeConstant.TYPE_HOPE || type == TypeConstant.TYPE_HOPE_FINISHED) {
-                                            callback.onSuccess(true);
-                                        } else {
-                                            callback.onSuccess(false);
-                                        }
-                                    }
-                                });
-                            }
-                        });
+                        if (type == TypeConstant.TYPE_HOPE || type == TypeConstant.TYPE_HOPE_FINISHED) {
+                            callback.onSuccess(true);
+                        } else {
+                            callback.onSuccess(false);
+                        }
                     }
                 });
             }
@@ -1433,5 +1447,26 @@ public class Api {
             e.printStackTrace();
             dataCallback.onFailed(-1, e.toString());
         }
+    }
+
+    /**
+     * 获取配置
+     * @param callback
+     */
+    public void getConfig(DataCallback<ConfigBean> callback) {
+        AVQuery<AVObject> query = new AVQuery<>(TableConstant.CONFIGURATION.CLAZZ_NAME);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        ConfigBean configBean = new ConfigBean();
+                        configBean.setCanPushImg(avObject.getBoolean(TableConstant.CONFIGURATION.ADD_IMG_ENABLE));
+                        callback.onSuccess(configBean);
+                    }
+                });
+            }
+        });
     }
 }

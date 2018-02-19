@@ -40,4 +40,18 @@ public class TipDialogHelper {
                 })
                 .show();
     }
+
+    public void showOneBtnDialog(Context context, String msg, OnComfirmListener listener) {
+        new AlertDialog.Builder(context)
+                .setMessage(msg)
+                .setPositiveButton(context.getString(R.string.comfirm), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(listener != null) {
+                            listener.comfirm();
+                        }
+                    }
+                })
+                .show();
+    }
 }

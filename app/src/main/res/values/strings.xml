@@ -93,6 +93,7 @@
     <string name="notification_add_memorial_title">ta 添加了纪念日</string>
     <string name="notification_add_hope_title">ta 悄悄许了个愿望</string>
     <string name="notification_add_text_title">ta 对你说了悄悄话</string>
+    <string name="notification_update_mc_title">ta 更新了点东西</string>
     <string name="notification_add_memorial_content">快去瞅瞅吧~</string>
     <string name="pushmanager_init_failed">推送初始化失败</string>
 
@@ -101,7 +102,7 @@
     <string name="create_text_time">%s月%s日</string>
 
     <string name="mc_name">小姨妈</string>
-    <string name="mc_come_for_man">她的姨妈来了，要加倍呵护她哦</string>
+    <string name="mc_come_for_man">她的姨妈来了，要加倍呵护她哦~</string>
     <string name="mc_go_for_man">她的姨妈走了，和她一起happy吧~</string>
     <string name="mc_lable">小姨妈</string>
     <string name="mc_come_for_women">告诉他姨妈来了</string>
@@ -119,6 +120,10 @@
     <string name="set_gender_lable">设置性别</string>
     <string name="set_user_name">设置昵称</string>
     <string name="set_user_name_hint">请输入昵称</string>
+
+    <string name="mc_tip_for_man">最近她可能心情烦躁，她也很辛苦的。喜欢才会放肆，要多多关心她哦~</string>
+    <string name="mc_tip_for_woman">最近你可能会感觉心情烦躁。爱就是克制，不要对他乱发脾气哦~</string>
+    <string name="mc_gap_day">%s 天</string>
 
     <string name="sp_key_mc_enable">sp_key_mc_enable</string>
 

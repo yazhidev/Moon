@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.ActivityRouter;
@@ -11,6 +12,7 @@ import com.yazhi1992.moon.BuildConfig;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
+import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.databinding.ActivityAddTextBinding;
 import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.event.AddDataEvent;
@@ -23,6 +25,7 @@ import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.util.StorageUtil;
 import com.yazhi1992.moon.util.UploadPhotoHelper;
 import com.yazhi1992.yazhilib.utils.LibFileUtils;
+import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -62,6 +65,8 @@ public class AddTextActivity extends BaseActivity {
         //显示软键盘
         LibUtils.showKeyoard(this, mBinding.etTitle);
 
+        mBinding.igAdd.setVisibility(LibSPUtils.getBoolean(SPKeyConstant.PUSH_IMG_ENABLE, true) ? View.VISIBLE : View.GONE);
+
         mBinding.igAdd.setOnClickListener(v -> {
             //选择图片
             Matisse.from(this)
@@ -80,7 +85,7 @@ public class AddTextActivity extends BaseActivity {
 
         mBinding.btnAdd.setOnClickListener(v -> {
             String title = mBinding.etTitle.getText().toString();
-            if(title.isEmpty()) {
+            if (title.isEmpty()) {
                 LibUtils.showToast(this, getString(R.string.add_text_empty));
                 return;
             }
@@ -124,7 +129,7 @@ public class AddTextActivity extends BaseActivity {
                     }
                 });
             } else {
-                mPresenter.addText(title, null,new DataCallback<String>() {
+                mPresenter.addText(title, null, new DataCallback<String>() {
                     @Override
                     public void onSuccess(String data) {
                         EventBus.getDefault().post(new AddDataEvent(ActionConstant.ADD_TEXT));

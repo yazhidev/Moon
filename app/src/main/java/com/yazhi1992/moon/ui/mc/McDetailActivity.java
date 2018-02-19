@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.ActivityMcDetailBinding;
 import com.yazhi1992.moon.dialog.DatePickerDialog;
@@ -14,6 +15,7 @@ import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.viewmodel.McBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
@@ -89,8 +91,9 @@ public class McDetailActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Boolean data) {
                         mBinding.btnSave.setLoading(false);
-                        LibUtils.showToast(McDetailActivity.this, "注意休息");
+                        LibUtils.showToast(McDetailActivity.this, setStatus == 0 ? "撒花~愉快地玩耍吧~" : "要注意休息，保重身体哦~");
                         finish();
+                        PushManager.getInstance().pushAction(ActionConstant.UPDATE_MC);
                     }
 
                     @Override

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.data.CheckConfigFilter;
 import com.yazhi1992.moon.data.CheckIsBindLoverFilter;
 import com.yazhi1992.moon.data.CheckIsLoginFilter;
 import com.yazhi1992.moon.data.CheckIsSetGenderFilter;
@@ -35,6 +36,7 @@ public class StartActivity extends AppCompatActivity {
         CheckUserDataChain.getInstance().add(new CheckIsLoginFilter());
         CheckUserDataChain.getInstance().add(new CheckIsBindLoverFilter());
         CheckUserDataChain.getInstance().add(new CheckIsSetGenderFilter());
+        CheckUserDataChain.getInstance().add(new CheckConfigFilter());
         CheckUserDataChain.getInstance().processChain();
     }
 }

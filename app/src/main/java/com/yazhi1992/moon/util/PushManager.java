@@ -127,6 +127,11 @@ public class PushManager {
                             PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_add_text_title)
                                     , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
                             break;
+                        case ActionConstant.UPDATE_MC:
+                            //对方更新了mc信息
+                            PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_update_mc_title)
+                                    , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
+                            break;
                         default:
                             break;
                     }
