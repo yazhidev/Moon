@@ -52,12 +52,16 @@ public class HomeFragment extends Fragment {
                 if (LibUtils.notNullNorEmpty(data)) {
                     Glide.with(view.getContext()).load(data)
                             .into(mBinding.igHome);
+                } else {
+                    Glide.with(view.getContext()).load(R.mipmap.bg_home)
+                            .into(mBinding.igHome);
                 }
             }
 
             @Override
             public void onFailed(int code, String msg) {
-
+                Glide.with(view.getContext()).load(R.mipmap.bg_home)
+                        .into(mBinding.igHome);
             }
         });
 

@@ -141,6 +141,8 @@
         </activity>
         <activity android:name=".ui.setname.SetUserNameActivity">
         </activity>
+        <activity android:name=".ui.usercenter.UserCenterActivity">
+        </activity>
     </application>
 
 </manifest>

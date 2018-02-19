@@ -9,6 +9,15 @@ package com.yazhi1992.moon.event;
 public class ChangeUserInfo {
     String name;
     String headUrl;
+    int gender;
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
 
     public String getHeadUrl() {
         return headUrl;

@@ -16,6 +16,7 @@ import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.AppUtils;
 import com.yazhi1992.moon.util.PushManager;
+import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.McBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
@@ -84,24 +85,29 @@ public class McDetailActivity extends BaseActivity {
         });
 
         mBinding.btnSave.setOnClickListener(v -> {
-            if(mModel != null) {
-                int setStatus = 1 - mModel.mStatus.get();
-                mBinding.btnSave.setLoading(true);
-                mPresenter.updateMcStatus(setStatus, chooseDate.getTime(), new DataCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean data) {
-                        mBinding.btnSave.setLoading(false);
-                        LibUtils.showToast(McDetailActivity.this, setStatus == 0 ? "撒花~愉快地玩耍吧~" : "要注意休息，保重身体哦~");
-                        finish();
-                        PushManager.getInstance().pushAction(ActionConstant.UPDATE_MC);
-                    }
+            TipDialogHelper.getInstance().showDialog(this, getString(R.string.comfirm_update_mc), new TipDialogHelper.OnComfirmListener() {
+                @Override
+                public void comfirm() {
+                    if(mModel != null) {
+                        int setStatus = 1 - mModel.mStatus.get();
+                        mBinding.btnSave.setLoading(true);
+                        mPresenter.updateMcStatus(setStatus, chooseDate.getTime(), new DataCallback<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean data) {
+                                mBinding.btnSave.setLoading(false);
+                                LibUtils.showToast(McDetailActivity.this, setStatus == 0 ? "撒花~愉快地玩耍吧~" : "要注意休息，保重身体哦~");
+                                finish();
+                                PushManager.getInstance().pushAction(ActionConstant.UPDATE_MC);
+                            }
 
-                    @Override
-                    public void onFailed(int code, String msg) {
-                        mBinding.btnSave.setLoading(false);
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                mBinding.btnSave.setLoading(false);
+                            }
+                        });
                     }
-                });
-            }
+                }
+            });
         });
     }
 }

@@ -46,6 +46,8 @@ public class ActivityRouter {
     public static final String IMG_PREVIEW = "/app/img_preview";
     //设置昵称
     public static final String SET_USER_NAME = "/app/set_user_name";
+    //个人中心
+    public static final String USER_CENTER = "/app/user_center";
 
     public static class KeyName {
         public static final String OBJECT_ID_KEY = "objectid";
@@ -168,6 +170,12 @@ public class ActivityRouter {
         ARouter.getInstance()
                 .build(IMG_PREVIEW)
                 .withString(KeyName.IMG_URL, url)
+                .navigation();
+    }
+
+    public static void gotoUserCenter() {
+        ARouter.getInstance()
+                .build(USER_CENTER)
                 .navigation();
     }
 }

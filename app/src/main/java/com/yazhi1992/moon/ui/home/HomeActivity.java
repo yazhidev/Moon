@@ -133,7 +133,7 @@ public class HomeActivity extends AbsUpgrateActivity {
                                 //即将来和刚来mc时，提示对方可能心情烦躁
                                 String tipStr;
                                 int gender = new UserDaoUtil().getUserDao().getGender();
-                                if(gender == TypeConstant.MEN) {
+                                if (gender == TypeConstant.MEN) {
                                     tipStr = getString(R.string.mc_tip_for_man);
                                 } else {
                                     tipStr = getString(R.string.mc_tip_for_woman);
@@ -221,49 +221,6 @@ public class HomeActivity extends AbsUpgrateActivity {
                     @Override
                     public void onSuc(String remoteImgUrl) {
                         EventBus.getDefault().post(new AddHomeImg(remoteImgUrl));
-                        LoadingHelper.getInstance().closeLoading();
-                    }
-
-                    @Override
-                    public void onError(String msg) {
-                        LibUtils.showToast(HomeActivity.this, msg);
-                        LoadingHelper.getInstance().closeLoading();
-                    }
-                });
-            }
-        } else if (requestCode == CodeConstant.PICK_PHOTO_FOR_HEAD && resultCode == RESULT_OK) {
-            //上传头像
-            List<String> uris = Matisse.obtainPathResult(data);
-            String path = uris.get(0);
-            //开始上传
-            if (LibUtils.notNullNorEmpty(path)) {
-                UploadPhotoHelper.uploadPhoto(this, path, new IUploader() {
-                    @Override
-                    public void upload(String filePath, DataCallback<String> callback) {
-                        mPresenter.updateHeadImg(filePath, new DataCallback<String>() {
-                            @Override
-                            public void onSuccess(String data) {
-                                callback.onSuccess(data);
-                            }
-
-                            @Override
-                            public void onFailed(int code, String msg) {
-                                callback.onFailed(code, msg);
-                            }
-                        });
-                    }
-                }, new UploadPhotoHelper.onUploadPhotoListener() {
-                    @Override
-                    public void onStart() {
-                        LoadingHelper.getInstance().showLoading(HomeActivity.this);
-                    }
-
-                    @Override
-                    public void onSuc(String remoteImgUrl) {
-                        new UserDaoUtil().updateUserHeadUrl(remoteImgUrl);
-                        ChangeUserInfo changeUserInfo = new ChangeUserInfo();
-                        changeUserInfo.setHeadUrl(remoteImgUrl);
-                        EventBus.getDefault().post(changeUserInfo);
                         LoadingHelper.getInstance().closeLoading();
                     }
 

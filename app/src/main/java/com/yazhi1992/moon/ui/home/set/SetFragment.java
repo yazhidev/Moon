@@ -104,14 +104,12 @@ public class SetFragment extends Fragment {
 
         mBinding.rlConfiguration.setOnClickListener(v -> ActivityRouter.gotoConfiguration());
 
-        //修改昵称
         mBinding.tvName.setOnClickListener(v -> {
-            ActivityRouter.gotoSetUserName(mViewModel.myName.get());
+            ActivityRouter.gotoUserCenter();
         });
 
-        //修改头像
         mBinding.igMe.setOnClickListener(v -> {
-            UploadPhotoHelper.pickPhoto(getActivity(), CodeConstant.PICK_PHOTO_FOR_HEAD);
+            ActivityRouter.gotoUserCenter();
         });
 
         mBinding.igLover.setOnClickListener(v -> ActivityRouter.gotoImgPreview(mViewModel.loverHeadUrl.get()));
@@ -138,5 +136,4 @@ public class SetFragment extends Fragment {
             mViewModel.myHeadUrl.set(bean.getHeadUrl());
         }
     }
-
 }

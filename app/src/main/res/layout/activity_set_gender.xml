@@ -44,14 +44,14 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
-                android:src="@mipmap/icon_mc"/>
+                android:src="@mipmap/male"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ig_hope_day_list"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:text="我是男生"
                 android:textColor="@color/black"
                 android:textSize="13sp"/>
@@ -60,7 +60,7 @@
 
         <ImageView
             android:src="@mipmap/hope_finish"
-            android:visibility="@{item.mGender == 1 ? View.VISIBLE : View.GONE}"
+            android:visibility="gone"
             android:layout_width="30dp"
             app:layout_constraintRight_toRightOf="@+id/rl_man"
             app:layout_constraintTop_toTopOf="@+id/rl_man"
@@ -83,14 +83,14 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
-                android:src="@mipmap/icon_mc"/>
+                android:src="@mipmap/female"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ig_month"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:text="我是女生"
                 android:textColor="@color/black"
                 android:textSize="13sp"/>
@@ -99,7 +99,7 @@
 
         <ImageView
             android:src="@mipmap/hope_finish"
-            android:visibility="@{item.mGender == 1 ? View.GONE : View.VISIBLE}"
+            android:visibility="gone"
             android:layout_width="30dp"
             app:layout_constraintRight_toRightOf="@+id/rl_women"
             app:layout_constraintTop_toTopOf="@+id/rl_women"
