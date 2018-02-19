@@ -8,7 +8,6 @@ import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.util.PushManager;
 
 /**
  * Created by zengyazhi on 2018/2/14.
@@ -33,9 +32,7 @@ public class CheckIsBindLoverFilter implements ICheckDataFilter {
                 public void done(AVObject object, AVException e) {
                     if(e == null) {
                         if(object.getBoolean(TableConstant.AVUserClass.HAVE_LOVER)) {
-                            userDaoUtil.updateLoveInfo(object.getString(TableConstant.AVUserClass.LOVER_ID)
-                                    , object.getString(TableConstant.AVUserClass.LOVER_NAME)
-                                    , object.getString(TableConstant.AVUserClass.LOVER_HEAD_URL));
+                            userDaoUtil.updateLoveId(object.getString(TableConstant.AVUserClass.LOVER_ID));
                             //已绑定
                             callBack.doContinue();
                         } else {

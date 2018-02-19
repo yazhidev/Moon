@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.databinding.ActivityImgPreviewBinding;
@@ -30,7 +32,8 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 public class ImgPreviewActivity extends BaseActivity {
 
     private ActivityImgPreviewBinding mBinding;
-    private TextBean mEditData;
+    @Autowired(name = ActivityRouter.KeyName.IMG_URL)
+    String url;
 
     @Override
     protected void initStatusBar() {
@@ -41,6 +44,9 @@ public class ImgPreviewActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ARouter.getInstance().inject(this);
+
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_img_preview);
 
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mBinding.toolbar.getLayoutParams();
@@ -55,9 +61,6 @@ public class ImgPreviewActivity extends BaseActivity {
 
         mBinding.imageView.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
-        if(EditDataHelper.getInstance().getData() instanceof TextBean) {
-            mEditData = (TextBean) EditDataHelper.getInstance().getData();
-            ViewBindingUtils.imgUrl(mBinding.imageView, mEditData.mImgUrl.get());
-        }
+        ViewBindingUtils.imgUrl(mBinding.imageView, url);
     }
 }

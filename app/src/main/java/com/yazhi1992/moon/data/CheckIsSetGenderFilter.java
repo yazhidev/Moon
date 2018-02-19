@@ -35,7 +35,7 @@ public class CheckIsSetGenderFilter implements ICheckDataFilter {
                             callBack.doContinue();
                         } else {
                             //未设置
-                            ActivityRouter.gotoSetGender();
+                            ActivityRouter.gotoSetGender(true);
                         }
                     } else {
                         //异常

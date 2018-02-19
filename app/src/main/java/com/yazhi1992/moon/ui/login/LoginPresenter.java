@@ -45,8 +45,12 @@ public class LoginPresenter {
                             public void done(AVUser avUser, AVException e) {
                                 //关联成功，已在 _User 表新增一条用户数据
                                 //修改用户名为QQ名，头像为QQ头像
-                                avUser.setUsername(nickname);
-                                avUser.put(TableConstant.AVUserClass.HEAD_URL, headUrl);
+                                if(LibUtils.isNullOrEmpty(avUser.getUsername())) {
+                                    avUser.setUsername(nickname);
+                                }
+                                if(LibUtils.isNullOrEmpty(avUser.getString(TableConstant.AVUserClass.HEAD_URL))) {
+                                    avUser.put(TableConstant.AVUserClass.HEAD_URL, headUrl);
+                                }
                                 avUser.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(AVException e) {
@@ -55,15 +59,13 @@ public class LoginPresenter {
                                             UserDaoUtil userDaoUtil = new UserDaoUtil();
                                             userDaoUtil.clear();
                                             User user = new User();
-                                            user.setName(nickname);
-                                            user.setHeadUrl(headUrl);
+                                            user.setName(avUser.getUsername());
+                                            user.setHeadUrl(avUser.getString(TableConstant.AVUserClass.HEAD_URL));
                                             user.setInviteNumber(avUser.getString(TableConstant.AVUserClass.INVITE_NUMBER));
                                             user.setObjectId(avUser.getObjectId());
                                             if (LibUtils.notNullNorEmpty(avUser.getString(TableConstant.AVUserClass.LOVER_ID))) {
                                                 user.setHaveLover(true);
                                                 user.setLoverId(avUser.getString(TableConstant.AVUserClass.LOVER_ID));
-                                                user.setLoverName(avUser.getString(TableConstant.AVUserClass.LOVER_NAME));
-                                                user.setLoverHeadUrl(avUser.getString(TableConstant.AVUserClass.LOVER_HEAD_URL));
                                             }
                                             userDaoUtil.insert(user);
 

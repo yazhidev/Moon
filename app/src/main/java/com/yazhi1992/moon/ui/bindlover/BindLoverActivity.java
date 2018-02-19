@@ -89,9 +89,7 @@ public class BindLoverActivity extends AbsUpgrateActivity {
                         mBinding.tvState.setText(getString(R.string.bind_state_suc));
                         //更新本地数据
                         mUserDaoUtil = new UserDaoUtil();
-                        mUserDaoUtil.updateLoveInfo(data.getLoverId()
-                                , data.getLoverName()
-                                , data.getLoverHeadUrl());
+                        mUserDaoUtil.updateLoveId(data.getLoverId());
 
                         CheckUserDataChain.getInstance().processChain();
                     } else {

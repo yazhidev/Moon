@@ -2,6 +2,7 @@ package com.yazhi1992.moon;
 
 import android.content.Intent;
 
+import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.launcher.ARouter;
 
 /**
@@ -43,12 +44,17 @@ public class ActivityRouter {
     public static final String CONFIGURATION = "/app/configuration";
     //预览图片
     public static final String IMG_PREVIEW = "/app/img_preview";
+    //设置昵称
+    public static final String SET_USER_NAME = "/app/set_user_name";
 
     public static class KeyName {
         public static final String OBJECT_ID_KEY = "objectid";
         public static final String TITLE_KEY = "title";
         public static final String TIME_KEY = "time";
         public static final String EDIT_MODE = "edit_mode";
+        public static final String CLEAR_TASK = "clear_task";
+        public static final String USER_NAME = "user_name";
+        public static final String IMG_URL = "img_url";
     }
 
     public static void gotoAddMemorial(boolean isAdd) {
@@ -72,10 +78,20 @@ public class ActivityRouter {
                 .navigation();
     }
 
-    public static void gotoSetGender() {
+    public static void gotoSetGender(boolean clearTask) {
+        Postcard build = ARouter.getInstance()
+                .build(SET_GENDER);
+        if (clearTask) {
+            build.withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        build.withBoolean(KeyName.CLEAR_TASK, clearTask);
+        build.navigation();
+    }
+
+    public static void gotoSetUserName(String userName) {
         ARouter.getInstance()
-                .build(SET_GENDER)
-                .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
+                .build(SET_USER_NAME)
+                .withString(KeyName.USER_NAME, userName)
                 .navigation();
     }
 
@@ -148,9 +164,10 @@ public class ActivityRouter {
                 .navigation();
     }
 
-    public static void gotoImgPreview() {
+    public static void gotoImgPreview(String url) {
         ARouter.getInstance()
                 .build(IMG_PREVIEW)
+                .withString(KeyName.IMG_URL, url)
                 .navigation();
     }
 }

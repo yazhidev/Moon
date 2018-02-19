@@ -19,6 +19,8 @@ import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.moon.ui.home.set.LoverInfo;
+import com.yazhi1992.moon.ui.home.set.SetPresenter;
 import com.yazhi1992.moon.ui.mc.McData;
 import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.CommentBean;
@@ -35,6 +37,7 @@ import org.json.JSONObject;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -208,8 +211,12 @@ public class Api {
                 .concatMap(new Function<AVObject, ObservableSource<String>>() {
                     @Override
                     public ObservableSource<String> apply(AVObject bindLoverItemData) throws Exception {
-                        peerUserId[0] = bindLoverItemData.getString(TableConstant.BindLover.USER_ID);
-                        return updateMyBindLover(userObjId, peerUserId[0], bindLoverItemData.getString(TableConstant.BindLover.LOVER_ID));
+                        AVObject avObject = bindLoverItemData.getAVObject(TableConstant.BindLover.USER);
+                        if (avObject != null) {
+                            peerUserId[0] = avObject.getObjectId();
+                        }
+                        AVObject loverObject = bindLoverItemData.getAVObject(TableConstant.BindLover.LOVER);
+                        return updateMyBindLover(userObjId, peerUserId[0], loverObject == null ? null : loverObject.getObjectId());
                     }
                 })
                 .takeWhile(new Predicate<String>() {
@@ -259,13 +266,19 @@ public class Api {
             public void subscribe(ObservableEmitter<AVObject> e) throws Exception {
                 AVQuery<AVObject> query = new AVQuery<>(TableConstant.BindLover.CLAZZ_NAME);
                 query.whereEqualTo(TableConstant.BindLover.INVITE_NUMBER, inviteNum);
+                query.include(TableConstant.BindLover.USER);
+                query.include(TableConstant.BindLover.LOVER);
                 query.findInBackground(new FindCallback<AVObject>() {
                     @Override
                     public void done(List<AVObject> list, AVException exc) {
                         if (exc == null) {
                             if (list != null && list.size() > 0) {
                                 AVObject bindLoverItemData = list.get(0);
-                                String loverId = bindLoverItemData.getString(TableConstant.BindLover.LOVER_ID);
+                                String loverId = null;
+                                AVObject avObject = bindLoverItemData.getAVObject(TableConstant.BindLover.LOVER);
+                                if (avObject != null) {
+                                    loverId = avObject.getObjectId();
+                                }
                                 if (LibUtils.isNullOrEmpty(loverId) || loverId.equals(userObjId)) {
                                     e.onNext(bindLoverItemData);
                                 } else {
@@ -290,9 +303,9 @@ public class Api {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
                 AVQuery<AVObject> query = new AVQuery<>(TableConstant.BindLover.CLAZZ_NAME);
-                query.whereEqualTo(TableConstant.BindLover.USER_ID, userObjId);
+                query.whereEqualTo(TableConstant.BindLover.USER, getUserObj(userObjId));
                 AVObject account = query.getFirst();
-                account.put(TableConstant.BindLover.LOVER_ID, loverId);
+                account.put(TableConstant.BindLover.LOVER, getUserObj(loverId));
                 account.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(AVException exc) {
@@ -323,8 +336,6 @@ public class Api {
                     AVUser currentUser = AVUser.getCurrentUser();
                     currentUser.put(TableConstant.AVUserClass.HAVE_LOVER, true);
                     currentUser.put(TableConstant.AVUserClass.LOVER_ID, peerUser.getObjectId());
-                    currentUser.put(TableConstant.AVUserClass.LOVER_NAME, peerUser.getString(TableConstant.AVUserClass.USER_NAME));
-                    currentUser.put(TableConstant.AVUserClass.LOVER_HEAD_URL, peerUser.getString(TableConstant.AVUserClass.HEAD_URL));
                     currentUser.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException exc) {
@@ -391,30 +402,43 @@ public class Api {
                     } else {
                         //查询是否自己绑定了人
                         AVQuery<AVObject> query = new AVQuery<>(TableConstant.BindLover.CLAZZ_NAME);
-                        query.whereEqualTo(TableConstant.BindLover.USER_ID, userId);
+                        query.whereEqualTo(TableConstant.BindLover.USER, getUserObj(userId));
+                        query.include(TableConstant.BindLover.USER);
+                        query.include(TableConstant.BindLover.LOVER);
                         query.findInBackground(new FindCallback<AVObject>() {
                             @Override
                             public void done(List<AVObject> list, AVException e) {
                                 if (e == null) {
                                     if (list != null && list.size() > 0) {
                                         AVObject bindLoverItemData = list.get(0);
-                                        String loverId = bindLoverItemData.getString(TableConstant.BindLover.LOVER_ID);
+                                        String loverId = null;
+                                        AVObject avObject1 = bindLoverItemData.getAVObject(TableConstant.BindLover.LOVER);
+                                        if (avObject1 != null) {
+                                            loverId = avObject1.getObjectId();
+                                        }
                                         if (LibUtils.isNullOrEmpty(loverId)) {
                                             callback.onSuccess(new CheckBindStateBean(2));
                                         } else {
                                             //查询对方是否绑定你
                                             AVQuery<AVObject> query = new AVQuery<>(TableConstant.BindLover.CLAZZ_NAME);
-                                            query.whereEqualTo(TableConstant.BindLover.USER_ID, loverId);
+                                            query.whereEqualTo(TableConstant.BindLover.USER, getUserObj(loverId));
+                                            query.include(TableConstant.BindLover.USER);
+                                            query.include(TableConstant.BindLover.LOVER);
                                             query.findInBackground(new FindCallback<AVObject>() {
                                                 @Override
                                                 public void done(List<AVObject> list, AVException e) {
                                                     if (e == null) {
                                                         if (list != null && list.size() > 0) {
                                                             AVObject bindLoverItemData = list.get(0);
-                                                            String loverId = bindLoverItemData.getString(TableConstant.BindLover.LOVER_ID);
+                                                            String loverId = null;
+                                                            AVObject avObject1 = bindLoverItemData.getAVObject(TableConstant.BindLover.LOVER);
+                                                            if (avObject1 != null) {
+                                                                loverId = avObject1.getObjectId();
+                                                            }
                                                             if (LibUtils.notNullNorEmpty(loverId) && loverId.equals(userId)) {
                                                                 CheckBindStateBean checkBindStateBean = new CheckBindStateBean(0);
-                                                                checkBindStateBean.setPeerObjId(bindLoverItemData.getString(TableConstant.BindLover.USER_ID));
+                                                                AVObject avObject2 = bindLoverItemData.getAVObject(TableConstant.BindLover.USER);
+                                                                checkBindStateBean.setPeerObjId(avObject2.getObjectId());
                                                                 callback.onSuccess(checkBindStateBean);
                                                             } else {
                                                                 callback.onSuccess(new CheckBindStateBean(1));
@@ -475,6 +499,39 @@ public class Api {
             default:
                 break;
         }
+        if(type == TypeConstant.TYPE_TEXT) {
+            //删除图文消息，如果有图片，一起删除图片，节约空间
+            AVObject data = AVObject.createWithoutData(clazzName, dataObjId);
+            String finalClazzName = clazzName;
+            String finalClazzInhistoryName = clazzInhistoryName;
+            data.fetchInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    handleResult(e, callback, new onResultSuc() {
+                        @Override
+                        public void onSuc() {
+                            AVFile avFile = avObject.getAVFile(TableConstant.Text.IMG_FILE);
+                            if(avFile != null)  {
+                                //如果原来有图片文件，则先删除原来的头像图片，节约空间
+                                avFile.deleteInBackground(new DeleteCallback() {
+                                    @Override
+                                    public void done(AVException e) {
+                                        doRealDelete(type, dataObjId, callback, finalClazzName, finalClazzInhistoryName);
+                                    }
+                                });
+                            } else {
+                                doRealDelete(type, dataObjId, callback, finalClazzName, finalClazzInhistoryName);
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            doRealDelete(type, dataObjId, callback, clazzName, clazzInhistoryName);
+        }
+    }
+
+    private void doRealDelete(@TypeConstant.DataTypeInHistory int type, String dataObjId, DataCallback<Boolean> callback, String clazzName, String clazzInhistoryName) {
         AVObject data = AVObject.createWithoutData(clazzName, dataObjId);
         String finalClazzInhistoryName = clazzInhistoryName;
         data.deleteInBackground(new DeleteCallback() {
@@ -576,7 +633,6 @@ public class Api {
             }
         });
     }
-
 
     /**
      * 获取纪念日列表
@@ -772,7 +828,7 @@ public class Api {
      * @param content      内容
      * @param dataCallback
      */
-    public void addText(String content, String filePath, final DataCallback<Boolean> dataCallback) {
+    public void addText(String content, String filePath, final DataCallback<String> dataCallback) {
         if (LibUtils.isNullOrEmpty(filePath)) {
             //保存到text表
             AVUser currentUser = AVUser.getCurrentUser();
@@ -791,7 +847,7 @@ public class Api {
             loveHistoryObj.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(AVException e) {
-                    handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+                    handleResult(e, dataCallback, () -> dataCallback.onSuccess(null));
                 }
             });
         } else {
@@ -811,7 +867,7 @@ public class Api {
                             //存到文本表 + 首页历史列表
                             AVObject hopeObj = new AVObject(TableConstant.Text.CLAZZ_NAME);
                             hopeObj.put(TableConstant.Text.CONTENT, content);
-                            hopeObj.put(TableConstant.Text.IMG_URL, file.getUrl());
+                            hopeObj.put(TableConstant.Text.IMG_FILE, file);
                             hopeObj.put(TableConstant.Text.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
 
                             AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
@@ -823,7 +879,7 @@ public class Api {
                             loveHistoryObj.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(AVException e) {
-                                    handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+                                    handleResult(e, dataCallback, () -> dataCallback.onSuccess(file.getUrl()));
                                 }
                             });
                         }
@@ -1258,5 +1314,124 @@ public class Api {
                 handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
             }
         });
+    }
+
+    /**
+     * 修改昵称
+     *
+     * @param userName
+     * @param callback
+     */
+    public void setUserName(String userName, DataCallback<String> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+        currentUser.setUsername(userName);
+        currentUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(userName);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 获取另一半的最新名字和头像
+     *
+     * @param callback
+     */
+    public void getLoverInfo(DataCallback<LoverInfo> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+        AVQuery<AVObject> query = new AVQuery<>(TableConstant.BindLover.CLAZZ_NAME);
+        query.whereEqualTo(TableConstant.BindLover.USER, getUserObj(currentUser.getObjectId()));
+        query.include(TableConstant.BindLover.USER);
+        query.include(TableConstant.BindLover.LOVER);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException exc) {
+                handleResult(exc, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        if (list != null && list.size() > 0) {
+                            AVObject bindLoverItemData = list.get(0);
+                            AVObject loverObject = bindLoverItemData.getAVObject(TableConstant.BindLover.LOVER);
+                            if (loverObject != null) {
+                                callback.onSuccess(new LoverInfo(loverObject.getString(TableConstant.AVUserClass.USER_NAME)
+                                        , loverObject.getString(TableConstant.AVUserClass.HEAD_URL)));
+                            } else {
+                                callback.onSuccess(null);
+                            }
+                        } else {
+                            callback.onSuccess(null);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 更新头像
+     * @param filePath
+     * @param dataCallback
+     */
+    public void updateHeadImg(String filePath, final DataCallback<String> dataCallback) {
+        String name = "head_img.jpg";
+        if (filePath.contains("/")) {
+            name = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+        }
+        try {
+            AVFile file = AVFile.withAbsoluteLocalPath(name, filePath);
+            file.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        AVUser currentUser = AVUser.getCurrentUser();
+                        currentUser.fetchInBackground(new GetCallback<AVObject>() {
+                            @Override
+                            public void done(AVObject avObject, AVException e) {
+                                AVFile avFile = avObject.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE);
+                                if(avFile == null) {
+                                    currentUser.put(TableConstant.AVUserClass.HEAD_URL, file.getUrl());
+                                    currentUser.put(TableConstant.AVUserClass.HEAD_IMG_FILE, file);
+                                    currentUser.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(AVException e) {
+                                            handleResult(e, dataCallback, () -> dataCallback.onSuccess(file.getUrl()));
+
+                                        }
+                                    });
+                                } else {
+                                    //如果原来有图片文件，则先删除原来的头像图片，节约空间
+                                    avFile.deleteInBackground(new DeleteCallback() {
+                                        @Override
+                                        public void done(AVException e) {
+                                            //再存储到user表
+                                            currentUser.put(TableConstant.AVUserClass.HEAD_URL, file.getUrl());
+                                            currentUser.put(TableConstant.AVUserClass.HEAD_IMG_FILE, file);
+                                            currentUser.saveInBackground(new SaveCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    handleResult(e, dataCallback, () -> dataCallback.onSuccess(file.getUrl()));
+
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+
+                    }
+                }
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            dataCallback.onFailed(-1, e.toString());
+        }
     }
 }

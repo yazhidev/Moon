@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:elevation="4dp"
             app:titleTextColor="@color/white"
-            app:title=""
+            app:title=" "
             android:layout_width="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_height="?attr/actionBarSize"></android.support.v7.widget.Toolbar>

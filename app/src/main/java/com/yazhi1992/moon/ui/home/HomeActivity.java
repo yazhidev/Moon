@@ -17,17 +17,22 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
+import com.yazhi1992.moon.constant.CodeConstant;
 import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.databinding.ActivityHomeBinding;
 import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.event.AddHomeImg;
+import com.yazhi1992.moon.event.ChangeUserInfo;
+import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.home.history.HistoryFragment;
 import com.yazhi1992.moon.ui.home.home.HomeFragment;
 import com.yazhi1992.moon.ui.home.set.SetFragment;
 import com.yazhi1992.moon.ui.mc.McDetailPresenter;
 import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.moon.util.IUploader;
 import com.yazhi1992.moon.util.StorageUtil;
 import com.yazhi1992.moon.util.TipDialogHelper;
+import com.yazhi1992.moon.util.UploadPhotoHelper;
 import com.yazhi1992.moon.viewmodel.McBean;
 import com.yazhi1992.yazhilib.utils.LibFileUtils;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
@@ -179,82 +184,87 @@ public class HomeActivity extends AbsUpgrateActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10 && resultCode == RESULT_OK) {
+        if (requestCode == CodeConstant.PICK_PHOTO_FOR_HOME && resultCode == RESULT_OK) {
             List<String> uris = Matisse.obtainPathResult(data);
             String path = uris.get(0);
             //开始上传
             if (LibUtils.notNullNorEmpty(path)) {
-                Observable.just(path)
-                        .observeOn(Schedulers.io())
-                        .concatMap(new Function<String, ObservableSource<File>>() {
+                UploadPhotoHelper.uploadPhoto(this, path, new IUploader() {
+                    @Override
+                    public void upload(String filePath, DataCallback<String> callback) {
+                        mPresenter.uploadHomeImg(filePath, new DataCallback<String>() {
                             @Override
-                            public ObservableSource<File> apply(String s) throws Exception {
-                                return Observable.create(new ObservableOnSubscribe<File>() {
-                                    @Override
-                                    public void subscribe(ObservableEmitter<File> emitter) throws Exception {
-                                        Luban.with(HomeActivity.this)
-                                                .load(uris)                                   // 传人要压缩的图片列表
-                                                .ignoreBy(100)                                  // 忽略不压缩图片的大小
-                                                .setTargetDir(StorageUtil.getPath(StorageUtil.DirectoryName.IMAGE_DIRECTORY_NAME))   // 设置压缩后文件存储位置
-                                                .setCompressListener(new OnCompressListener() { //设置回调
-                                                    @Override
-                                                    public void onStart() {
-                                                        LoadingHelper.getInstance().showLoading(HomeActivity.this);
-                                                    }
-
-                                                    @Override
-                                                    public void onSuccess(File file) {
-                                                        LibFileUtils.deleteFile(path);
-                                                        emitter.onNext(file);
-                                                    }
-
-                                                    @Override
-                                                    public void onError(Throwable e) {
-                                                        emitter.onError(e);
-                                                    }
-                                                }).launch();    //启动压缩
-                                    }
-                                });
+                            public void onSuccess(String data) {
+                                callback.onSuccess(data);
                             }
-                        })
-                        .observeOn(Schedulers.io())
-                        .concatMap(new Function<File, ObservableSource<String>>() {
-                            @Override
-                            public ObservableSource<String> apply(File file) throws Exception {
-                                return Observable.create(new ObservableOnSubscribe<String>() {
-                                    @Override
-                                    public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-                                        mPresenter.uploadHomeImg(file.getPath(), new DataCallback<String>() {
-                                            @Override
-                                            public void onSuccess(String data) {
-                                                //上传成功，删除本地图片
-                                                LibFileUtils.deleteFile(file.getPath());
-                                                emitter.onNext(data);
-                                            }
 
-                                            @Override
-                                            public void onFailed(int code, String msg) {
-                                                emitter.onError(new Throwable(code + msg));
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<String>() {
                             @Override
-                            public void accept(String path) throws Exception {
-                                EventBus.getDefault().post(new AddHomeImg(path));
-                                LoadingHelper.getInstance().closeLoading();
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                LibUtils.showToast(HomeActivity.this, throwable.getMessage());
-                                LoadingHelper.getInstance().closeLoading();
+                            public void onFailed(int code, String msg) {
+                                callback.onFailed(code, msg);
                             }
                         });
+                    }
+                }, new UploadPhotoHelper.onUploadPhotoListener() {
+                    @Override
+                    public void onStart() {
+                        LoadingHelper.getInstance().showLoading(HomeActivity.this);
+                    }
+
+                    @Override
+                    public void onSuc(String remoteImgUrl) {
+                        EventBus.getDefault().post(new AddHomeImg(remoteImgUrl));
+                        LoadingHelper.getInstance().closeLoading();
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        LibUtils.showToast(HomeActivity.this, msg);
+                        LoadingHelper.getInstance().closeLoading();
+                    }
+                });
+            }
+        } else if (requestCode == CodeConstant.PICK_PHOTO_FOR_HEAD && resultCode == RESULT_OK) {
+            //上传头像
+            List<String> uris = Matisse.obtainPathResult(data);
+            String path = uris.get(0);
+            //开始上传
+            if (LibUtils.notNullNorEmpty(path)) {
+                UploadPhotoHelper.uploadPhoto(this, path, new IUploader() {
+                    @Override
+                    public void upload(String filePath, DataCallback<String> callback) {
+                        mPresenter.updateHeadImg(filePath, new DataCallback<String>() {
+                            @Override
+                            public void onSuccess(String data) {
+                                callback.onSuccess(data);
+                            }
+
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                callback.onFailed(code, msg);
+                            }
+                        });
+                    }
+                }, new UploadPhotoHelper.onUploadPhotoListener() {
+                    @Override
+                    public void onStart() {
+                        LoadingHelper.getInstance().showLoading(HomeActivity.this);
+                    }
+
+                    @Override
+                    public void onSuc(String remoteImgUrl) {
+                        new UserDaoUtil().updateUserHeadUrl(remoteImgUrl);
+                        ChangeUserInfo changeUserInfo = new ChangeUserInfo();
+                        changeUserInfo.setHeadUrl(remoteImgUrl);
+                        EventBus.getDefault().post(changeUserInfo);
+                        LoadingHelper.getInstance().closeLoading();
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        LibUtils.showToast(HomeActivity.this, msg);
+                        LoadingHelper.getInstance().closeLoading();
+                    }
+                });
             }
         }
     }

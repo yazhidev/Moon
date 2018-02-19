@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.yazhi1992.moon.ui.setname.SetUserNameActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/toolbar"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/set_user_name"></android.support.v7.widget.Toolbar>
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout
+            android:id="@+id/rl_input"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:rv_strokeWidth="1dp"
+            app:rv_strokeColor="@color/light_text_color"
+            app:rv_cornerRadius="5dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="0dp"
+            android:layout_height="40dp">
+
+            <EditText
+                android:id="@+id/et_input"
+                android:background="@null"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/dark_text_color"
+                android:maxLength="20"
+                android:hint="@string/set_user_name_hint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout>
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
+            android:id="@+id/btn_comfirm"
+            style="@style/loading_btn"
+            android:layout_width="0dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rl_input"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            app:rv_text="@string/save_text"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
+

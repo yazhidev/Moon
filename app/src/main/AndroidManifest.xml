@@ -139,6 +139,8 @@
         </activity>
         <activity android:name=".ui.imgpreview.ImgPreviewActivity">
         </activity>
+        <activity android:name=".ui.setname.SetUserNameActivity">
+        </activity>
     </application>
 
 </manifest>

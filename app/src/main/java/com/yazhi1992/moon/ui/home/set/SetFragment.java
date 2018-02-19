@@ -14,11 +14,18 @@ import android.view.ViewGroup;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.constant.CodeConstant;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
+import com.yazhi1992.moon.event.ChangeUserInfo;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.moon.util.UploadPhotoHelper;
 import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -46,13 +53,25 @@ public class SetFragment extends Fragment {
         mBinding.rlTop.setPadding(0, LibStatusBarUtils.getStatusBarHeight(getActivity()), 0, 0);
 
         mUserDaoUtil = new UserDaoUtil();
+
         User user = mUserDaoUtil.getUserDao();
         if (user != null) {
             mViewModel.myName.set(user.getName());
             mViewModel.myHeadUrl.set(user.getHeadUrl());
-            mViewModel.loverHeadUrl.set(user.getLoverHeadUrl());
-            mViewModel.loverName.set(user.getLoverName());
         }
+
+        mPresenter.getLoverInfo(new DataCallback<LoverInfo>() {
+            @Override
+            public void onSuccess(LoverInfo data) {
+                mViewModel.loverName.set(data.name);
+                mViewModel.loverHeadUrl.set(data.imgurl);
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+
+            }
+        });
 
         mBinding.rlLogout.setOnClickListener(v -> {
             new AlertDialog.Builder(getContext())
@@ -85,6 +104,39 @@ public class SetFragment extends Fragment {
 
         mBinding.rlConfiguration.setOnClickListener(v -> ActivityRouter.gotoConfiguration());
 
+        //修改昵称
+        mBinding.tvName.setOnClickListener(v -> {
+            ActivityRouter.gotoSetUserName(mViewModel.myName.get());
+        });
+
+        //修改头像
+        mBinding.igMe.setOnClickListener(v -> {
+            UploadPhotoHelper.pickPhoto(getActivity(), CodeConstant.PICK_PHOTO_FOR_HEAD);
+        });
+
+        mBinding.igLover.setOnClickListener(v -> ActivityRouter.gotoImgPreview(mViewModel.loverHeadUrl.get()));
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void changeUserName(ChangeUserInfo bean) {
+        if(bean.getName() != null) {
+            mViewModel.myName.set(bean.getName());
+        }
+        if(bean.getHeadUrl() != null) {
+            mViewModel.myHeadUrl.set(bean.getHeadUrl());
+        }
     }
 
 }

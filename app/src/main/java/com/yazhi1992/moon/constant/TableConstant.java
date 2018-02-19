@@ -21,9 +21,8 @@ public class TableConstant {
         public static final String INVITE_NUMBER = "invite_number";
         public static final String HAVE_LOVER = "have_lover";
         public static final String LOVER_ID = "lover_id";
-        public static final String LOVER_NAME = "lover_name";
-        public static final String LOVER_HEAD_URL = "lover_head_url";
         public static final String GENDER = "gender"; //0 未设置，1男性，2女性
+        public static final String HEAD_IMG_FILE = "head_img_file";
     }
 
     //纪念日表
@@ -52,9 +51,9 @@ public class TableConstant {
     public static class BindLover {
         public static final String CLAZZ_NAME = "bind_lover";
         public static final String INVITE_NUMBER = "invite_number";
-        public static final String USER_ID = "user_id";
-        public static final String LOVER_ID = "lover_id";
         public static final String USER_NAME = "user_name";
+        public static final String USER = "user";
+        public static final String LOVER = "lover";
     }
 
     //心愿表
@@ -75,7 +74,7 @@ public class TableConstant {
         public static final String CONTENT = "content";
         public static final String ID = "id";
         public static final String USER = "user";
-        public static final String IMG_URL = "img_url";
+        public static final String IMG_FILE = "img_file";
     }
 
     //首页信息

@@ -45,7 +45,7 @@ public class BindLoverPresenter {
                         //存入bind_lover表
                         AVObject bindLoverItemData = new AVObject(TableConstant.BindLover.CLAZZ_NAME);
                         bindLoverItemData.put(TableConstant.BindLover.INVITE_NUMBER, number);
-                        bindLoverItemData.put(TableConstant.BindLover.USER_ID, currentUser.getObjectId());
+                        bindLoverItemData.put(TableConstant.BindLover.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
                         bindLoverItemData.put(TableConstant.BindLover.USER_NAME, currentUser.getUsername());
                         List<AVObject> objects = new ArrayList<>();
                         objects.add(currentUser);
@@ -128,9 +128,7 @@ public class BindLoverPresenter {
                 //更新本地数据
                 if(data.isBindComplete()) {
                     UserDaoUtil userDaoUtil = new UserDaoUtil();
-                    userDaoUtil.updateLoveInfo(data.getLoverId()
-                            , data.getLoverName()
-                            , data.getLoverHeadUrl());
+                    userDaoUtil.updateLoveId(data.getLoverId());
                     callback.onSuccess(true);
                 } else {
                     callback.onFailed(0, "bind lover not complete");

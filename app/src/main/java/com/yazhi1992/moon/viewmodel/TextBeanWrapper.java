@@ -1,5 +1,6 @@
 package com.yazhi1992.moon.viewmodel;
 
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
@@ -29,7 +30,10 @@ public class TextBeanWrapper extends IHistoryBean<TextBean> {
         textBean.setObjectId(textItemData.getObjectId());
         AVObject user = avObject.getAVObject(TableConstant.LoveHistory.USER);
         textBean.setUserName(user.getString(TableConstant.AVUserClass.USER_NAME));
-        textBean.setImgUrl(textItemData.getString(TableConstant.Text.IMG_URL));
+        AVFile avFile = textItemData.getAVFile(TableConstant.Text.IMG_FILE);
+        if(avFile != null) {
+            textBean.setImgUrl(avFile.getUrl());
+        }
         Date createdAt = avObject.getCreatedAt();
         Calendar instance = Calendar.getInstance();
         instance.setTime(createdAt);

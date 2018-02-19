@@ -16,19 +16,19 @@
 
         <RelativeLayout
             android:id="@+id/rl_top"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/theme_color"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@color/theme_color"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 style="@style/toolbar"
-                app:title="我们"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.Toolbar>
+                android:layout_height="wrap_content"
+                app:title="我们"></android.support.v7.widget.Toolbar>
 
         </RelativeLayout>
 
@@ -37,138 +37,137 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginTop="50dp"
-            app:url="@{item.myHeadUrl}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/ig_lover"
-            app:layout_constraintTop_toBottomOf="@+id/rl_top"/>
+            app:layout_constraintTop_toBottomOf="@+id/rl_top"
+            app:url="@{item.myHeadUrl}"/>
 
         <ImageView
             android:id="@+id/ig_lover"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/ig_me"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ig_me"
             app:url="@{item.loverHeadUrl}"/>
 
         <TextView
             android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ig_me"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="25dp"
             android:gravity="center"
-            android:padding="15dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/tv_lover"
-            app:layout_constraintTop_toBottomOf="@+id/ig_me"
             android:text="@{item.myName}"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/ig_me"
+            app:layout_constraintRight_toRightOf="@+id/ig_me"
+            app:layout_constraintTop_toBottomOf="@+id/ig_me"/>
 
         <TextView
             android:id="@+id/tv_lover"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ig_me"
+            android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:padding="15dp"
             android:text="@{item.loverName}"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/tv_name"
-            app:layout_constraintTop_toTopOf="@+id/tv_name"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="@+id/ig_lover"
+            app:layout_constraintRight_toRightOf="@+id/ig_lover"
+            app:layout_constraintTop_toTopOf="@+id/tv_name"/>
 
         <RelativeLayout
             android:id="@+id/rl_configuration"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/rl_about_us"
             android:layout_width="0dp"
+            android:layout_height="50dp"
             android:background="@drawable/theme_white_press_selector"
-            android:layout_height="50dp">
+            app:layout_constraintBottom_toTopOf="@+id/rl_about_us"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
             <ImageView
                 android:id="@+id/ig_configuration"
                 android:layout_width="@dimen/set_icon_size"
                 android:layout_height="@dimen/set_icon_size"
-                android:src="@mipmap/icon_configuration"
-                android:layout_marginLeft="@dimen/set_margin"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/set_margin"
+                android:src="@mipmap/icon_configuration"
                 />
 
             <TextView
-                android:layout_toRightOf="@+id/ig_configuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="配置"
-                android:textSize="@dimen/set_text_size"
-                android:textColor="@color/black"
-                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/ig_configuration"
+                android:text="配置"
+                android:textColor="@color/black"
+                android:textSize="@dimen/set_text_size"
                 />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_about_us"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/rl_logout"
-            android:background="@drawable/theme_white_press_selector"
             android:layout_width="0dp"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:background="@drawable/theme_white_press_selector"
+            app:layout_constraintBottom_toTopOf="@+id/rl_logout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
             <ImageView
                 android:id="@+id/ig_about_us"
                 android:layout_width="@dimen/set_icon_size"
                 android:layout_height="@dimen/set_icon_size"
-                android:src="@mipmap/about"
-                android:layout_marginLeft="@dimen/set_margin"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/set_margin"
+                android:src="@mipmap/about"
                 />
 
             <TextView
-                android:layout_toRightOf="@+id/ig_about_us"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="关于我们"
-                android:textSize="@dimen/set_text_size"
-                android:textColor="@color/black"
-                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/ig_about_us"
+                android:text="关于我们"
+                android:textColor="@color/black"
+                android:textSize="@dimen/set_text_size"
                 />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rl_logout"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/theme_white_press_selector"
-            android:layout_width="0dp"
-            android:layout_height="50dp">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
             <ImageView
                 android:id="@+id/ig_logout"
                 android:layout_width="@dimen/set_icon_size"
                 android:layout_height="@dimen/set_icon_size"
-                android:src="@mipmap/log_out"
-                android:layout_marginLeft="@dimen/set_margin"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/set_margin"
+                android:src="@mipmap/log_out"
                 />
 
             <TextView
-                android:layout_toRightOf="@+id/ig_logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="退出登录"
-                android:textSize="@dimen/set_text_size"
-                android:textColor="@color/black"
-                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/ig_logout"
+                android:text="退出登录"
+                android:textColor="@color/black"
+                android:textSize="@dimen/set_text_size"
                 />
 
         </RelativeLayout>

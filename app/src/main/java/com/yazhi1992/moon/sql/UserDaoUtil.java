@@ -35,18 +35,35 @@ public class UserDaoUtil extends BaseDao<User> {
         }
     }
 
-    public void updateLoveInfo(String loverId, String loverName, String loverHeadurl) {
+    public void updateLoveId(String loverId) {
         User userDao = getUserDao();
         userDao.setHaveLover(true);
         userDao.setLoverId(loverId);
-        userDao.setLoverName(loverName);
-        userDao.setLoverHeadUrl(loverHeadurl);
+        update(userDao);
+    }
+
+    public void updateLoveInfo(String name, String headUrl) {
+        User userDao = getUserDao();
+        userDao.setLoverName(name);
+        userDao.setLoverHeadUrl(headUrl);
         update(userDao);
     }
 
     public void updateGender(int gender) {
         User userDao = getUserDao();
         userDao.setGender(gender);
+        update(userDao);
+    }
+
+    public void updateUserName(String userName) {
+        User userDao = getUserDao();
+        userDao.setName(userName);
+        update(userDao);
+    }
+
+    public void updateUserHeadUrl(String url) {
+        User userDao = getUserDao();
+        userDao.setHeadUrl(url);
         update(userDao);
     }
 

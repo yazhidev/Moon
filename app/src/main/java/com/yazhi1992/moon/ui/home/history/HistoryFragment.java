@@ -28,13 +28,13 @@ import com.yazhi1992.moon.databinding.FragmentHistoryBinding;
 import com.yazhi1992.moon.dialog.AddDialog;
 import com.yazhi1992.moon.dialog.DeleteDialog;
 import com.yazhi1992.moon.event.AddDataEvent;
+import com.yazhi1992.moon.event.ChangeUserInfo;
 import com.yazhi1992.moon.util.EditDataHelper;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataWrapper;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
-import com.yazhi1992.moon.viewmodel.McBean;
 import com.yazhi1992.moon.viewmodel.McBeanWrapper;
 import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
 import com.yazhi1992.moon.viewmodel.TextBeanWrapper;
@@ -144,10 +144,10 @@ public class HistoryFragment extends Fragment {
                     case TypeConstant.TYPE_TEXT:
                         // TODO: 2018/2/19 过度动画
                         TextBeanWrapper data = (TextBeanWrapper) obj;
-                        if(LibUtils.isNullOrEmpty(data.getData().mImgUrl.get() )) {
+                        if(LibUtils.isNullOrEmpty(data.getData().mImgUrl.get())) {
                             ActivityRouter.gotoTextDetail();
                         } else {
-                            ActivityRouter.gotoImgPreview();
+                            ActivityRouter.gotoImgPreview(data.getData().mImgUrl.get());
                         }
                         break;
                     case TypeConstant.TYPE_MC:
@@ -428,6 +428,11 @@ public class HistoryFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void addMemorial(AddDataEvent bean) {
+        mBinding.smartRefresh.autoRefresh();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void changeUserName(ChangeUserInfo bean) {
         mBinding.smartRefresh.autoRefresh();
     }
 }

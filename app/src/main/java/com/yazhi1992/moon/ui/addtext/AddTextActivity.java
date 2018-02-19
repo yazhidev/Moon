@@ -18,8 +18,10 @@ import com.yazhi1992.moon.event.AddHomeImg;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
 import com.yazhi1992.moon.ui.home.HomeActivity;
+import com.yazhi1992.moon.util.IUploader;
 import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.util.StorageUtil;
+import com.yazhi1992.moon.util.UploadPhotoHelper;
 import com.yazhi1992.yazhilib.utils.LibFileUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.zhihu.matisse.Matisse;
@@ -85,83 +87,46 @@ public class AddTextActivity extends BaseActivity {
             mBinding.btnAdd.setLoading(true);
             //开始上传
             if (LibUtils.notNullNorEmpty(imgPath)) {
-                Observable.just(imgPath)
-                        .observeOn(Schedulers.io())
-                        .concatMap(new Function<String, ObservableSource<File>>() {
+                UploadPhotoHelper.uploadPhoto(this, imgPath, new IUploader() {
+                    @Override
+                    public void upload(String filePath, DataCallback<String> callback) {
+                        mPresenter.addText(title, filePath, new DataCallback<String>() {
                             @Override
-                            public ObservableSource<File> apply(String s) throws Exception {
-                                return Observable.create(new ObservableOnSubscribe<File>() {
-                                    @Override
-                                    public void subscribe(ObservableEmitter<File> emitter) throws Exception {
-                                        Luban.with(AddTextActivity.this)
-                                                .load(imgPath)                                   // 传人要压缩的图片列表
-                                                .ignoreBy(100)                                  // 忽略不压缩图片的大小
-                                                .setTargetDir(StorageUtil.getPath(StorageUtil.DirectoryName.IMAGE_DIRECTORY_NAME))   // 设置压缩后文件存储位置
-                                                .setCompressListener(new OnCompressListener() { //设置回调
-                                                    @Override
-                                                    public void onStart() {
-                                                    }
-
-                                                    @Override
-                                                    public void onSuccess(File file) {
-                                                        LibFileUtils.deleteFile(imgPath);
-                                                        emitter.onNext(file);
-                                                    }
-
-                                                    @Override
-                                                    public void onError(Throwable e) {
-                                                        emitter.onError(e);
-                                                    }
-                                                }).launch();    //启动压缩
-                                    }
-                                });
+                            public void onSuccess(String remoteImgUrl) {
+                                callback.onSuccess(remoteImgUrl);
                             }
-                        })
-                        .observeOn(Schedulers.io())
-                        .concatMap(new Function<File, ObservableSource<String>>() {
-                            @Override
-                            public ObservableSource<String> apply(File file) throws Exception {
-                                return Observable.create(new ObservableOnSubscribe<String>() {
-                                    @Override
-                                    public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-                                        mPresenter.addText(title, file.getPath(), new DataCallback<Boolean>() {
-                                            @Override
-                                            public void onSuccess(Boolean data) {
-                                                //上传成功，删除本地图片
-                                                LibFileUtils.deleteFile(file.getPath());
-                                                emitter.onNext(file.getPath());
-                                            }
 
-                                            @Override
-                                            public void onFailed(int code, String msg) {
-                                                emitter.onError(new Throwable(code + msg));
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        })
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<String>() {
                             @Override
-                            public void accept(String path) throws Exception {
-                                mBinding.btnAdd.setLoading(false);
-                                EventBus.getDefault().post(new AddDataEvent(ActionConstant.ADD_TEXT));
-                                LibUtils.hideKeyboard(mBinding.etTitle);
-                                finish();
-                                PushManager.getInstance().pushAction(ActionConstant.ADD_TEXT);
-                            }
-                        }, new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                LibUtils.showToast(AddTextActivity.this, throwable.getMessage());
-                                mBinding.btnAdd.setLoading(false);
+                            public void onFailed(int code, String msg) {
+                                callback.onFailed(code, msg);
                             }
                         });
-            } else {
-                mPresenter.addText(title, null,new DataCallback<Boolean>() {
+                    }
+                }, new UploadPhotoHelper.onUploadPhotoListener() {
                     @Override
-                    public void onSuccess(Boolean data) {
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onSuc(String remoteImgUrl) {
+                        mBinding.btnAdd.setLoading(false);
+                        EventBus.getDefault().post(new AddDataEvent(ActionConstant.ADD_TEXT));
+                        LibUtils.hideKeyboard(mBinding.etTitle);
+                        finish();
+                        PushManager.getInstance().pushAction(ActionConstant.ADD_TEXT);
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        LibUtils.showToast(AddTextActivity.this, msg);
+                        mBinding.btnAdd.setLoading(false);
+                    }
+                });
+            } else {
+                mPresenter.addText(title, null,new DataCallback<String>() {
+                    @Override
+                    public void onSuccess(String data) {
                         EventBus.getDefault().post(new AddDataEvent(ActionConstant.ADD_TEXT));
                         LibUtils.hideKeyboard(mBinding.etTitle);
                         mBinding.btnAdd.setLoading(false);

@@ -11,4 +11,8 @@ public class HomePresenter {
     public void uploadHomeImg(String filePath, DataCallback<String> callback) {
         Api.getInstance().uploadHomeImg(filePath, callback);
     }
+
+    public void updateHeadImg(String filePath, DataCallback<String> callback) {
+        Api.getInstance().updateHeadImg(filePath, callback);
+    }
 }
