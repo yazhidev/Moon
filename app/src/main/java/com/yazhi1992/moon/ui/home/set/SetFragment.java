@@ -61,6 +61,7 @@ public class SetFragment extends Fragment {
             mViewModel.myHeadUrl.set(user.getHeadUrl());
         }
 
+        //同步另一半最新的昵称与头像
         mPresenter.getLoverInfo(new DataCallback<LoverInfo>() {
             @Override
             public void onSuccess(LoverInfo data) {

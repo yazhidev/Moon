@@ -62,7 +62,7 @@ public class RegisterActivity extends BaseActivity {
                             //插入数据库
                             UserDaoUtil userDaoUtil = new UserDaoUtil();
                             User user = new User();
-                            user.setName(avUser.getUsername());
+                            user.setName(avUser.getString(TableConstant.AVUserClass.NICK_NAME));
                             user.setInviteNumber(avUser.getString(TableConstant.AVUserClass.INVITE_NUMBER));
                             user.setObjectId(avUser.getObjectId());
                             user.setEmail(accout);

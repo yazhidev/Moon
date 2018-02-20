@@ -122,28 +122,25 @@ public class HomeActivity extends AbsUpgrateActivity {
             String todayTime = AppUtils.memorialDayYmdFormat.format(new Date());
             if (!lastTipTime.equals(todayTime)) {
                 //今天未提醒
-                new McDetailPresenter().getLastMcRecord(new DataCallback<McBean>() {
+                new McDetailPresenter().getLastMcRecord(new DataCallback<Boolean>() {
                     @Override
-                    public void onSuccess(McBean data) {
-                        if (data != null) {
+                    public void onSuccess(Boolean showTip) {
+                        if (showTip) {
                             LibSPUtils.setString(SPKeyConstant.TIP_BAD_MOOD_TIME, todayTime);
-                            Integer gapDayNum = Integer.valueOf(data.mGapDayNumStr.get());
-                            if ((gapDayNum < 37 && gapDayNum > 25) || gapDayNum < 3) {
-                                //即将来和刚来mc时，提示对方可能心情烦躁
-                                String tipStr;
-                                int gender = new UserDaoUtil().getUserDao().getGender();
-                                if (gender == TypeConstant.MEN) {
-                                    tipStr = getString(R.string.mc_tip_for_man);
-                                } else {
-                                    tipStr = getString(R.string.mc_tip_for_woman);
-                                }
-                                TipDialogHelper.getInstance().showOneBtnDialog(HomeActivity.this, tipStr, new TipDialogHelper.OnComfirmListener() {
-                                    @Override
-                                    public void comfirm() {
-
-                                    }
-                                });
+                            //即将来和刚来mc时，提示对方可能心情烦躁
+                            String tipStr;
+                            int gender = new UserDaoUtil().getUserDao().getGender();
+                            if (gender == TypeConstant.MEN) {
+                                tipStr = getString(R.string.mc_tip_for_man);
+                            } else {
+                                tipStr = getString(R.string.mc_tip_for_woman);
                             }
+                            TipDialogHelper.getInstance().showOneBtnDialog(HomeActivity.this, tipStr, new TipDialogHelper.OnComfirmListener() {
+                                @Override
+                                public void comfirm() {
+
+                                }
+                            });
                         }
                     }
 

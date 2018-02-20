@@ -4,6 +4,9 @@ import android.databinding.ObservableField;
 
 import com.avos.avoscloud.AVObject;
 import com.yazhi1992.moon.constant.TableConstant;
+import com.yazhi1992.moon.sql.User;
+import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +17,7 @@ import java.util.List;
 
 /**
  * Created by zengyazhi on 2018/1/29.
- *
+ * <p>
  * 历史页外层布局，包含通用的消息发布者用户名、用户头像、该消息的评论列表
  */
 
@@ -39,16 +42,22 @@ public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
             setUserHeadUrl(user.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE).getUrl());
         }
         JSONArray jsonArray = avObj.getJSONArray(TableConstant.LoveHistory.COMMENT_LIST);
-        if(jsonArray != null && jsonArray.length() > 0) {
+        if (jsonArray != null && jsonArray.length() > 0) {
             //评论有数据
             mCommentDatas = new ArrayList<>();
+            User userDao = new UserDaoUtil().getUserDao();
             for (int i = 0; i < jsonArray.length(); i++) {
                 try {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    CommentBean commentBean = new CommentBean(jsonObject.getString(CommentBean.CONTENT), jsonObject.getString(CommentBean.USER_NAME));
-                    commentBean.setUserId(jsonObject.getString(CommentBean.USER_ID));
-                    commentBean.setReplyName(jsonObject.getString(CommentBean.REPLAY_NAME));
-                    commentBean.setReplyId(jsonObject.getString(CommentBean.REPLAY_ID));
+                    CommentBean commentBean = new CommentBean(jsonObject.getString(CommentBean.CONTENT));
+                    String userId = jsonObject.getString(CommentBean.USER_ID);
+                    String replyId = jsonObject.getString(CommentBean.REPLAY_ID);
+                    commentBean.setUserId(userId);
+                    commentBean.setUserName(userId.equals(userDao.getObjectId()) ? userDao.getName() : userDao.getLoverName());
+                    if (LibUtils.notNullNorEmpty(replyId) && !"null".equals(replyId)) {
+                        commentBean.setReplyName(replyId.equals(userDao.getObjectId()) ? userDao.getName() : userDao.getLoverName());
+                    }
+                    commentBean.setReplyId(replyId);
                     commentBean.setId(jsonObject.getLong(CommentBean.ID));
                     commentBean.setParentId(jsonObject.getString(CommentBean.PARENT_ID));
                     mCommentDatas.add(commentBean);
@@ -65,7 +74,7 @@ public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
     }
 
     public List<CommentBean> getCommentDatas() {
-        if(mCommentDatas == null) {
+        if (mCommentDatas == null) {
             mCommentDatas = new ArrayList<>();
         }
         return mCommentDatas;

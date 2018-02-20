@@ -102,5 +102,8 @@ public class TableConstant {
     public static class CONFIGURATION {
         public static final String CLAZZ_NAME = "configuration";
         public static final String ADD_IMG_ENABLE = "add_img_enable"; //说说是否可以传图
+        public static final String MC_GO_MIN_DAY = "mc_go_min_day"; //mc 没来开始预警天数
+        public static final String MC_GO_MAX_DAY = "mc_go_max_day"; //mc 没来结束预警天数
+        public static final String MC_COME_MAX_DAY = "mc_come_max_day"; //mc 来了预警天数
     }
 }

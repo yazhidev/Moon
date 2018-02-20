@@ -15,7 +15,7 @@ public class McDetailPresenter {
         Api.getInstance().getMcDetailInitData(callback);
     }
 
-    public void getLastMcRecord(DataCallback<McBean> callback) {
+    public void getLastMcRecord(DataCallback<Boolean> callback) {
         Api.getInstance().getLastMcRecord(callback);
     }
 

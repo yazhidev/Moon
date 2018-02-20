@@ -80,7 +80,6 @@ public class HistoryFragment extends Fragment {
     private String mAddCommentInput; //缓存已输入的评论内容
     private String mReplyCommentInput; //缓存已输入的回复内容
     private String mReplyCommentPeerId;
-    private String mReplyCommentPeerName;
 
     @Nullable
     @Override
@@ -193,7 +192,6 @@ public class HistoryFragment extends Fragment {
                 mBinding.etInput.setHint("回复 " + peerName);
                 mAddCommentPosition = position;
                 mReplyCommentPeerId = peerId;
-                mReplyCommentPeerName = peerName;
                 LibUtils.showKeyoard(getActivity(), mBinding.etInput);
             }
         };
@@ -301,7 +299,7 @@ public class HistoryFragment extends Fragment {
                 };
                 if (mInputType == 1) {
                     //回复，则有对方的姓名
-                    mPresenter.replyComment(comment, data.getObjectId(), mReplyCommentPeerId, mReplyCommentPeerName, callback);
+                    mPresenter.replyComment(comment, data.getObjectId(), mReplyCommentPeerId, callback);
                 } else {
                     mPresenter.addComment(comment, data.getObjectId(), callback);
                 }

@@ -17,6 +17,7 @@ import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
+import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.sql.User;
@@ -28,8 +29,9 @@ import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.ConfigBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
-import com.yazhi1992.moon.viewmodel.McBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
+import com.yazhi1992.yazhilib.utils.LibSPUtils;
+import com.yazhi1992.yazhilib.utils.LibTimeUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.json.JSONArray;
@@ -471,7 +473,7 @@ public class Api {
     }
 
     /**
-     * 删除纪念日数据
+     * 删除回忆列表数据
      *
      * @param callback
      */
@@ -500,7 +502,7 @@ public class Api {
             default:
                 break;
         }
-        if(type == TypeConstant.TYPE_TEXT) {
+        if (type == TypeConstant.TYPE_TEXT) {
             //删除图文消息，如果有图片，一起删除图片，节约空间
             AVObject data = AVObject.createWithoutData(clazzName, dataObjId);
             String finalClazzName = clazzName;
@@ -512,7 +514,7 @@ public class Api {
                         @Override
                         public void onSuc() {
                             AVFile avFile = avObject.getAVFile(TableConstant.Text.IMG_FILE);
-                            if(avFile != null)  {
+                            if (avFile != null) {
                                 //如果原来有图片文件，则先删除原来的头像图片，节约空间
                                 avFile.deleteInBackground(new DeleteCallback() {
                                     @Override
@@ -535,10 +537,11 @@ public class Api {
     private void doRealDelete(@TypeConstant.DataTypeInHistory int type, String dataObjId, DataCallback<Boolean> callback, String clazzName, String clazzInhistoryName) {
         AVObject data = AVObject.createWithoutData(clazzName, dataObjId);
         String finalClazzInhistoryName = clazzInhistoryName;
-        if(type == TypeConstant.TYPE_MC) {
+        if (type == TypeConstant.TYPE_MC) {
             //只删除history表数据
             deleteHistoryItemData(finalClazzInhistoryName, data, callback, type);
-        } else{
+        } else {
+            //先删除关联的表数据，再删除history表数据
             data.deleteInBackground(new DeleteCallback() {
                 @Override
                 public void done(AVException e) {
@@ -546,7 +549,6 @@ public class Api {
                         @Override
                         public void onSuc() {
                             deleteHistoryItemData(finalClazzInhistoryName, data, callback, type);
-
                         }
                     });
                 }
@@ -556,6 +558,7 @@ public class Api {
 
     /**
      * 删除history表数据
+     *
      * @param finalClazzInhistoryName
      * @param data
      * @param callback
@@ -917,7 +920,7 @@ public class Api {
         AVObject commentItemData = AVObject.createWithoutData(TableConstant.LoveHistory.CLAZZ_NAME, parentObjId);
         AVUser currentUser = AVUser.getCurrentUser();
 
-        CommentBean commentBean = new CommentBean(content, currentUser.getUsername());
+        CommentBean commentBean = new CommentBean(content);
         commentBean.setUserId(currentUser.getObjectId());
         commentBean.setId(new Date().getTime());
         commentBean.setParentId(parentObjId);
@@ -932,15 +935,14 @@ public class Api {
         });
     }
 
-    public void replyComment(String content, String parentObjId, String peerId, String peerName, final DataCallback<CommentBean> dataCallback) {
+    public void replyComment(String content, String parentObjId, String peerId, final DataCallback<CommentBean> dataCallback) {
         AVObject commentItemData = AVObject.createWithoutData(TableConstant.LoveHistory.CLAZZ_NAME, parentObjId);
         AVUser currentUser = AVUser.getCurrentUser();
 
-        CommentBean commentBean = new CommentBean(content, currentUser.getUsername());
+        CommentBean commentBean = new CommentBean(content);
         commentBean.setUserId(currentUser.getObjectId());
         commentBean.setId(new Date().getTime());
         commentBean.setReplyId(peerId);
-        commentBean.setReplyName(peerName);
         commentBean.setParentId(parentObjId);
 
         commentItemData.add(TableConstant.LoveHistory.COMMENT_LIST, commentBean);
@@ -972,9 +974,8 @@ public class Api {
                                     if (jsonObject.getLong(CommentBean.ID) == commentId) {
                                         continue;
                                     }
-                                    CommentBean commentBean = new CommentBean(jsonObject.getString(CommentBean.CONTENT), jsonObject.getString(CommentBean.USER_NAME));
+                                    CommentBean commentBean = new CommentBean(jsonObject.getString(CommentBean.CONTENT));
                                     commentBean.setUserId(jsonObject.getString(CommentBean.USER_ID));
-                                    commentBean.setReplyName(jsonObject.getString(CommentBean.REPLAY_NAME));
                                     commentBean.setReplyId(jsonObject.getString(CommentBean.REPLAY_ID));
                                     commentBean.setId(jsonObject.getLong(CommentBean.ID));
                                     commentBean.setParentId(jsonObject.getString(CommentBean.PARENT_ID));
@@ -1131,7 +1132,7 @@ public class Api {
      */
     public void setGender(@TypeConstant.Gender int gender, DataCallback<Integer> callback) {
         AVUser currentUser = AVUser.getCurrentUser();
-        if(currentUser.getInt(TableConstant.AVUserClass.GENDER) == 0) {
+        if (currentUser.getInt(TableConstant.AVUserClass.GENDER) == 0) {
             //刚注册时设置性别，则设置默认头像
             currentUser.put(TableConstant.AVUserClass.HEAD_IMG_FILE, gender == 1
                     ? currentUser.getAVFile(TableConstant.AVUserClass.DEFAULT_MAN_HEAD)
@@ -1151,6 +1152,13 @@ public class Api {
         });
     }
 
+    /**
+     * mc详情页信息获取
+     * 先获取最后一次来mc的时间，用于显示。
+     * 再获取最近一条mc更新状态，用于判断按钮要显示的问题是来还是走
+     *
+     * @param callback
+     */
     public void getMcDetailInitData(DataCallback<McData> callback) {
         final McData[] data = {null};
         Observable.just(1)
@@ -1276,11 +1284,11 @@ public class Api {
     }
 
     /**
-     * 获取情侣中女性最近一条mc记录
+     * 获取情侣中女性最近一条mc记录（用于心情预警，如果没来25天或刚来3天，则预警）
      *
      * @param callback
      */
-    public void getLastMcRecord(DataCallback<McBean> callback) {
+    public void getLastMcRecord(DataCallback<Boolean> callback) {
         User userDao = new UserDaoUtil().getUserDao();
         AVObject userObj = null;
         if (userDao.getGender() == TypeConstant.MEN) {
@@ -1302,12 +1310,21 @@ public class Api {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        McBean mcBean = null;
-                        if (avObject != null) {
-                            mcBean = new McBean(avObject.getInt(TableConstant.MC.STATUS));
-                            mcBean.setTime(avObject.getLong(TableConstant.MC.TIME));
+                        int status = avObject.getInt(TableConstant.MC.STATUS);
+                        int gapBetweenTwoDay = Math.abs(LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(avObject.getLong(TableConstant.MC.TIME))));
+
+                        if (status == 0
+                                && LibSPUtils.getInt(SPKeyConstant.MC_GO_MIN_DAY, 25) < gapBetweenTwoDay
+                                && gapBetweenTwoDay < LibSPUtils.getInt(SPKeyConstant.MC_GO_MAX_DAY, 37)) {
+                            //走了 25 < day < 37 要预警
+                            callback.onSuccess(true);
+                        } else if (status == 1
+                                && gapBetweenTwoDay < LibSPUtils.getInt(SPKeyConstant.MC_COME_MAX_DAY, 3)) {
+                            //来 day < 3 要预警
+                            callback.onSuccess(true);
+                        } else {
+                            callback.onSuccess(false);
                         }
-                        callback.onSuccess(mcBean);
                     }
                 });
             }
@@ -1348,7 +1365,7 @@ public class Api {
      */
     public void setUserName(String userName, DataCallback<String> callback) {
         AVUser currentUser = AVUser.getCurrentUser();
-        currentUser.setUsername(userName);
+        currentUser.put(TableConstant.AVUserClass.NICK_NAME, userName);
         currentUser.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
@@ -1399,6 +1416,7 @@ public class Api {
 
     /**
      * 更新头像
+     *
      * @param filePath
      * @param dataCallback
      */
@@ -1418,7 +1436,7 @@ public class Api {
                             @Override
                             public void done(AVObject avObject, AVException e) {
                                 AVFile avFile = avObject.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE);
-                                if(avFile == null) {
+                                if (avFile == null) {
                                     currentUser.put(TableConstant.AVUserClass.HEAD_IMG_FILE, file);
                                     currentUser.saveInBackground(new SaveCallback() {
                                         @Override
@@ -1459,6 +1477,7 @@ public class Api {
 
     /**
      * 获取配置
+     *
      * @param callback
      */
     public void getConfig(DataCallback<ConfigBean> callback) {
@@ -1471,6 +1490,9 @@ public class Api {
                     public void onSuc() {
                         ConfigBean configBean = new ConfigBean();
                         configBean.setCanPushImg(avObject.getBoolean(TableConstant.CONFIGURATION.ADD_IMG_ENABLE));
+                        configBean.setMcComeMaxDay(avObject.getInt(TableConstant.CONFIGURATION.MC_COME_MAX_DAY));
+                        configBean.setMcGoMaxDay(avObject.getInt(TableConstant.CONFIGURATION.MC_GO_MAX_DAY));
+                        configBean.setMcGoMinDay(avObject.getInt(TableConstant.CONFIGURATION.MC_GO_MIN_DAY));
                         callback.onSuccess(configBean);
                     }
                 });
@@ -1480,6 +1502,7 @@ public class Api {
 
     /**
      * 注册
+     *
      * @param email
      * @param pwd
      * @param callback
@@ -1506,6 +1529,7 @@ public class Api {
 
     /**
      * 登录
+     *
      * @param email
      * @param pwd
      * @param callback
@@ -1526,12 +1550,13 @@ public class Api {
 
     /**
      * 发送验证邮件
+     *
      * @param email
      * @param callback
      */
     public void checkEmail(String email, DataCallback<Boolean> callback) {
         AVUser currentUser = AVUser.getCurrentUser();
-        if(LibUtils.isNullOrEmpty(currentUser.getEmail())) {
+        if (LibUtils.isNullOrEmpty(currentUser.getEmail())) {
             currentUser.setEmail(email);
             currentUser.saveInBackground(new SaveCallback() {
                 @Override
@@ -1546,6 +1571,7 @@ public class Api {
 
     /**
      * 检验邮箱是否已验证
+     *
      * @param callback
      */
     public void checkEmailStatus(DataCallback<Boolean> callback) {
@@ -1579,6 +1605,7 @@ public class Api {
 
     /**
      * 发送重置密码邮件
+     *
      * @param email
      * @param callback
      */

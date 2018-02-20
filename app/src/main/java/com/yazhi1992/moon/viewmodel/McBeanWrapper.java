@@ -25,6 +25,8 @@ public class McBeanWrapper extends IHistoryBean<McBean> {
     McBean transformAvObject(HistoryItemDataFromApi loveHistoryItemData) {
         AVObject avObject = loveHistoryItemData.getAvObject();
         AVObject mcItemData = avObject.getAVObject(TableConstant.LoveHistory.MC);
-        return new McBean(mcItemData.getInt(TableConstant.MC.STATUS));
+        McBean mcBean = new McBean(mcItemData.getInt(TableConstant.MC.STATUS));
+        mcBean.setObjectId(mcItemData.getObjectId());
+        return mcBean;
     }
 }
