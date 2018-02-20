@@ -57,7 +57,6 @@ public class LoginPresenter {
                                         if (e == null) {
                                             //插入数据库
                                             UserDaoUtil userDaoUtil = new UserDaoUtil();
-                                            userDaoUtil.clear();
                                             User user = new User();
                                             user.setName(avUser.getUsername());
                                             user.setHeadUrl(avUser.getString(TableConstant.AVUserClass.HEAD_URL));
@@ -67,7 +66,7 @@ public class LoginPresenter {
                                                 user.setHaveLover(true);
                                                 user.setLoverId(avUser.getString(TableConstant.AVUserClass.LOVER_ID));
                                             }
-                                            userDaoUtil.insert(user);
+                                            userDaoUtil.insert(user, null);
 
                                             if (mCallback != null) {
                                                 mCallback.onSuccess(user.getHaveLover());

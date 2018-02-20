@@ -48,6 +48,12 @@ public class ActivityRouter {
     public static final String SET_USER_NAME = "/app/set_user_name";
     //个人中心
     public static final String USER_CENTER = "/app/user_center";
+    //账号密码登录页
+    public static final String NEW_LOGIN = "/app/new_login";
+    //注册页
+    public static final String REGISTER_STEP_ONE = "/app/register_step_one";
+    //设置邮箱
+    public static final String SET_EMAIL = "/app/set_email";
 
     public static class KeyName {
         public static final String OBJECT_ID_KEY = "objectid";
@@ -73,11 +79,27 @@ public class ActivityRouter {
                 .navigation();
     }
 
+    public static void gotoNewLogin() {
+        ARouter.getInstance()
+                .build(NEW_LOGIN)
+                .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
+                .navigation();
+    }
+
     public static void gotoLogin() {
         ARouter.getInstance()
                 .build(LOGIN)
                 .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                 .navigation();
+    }
+
+    public static void gotoSetEmail(boolean clearTask) {
+        Postcard build = ARouter.getInstance()
+                .build(SET_EMAIL);
+        if (clearTask) {
+            build.withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        build.navigation();
     }
 
     public static void gotoSetGender(boolean clearTask) {
@@ -178,4 +200,11 @@ public class ActivityRouter {
                 .build(USER_CENTER)
                 .navigation();
     }
+
+    public static void gotRegister1() {
+        ARouter.getInstance()
+                .build(REGISTER_STEP_ONE)
+                .navigation();
+    }
+
 }

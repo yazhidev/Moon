@@ -18,11 +18,15 @@ public class TableConstant {
         public static final String CLAZZ_NAME = "_User";
         public static final String HEAD_URL = "head_img_url";
         public static final String USER_NAME = "username";
+        public static final String NICK_NAME = "nickname";
         public static final String INVITE_NUMBER = "invite_number";
         public static final String HAVE_LOVER = "have_lover";
         public static final String LOVER_ID = "lover_id";
         public static final String GENDER = "gender"; //0 未设置，1男性，2女性
         public static final String HEAD_IMG_FILE = "head_img_file";
+        public static final String DEFAULT_MAN_HEAD = "default_man_head";
+        public static final String DEFAULT_WOMAN_HEAD = "default_woman_head";
+        public static final String EMAIL_VERIFIED = "emailVerified";
     }
 
     //纪念日表

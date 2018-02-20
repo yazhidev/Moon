@@ -32,6 +32,6 @@
     <color name="dark_text_color">#1e2d44</color>
     <color name="light_text_color">#adb0b4</color>
     <color name="line">#cccccc</color>
-
+    <color name="light_bg_color">#f0f2f8</color>
 
 </resources>

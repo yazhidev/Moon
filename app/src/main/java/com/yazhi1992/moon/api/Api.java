@@ -8,7 +8,10 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.LogInCallback;
+import com.avos.avoscloud.RequestEmailVerifyCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.SignUpCallback;
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
@@ -74,7 +77,7 @@ public class Api {
         if (e == null) {
             onResultSuc.onSuc();
         } else {
-            LibUtils.showToast(BaseApplication.getInstance(), e.getCode() + e.getMessage());
+            LibUtils.showToast(BaseApplication.getInstance(), e.getCode() + " - " + e.getMessage());
             dataCallback.onFailed(e.getCode(), e.getMessage());
         }
     }
@@ -1127,6 +1130,12 @@ public class Api {
      */
     public void setGender(@TypeConstant.Gender int gender, DataCallback<Integer> callback) {
         AVUser currentUser = AVUser.getCurrentUser();
+        if(currentUser.getInt(TableConstant.AVUserClass.GENDER) == 0) {
+            //刚注册时设置性别，则设置默认头像
+            currentUser.put(TableConstant.AVUserClass.HEAD_IMG_FILE, gender == 1
+                    ? currentUser.getAVFile(TableConstant.AVUserClass.DEFAULT_MAN_HEAD)
+                    : currentUser.getAVFile(TableConstant.AVUserClass.DEFAULT_WOMAN_HEAD));
+        }
         currentUser.put(TableConstant.AVUserClass.GENDER, gender);
         currentUser.saveInBackground(new SaveCallback() {
             @Override
@@ -1464,6 +1473,105 @@ public class Api {
                         ConfigBean configBean = new ConfigBean();
                         configBean.setCanPushImg(avObject.getBoolean(TableConstant.CONFIGURATION.ADD_IMG_ENABLE));
                         callback.onSuccess(configBean);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 注册
+     * @param email
+     * @param pwd
+     * @param callback
+     */
+    public void register(String email, String pwd, String nickname, DataCallback<Boolean> callback) {
+        AVUser user = new AVUser();// 新建 AVUser 对象实例
+        user.setUsername(email);// 设置用户名
+        user.setEmail(email);
+        user.setPassword(pwd);// 设置密码
+        user.put(TableConstant.AVUserClass.NICK_NAME, nickname);// 设置昵称
+        user.signUpInBackground(new SignUpCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        //自动登录
+                        login(email, pwd, callback);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 登录
+     * @param email
+     * @param pwd
+     * @param callback
+     */
+    public void login(String email, String pwd, DataCallback<Boolean> callback) {
+        AVUser.logInInBackground(email, pwd, new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(true);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 发送验证邮件
+     * @param email
+     * @param callback
+     */
+    public void checkEmail(String email, DataCallback<Boolean> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+        if(LibUtils.isNullOrEmpty(currentUser.getEmail())) {
+            currentUser.setEmail(email);
+            currentUser.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    sendCheckEmail(email, callback);
+                }
+            });
+        } else {
+            sendCheckEmail(email, callback);
+        }
+    }
+
+    /**
+     * 检验邮箱是否已验证
+     * @param callback
+     */
+    public void checkEmailStatus(DataCallback<Boolean> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+        currentUser.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(avObject.getBoolean(TableConstant.AVUserClass.EMAIL_VERIFIED));
+                    }
+                });
+            }
+        });
+    }
+
+    private void sendCheckEmail(String email, DataCallback<Boolean> callback) {
+        AVUser.requestEmailVerifyInBackground(email, new RequestEmailVerifyCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(true);
                     }
                 });
             }

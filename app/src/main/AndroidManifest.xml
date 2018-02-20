@@ -14,6 +14,11 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.READ_PROFILE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
@@ -142,6 +147,12 @@
         <activity android:name=".ui.setname.SetUserNameActivity">
         </activity>
         <activity android:name=".ui.usercenter.UserCenterActivity">
+        </activity>
+        <activity android:name=".ui.newlogin.NewLoginActivity">
+        </activity>
+        <activity android:name=".ui.register.RegisterActivity">
+        </activity>
+        <activity android:name=".ui.setemail.SetEmailActivity">
         </activity>
     </application>
 

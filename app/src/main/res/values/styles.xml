@@ -110,4 +110,9 @@
 
     <!--首页布局-->
 
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/color_9</item>
+        <item name="colorControlActivated">@color/theme_color</item>
+    </style>
+
 </resources>

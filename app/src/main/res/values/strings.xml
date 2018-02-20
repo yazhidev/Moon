@@ -131,5 +131,28 @@
     <string name="woman_str">女</string>
 
     <string name="sp_key_mc_enable">sp_key_mc_enable</string>
+    <string name="title_activity_login">登录</string>
+
+    <string name="login_lable">登录账号</string>
+    <string name="login_accout">邮箱地址</string>
+    <string name="login_pwd">密码</string>
+    <string name="login_login">登录</string>
+    <string name="login_forget_pwd">忘记密码？</string>
+
+    <string name="login_register">新用户注册</string>
+    <string name="login_register_lable">注册账号</string>
+    <string name="login_nickname">昵称</string>
+    <string name="login_register_next">下一步</string>
+    <string name="error_email">请输入正确的邮箱地址</string>
+    <string name="empty_pwd">密码不能为空</string>
+    <string name="empty_nickname">昵称不能为空</string>
+    <string name="bind_email">验证邮箱</string>
+    <string name="input_email">请输入用于找回密码的邮箱</string>
+    <string name="check_email">发送验证邮件</string>
+    <string name="already_check_email">已在邮箱中完成验证</string>
+    <string name="empty_email">邮箱地址不能为空</string>
+    <string name="check_failed">请到邮箱中打开验证邮件并点击激活链接~</string>
+    <string name="check_suc">邮箱验证成功~</string>
+
 
 </resources>

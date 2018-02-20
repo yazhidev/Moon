@@ -25,6 +25,14 @@ public class BaseActivity extends AppCompatActivity {
         initStatusBar();
     }
 
+    protected boolean displayBackBtnInToolber() {
+        if(isTaskRoot()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     protected void initStatusBar() {
         LibStatusBarUtils.with(this)
                 .setColor(getResources().getColor(R.color.colorAccent))
@@ -33,14 +41,16 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void initToolBar(Toolbar toolbar) {
         setSupportActionBar(toolbar);
-        //显示返回键
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Observable.timer(300, TimeUnit.MILLISECONDS)
-                        .subscribe(aLong -> finish());
-            }
-        });
+        if(displayBackBtnInToolber()) {
+            //显示返回键
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Observable.timer(300, TimeUnit.MILLISECONDS)
+                            .subscribe(aLong -> finish());
+                }
+            });
+        }
     }
 }

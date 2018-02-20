@@ -21,7 +21,7 @@ public class BaseDao<T>{
         mDaoSession = mDaoManager.getDaoSession();
     }
 
-    protected void insert(T obj, IDaoOperationListener.IOperationistener listener) {
+    public void insert(T obj, IDaoOperationListener.IOperationistener listener) {
         AsyncSession asyncSession = mDaoSession.startAsyncSession();
         setOperation(asyncSession, listener);
         asyncSession.insert(obj);

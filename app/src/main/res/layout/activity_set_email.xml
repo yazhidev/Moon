@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.yazhi1992.moon.ui.setemail.SetEmailActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/toolbar"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/bind_email"></android.support.v7.widget.Toolbar>
+
+        <View
+            android:id="@+id/bg1"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            android:background="@color/light_bg_color"
+            ></View>
+
+        <TextView
+            android:id="@+id/tv_email"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bg1"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="20dp"
+            android:background="@null"
+            android:textSize="16sp"
+            android:gravity="center_vertical|left"
+            android:paddingRight="20dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"/>
+
+        <View
+            android:id="@+id/bg2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_email"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/light_bg_color"
+            ></View>
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
+            android:id="@+id/btn_comfirm"
+            style="@style/loading_btn"
+            android:layout_width="0dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_email"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            app:rv_text="@string/check_email"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
+
+
+        <TextView
+            android:id="@+id/tv_later"
+            android:background="@drawable/theme_press_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="稍后绑定"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/color_9"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_comfirm"
+            android:padding="10dp"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

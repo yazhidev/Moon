@@ -15,7 +15,7 @@ public class CheckIsLoginFilter implements ICheckDataFilter {
         UserDaoUtil userDaoUtil = new UserDaoUtil();
         if(userDaoUtil.getUserDao() == null) {
             //未登录
-            ActivityRouter.gotoLogin();
+            ActivityRouter.gotoNewLogin();
         } else {
             PushManager.getInstance().register();
             //通过，continue

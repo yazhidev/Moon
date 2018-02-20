@@ -8,10 +8,6 @@ import java.util.List;
 
 public class UserDaoUtil extends BaseDao<User> {
 
-    public void insert(User user) {
-        insert(user, null);
-    }
-
     public void clear() {
         deleteAll(User.class, null);
     }

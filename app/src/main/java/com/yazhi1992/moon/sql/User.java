@@ -42,10 +42,17 @@ public class User {
     @Property(nameInDb = "gender")
     private int gender;
 
-    @Generated(hash = 1112212378)
+    @Property(nameInDb = "email")
+    private String email;
+
+    @Property(nameInDb = "emailVerified")
+    private boolean emailVerified;
+
+    @Generated(hash = 889710475)
     public User(Long id, String name, String objectId, String headUrl,
             String inviteNumber, boolean haveLover, String loverId,
-            String loverHeadUrl, String loverName, int gender) {
+            String loverHeadUrl, String loverName, int gender, String email,
+            boolean emailVerified) {
         this.id = id;
         this.name = name;
         this.objectId = objectId;
@@ -56,6 +63,8 @@ public class User {
         this.loverHeadUrl = loverHeadUrl;
         this.loverName = loverName;
         this.gender = gender;
+        this.email = email;
+        this.emailVerified = emailVerified;
     }
 
     @Generated(hash = 586692638)
@@ -140,5 +149,21 @@ public class User {
 
     public void setGender(int gender) {
         this.gender = gender;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean getEmailVerified() {
+        return this.emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 }

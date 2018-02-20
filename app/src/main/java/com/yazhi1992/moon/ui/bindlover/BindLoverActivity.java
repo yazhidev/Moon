@@ -48,7 +48,7 @@ public class BindLoverActivity extends AbsUpgrateActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.log_out) {
                     new UserDaoUtil().clear();
-                    ActivityRouter.gotoLogin();
+                    ActivityRouter.gotoNewLogin();
                     finish();
                 } else if(item.getItemId() == R.id.about_us) {
                     ActivityRouter.gotoAboutUs();
