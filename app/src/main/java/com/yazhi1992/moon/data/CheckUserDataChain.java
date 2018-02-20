@@ -38,6 +38,10 @@ public class CheckUserDataChain {
         mChainIndex = 0;
     }
 
+    public void resetChainIndex() {
+        mChainIndex = 0;
+    }
+
     public void processChain() {
         if (mChainList.size() > 0 && mChainList.size() > mChainIndex) {
             ICheckDataFilter iCheckDataFilter = mChainList.get(mChainIndex);
@@ -50,7 +54,7 @@ public class CheckUserDataChain {
 
                 @Override
                 public void onErr() {
-                    ActivityRouter.gotoLogin();
+                    ActivityRouter.gotoNewLogin();
                 }
             });
         } else{

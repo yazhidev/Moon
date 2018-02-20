@@ -15,6 +15,7 @@ import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.PushManager;
+import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 /**
@@ -50,34 +51,37 @@ public class RegisterActivity extends BaseActivity {
                 LibUtils.showToast(this, getString(R.string.empty_nickname));
                 return;
             }
-            mBinding.btnComfirm.setLoading(true);
-            mPresenter.register(accout, pwd, nickname, new DataCallback<Boolean>() {
+            TipDialogHelper.getInstance().showDialog(this, String.format(getString(R.string.comfirm_email), accout), new TipDialogHelper.OnComfirmListener() {
                 @Override
-                public void onSuccess(Boolean data) {
-                    AVUser avUser = AVUser.getCurrentUser();
-                    //插入数据库
-                    UserDaoUtil userDaoUtil = new UserDaoUtil();
-                    User user = new User();
-                    user.setName(avUser.getUsername());
-                    user.setHeadUrl(avUser.getString(TableConstant.AVUserClass.HEAD_URL));
-                    user.setInviteNumber(avUser.getString(TableConstant.AVUserClass.INVITE_NUMBER));
-                    user.setObjectId(avUser.getObjectId());
-                    user.setEmail(accout);
-//                    user.setEmailVerified(avUser.getBoolean(TableConstant.AVUserClass.EMAIL_VERIFIED));
-                    if (LibUtils.notNullNorEmpty(avUser.getString(TableConstant.AVUserClass.LOVER_ID))) {
-                        user.setHaveLover(true);
-                        user.setLoverId(avUser.getString(TableConstant.AVUserClass.LOVER_ID));
-                    }
-                    userDaoUtil.insert(user, null);
-                    PushManager.getInstance().register();
-                    //前往验证邮箱
-                    ActivityRouter.gotoSetEmail(true);
-                    mBinding.btnComfirm.setLoading(false);
-                }
+                public void comfirm() {
+                    mBinding.btnComfirm.setLoading(true);
+                    mPresenter.register(accout, pwd, nickname, new DataCallback<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean data) {
+                            AVUser avUser = AVUser.getCurrentUser();
+                            //插入数据库
+                            UserDaoUtil userDaoUtil = new UserDaoUtil();
+                            User user = new User();
+                            user.setName(avUser.getUsername());
+                            user.setInviteNumber(avUser.getString(TableConstant.AVUserClass.INVITE_NUMBER));
+                            user.setObjectId(avUser.getObjectId());
+                            user.setEmail(accout);
+                            if (LibUtils.notNullNorEmpty(avUser.getString(TableConstant.AVUserClass.LOVER_ID))) {
+                                user.setHaveLover(true);
+                                user.setLoverId(avUser.getString(TableConstant.AVUserClass.LOVER_ID));
+                            }
+                            userDaoUtil.insert(user, null);
+                            PushManager.getInstance().register();
+                            //前往验证邮箱
+                            ActivityRouter.gotoSetEmail(true);
+                            mBinding.btnComfirm.setLoading(false);
+                        }
 
-                @Override
-                public void onFailed(int code, String msg) {
-                    mBinding.btnComfirm.setLoading(false);
+                        @Override
+                        public void onFailed(int code, String msg) {
+                            mBinding.btnComfirm.setLoading(false);
+                        }
+                    });
                 }
             });
         });

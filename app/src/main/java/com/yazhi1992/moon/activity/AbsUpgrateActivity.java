@@ -9,6 +9,7 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.event.BuglyUpgrate;
+import com.yazhi1992.moon.ui.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -18,7 +19,11 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by zengyazhi on 2018/1/25.
  */
 
-public class AbsUpgrateActivity extends AppCompatActivity {
+public class AbsUpgrateActivity extends BaseActivity {
+
+    @Override
+    protected void initStatusBar() {
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -29,7 +29,7 @@ public class TextBeanWrapper extends IHistoryBean<TextBean> {
         TextBean textBean = new TextBean(textItemData.getString(TableConstant.Text.CONTENT));
         textBean.setObjectId(textItemData.getObjectId());
         AVObject user = avObject.getAVObject(TableConstant.LoveHistory.USER);
-        textBean.setUserName(user.getString(TableConstant.AVUserClass.USER_NAME));
+        textBean.setUserName(user.getString(TableConstant.AVUserClass.NICK_NAME));
         AVFile avFile = textItemData.getAVFile(TableConstant.Text.IMG_FILE);
         if(avFile != null) {
             textBean.setImgUrl(avFile.getUrl());

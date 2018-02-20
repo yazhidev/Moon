@@ -15,6 +15,7 @@ import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.CodeConstant;
+import com.yazhi1992.moon.data.CheckUserDataChain;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
 import com.yazhi1992.moon.event.ChangeUserInfo;
 import com.yazhi1992.moon.sql.User;
@@ -84,7 +85,8 @@ public class SetFragment extends Fragment {
                                 @Override
                                 public void onSuccess(Boolean data) {
                                     PushManager.getInstance().unregister();
-                                    ActivityRouter.gotoLogin();
+                                    CheckUserDataChain.getInstance().resetChainIndex();
+                                    ActivityRouter.gotoNewLogin();
                                     getActivity().finish();
                                 }
 

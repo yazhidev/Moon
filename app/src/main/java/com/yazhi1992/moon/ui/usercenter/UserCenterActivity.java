@@ -52,6 +52,8 @@ public class UserCenterActivity extends BaseActivity {
             mViewModel.gender.set(userDao.getGender());
             mViewModel.headUrl.set(userDao.getHeadUrl());
             mViewModel.userName.set(userDao.getName());
+            mViewModel.email.set(userDao.getEmail());
+            mViewModel.emailValid.set(userDao.getEmailVerified());
         }
 
         mBinding.setItem(mViewModel);
@@ -59,6 +61,7 @@ public class UserCenterActivity extends BaseActivity {
         mBinding.rlHead.setOnClickListener(v -> UploadPhotoHelper.pickPhoto(this, CodeConstant.PICK_PHOTO_FOR_HEAD));
         mBinding.rlName.setOnClickListener(v -> ActivityRouter.gotoSetUserName(mViewModel.userName.get()));
         mBinding.rlGender.setOnClickListener(v -> ActivityRouter.gotoSetGender(false));
+        mBinding.rlEmail.setOnClickListener(v -> ActivityRouter.gotoSetEmail(false));
     }
 
     @Override
@@ -127,6 +130,7 @@ public class UserCenterActivity extends BaseActivity {
         if(bean.getGender() != 0) {
             mViewModel.gender.set(bean.getGender());
         }
+        mViewModel.emailValid.set(bean.isEmailValid());
     }
 
 }

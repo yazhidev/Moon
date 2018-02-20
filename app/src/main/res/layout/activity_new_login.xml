@@ -86,6 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="记住密码"
+            android:checked="true"
             android:textSize="16sp"
             android:theme="@style/MyCheckBox"
             android:textColor="@color/color_9"

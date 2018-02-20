@@ -67,6 +67,10 @@ public class BaseDao<T>{
         }
     }
 
+    protected void deleteAll(Class obj) {
+        mDaoSession.deleteAll(obj);
+    }
+
     protected void deleteAll(Class obj, IDaoOperationListener.IOperationistener listener) {
         AsyncSession asyncSession = mDaoSession.startAsyncSession();
         setOperation(asyncSession, listener);

@@ -35,8 +35,8 @@ public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
         setUpdateTime(avObj.getUpdatedAt());
         AVObject user = avObj.getAVObject(TableConstant.LoveHistory.USER);
         if (user != null) {
-            setUserName(user.getString(TableConstant.AVUserClass.USER_NAME));
-            setUserHeadUrl(user.getString(TableConstant.AVUserClass.HEAD_URL));
+            setUserName(user.getString(TableConstant.AVUserClass.NICK_NAME));
+            setUserHeadUrl(user.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE).getUrl());
         }
         JSONArray jsonArray = avObj.getJSONArray(TableConstant.LoveHistory.COMMENT_LIST);
         if(jsonArray != null && jsonArray.length() > 0) {

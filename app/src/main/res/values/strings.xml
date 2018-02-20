@@ -153,6 +153,12 @@
     <string name="empty_email">邮箱地址不能为空</string>
     <string name="check_failed">请到邮箱中打开验证邮件并点击激活链接~</string>
     <string name="check_suc">邮箱验证成功~</string>
+    <string name="comfirm_email">请确认注册邮箱为：\n%s\n若邮箱地址填写错误，将无法使用找回密码功能！</string>
 
+    <string name="change_pwd_lable">重置密码</string>
+    <string name="change_pwd">发送重置密码邮件到以上邮箱</string>
+    <string name="already_change_pwd">已在邮件中修改密码</string>
+    <string name="already_send_email">邮件已发送，请注意查收~</string>
+    <string name="already_send_check_email">验证邮件已发送，请注意查收~</string>
 
 </resources>

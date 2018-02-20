@@ -48,6 +48,7 @@ public class BindLoverActivity extends AbsUpgrateActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.log_out) {
                     new UserDaoUtil().clear();
+                    CheckUserDataChain.getInstance().resetChainIndex();
                     ActivityRouter.gotoNewLogin();
                     finish();
                 } else if(item.getItemId() == R.id.about_us) {
@@ -56,6 +57,8 @@ public class BindLoverActivity extends AbsUpgrateActivity {
                 return true;
             }
         });
+
+        LibUtils.showKeyoard(this, mBinding.etInput);
 
         mPresenter.getInviteNum(new DataCallback<String>() {
             @Override

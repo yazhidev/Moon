@@ -9,7 +9,7 @@ import java.util.List;
 public class UserDaoUtil extends BaseDao<User> {
 
     public void clear() {
-        deleteAll(User.class, null);
+        deleteAll(User.class);
     }
 
     public void  getUserDaoAsyn(DaoCallback.QueryCallback<User> callback) {
@@ -60,6 +60,12 @@ public class UserDaoUtil extends BaseDao<User> {
     public void updateUserHeadUrl(String url) {
         User userDao = getUserDao();
         userDao.setHeadUrl(url);
+        update(userDao);
+    }
+
+    public void updateEmailStatus(boolean valid) {
+        User userDao = getUserDao();
+        userDao.setEmailVerified(valid);
         update(userDao);
     }
 

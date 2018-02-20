@@ -154,6 +154,8 @@
         </activity>
         <activity android:name=".ui.setemail.SetEmailActivity">
         </activity>
+        <activity android:name=".ui.forgetpwd.ForgetPwdActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -2,6 +2,8 @@
 <layout>
 
     <data>
+        <import type="android.view.View"></import>
+
         <variable
             name="item"
             type="com.yazhi1992.moon.ui.usercenter.UserCenterViewModel"></variable>
@@ -167,6 +169,67 @@
                 />
 
         </RelativeLayout>
+
+        <View
+            android:id="@+id/line3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rl_gender"
+            android:background="@color/line"
+            android:layout_width="0dp"
+            android:layout_marginLeft="20dp"
+            android:layout_height="0.5dp"></View>
+
+        <RelativeLayout
+            android:background="@drawable/theme_white_press_selector"
+            android:id="@+id/rl_email"
+            android:layout_width="0dp"
+            android:clickable="@{!item.emailValid}"
+            app:layout_constraintTop_toBottomOf="@+id/line3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_height="60dp">
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/dark_text_color"
+                android:textSize="18sp"
+                android:text="邮箱"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <RelativeLayout
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ig_email_goto"
+                    android:src="@mipmap/right_arrow"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="@{item.emailValid ? View.GONE : View.VISIBLE}"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/ig_email_goto"
+                    android:layout_marginRight="10dp"
+                    tools:text="123123"
+                    android:textSize="17sp"
+                    android:textColor="@color/color_5"
+                    android:text="@{item.email}"
+                    />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
 
     </android.support.constraint.ConstraintLayout>
 </layout>

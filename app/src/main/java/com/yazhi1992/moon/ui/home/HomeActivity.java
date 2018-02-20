@@ -67,7 +67,6 @@ public class HomeActivity extends AbsUpgrateActivity {
     private ActivityHomeBinding mBinding;
     private List<Fragment> mFragments = new ArrayList<>();
     private HomeAdapter mHomeAdapter;
-    private long mExitTime;
     private HomePresenter mPresenter = new HomePresenter();
 
     @Override
@@ -155,21 +154,6 @@ public class HomeActivity extends AbsUpgrateActivity {
                 });
             }
         }
-    }
-
-    //双击退出
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && isTaskRoot()) {
-            // 判断是否在两秒之内连续点击返回键，是则退出，否则不退出
-            if (System.currentTimeMillis() - mExitTime > 2000) {
-                LibUtils.showToast(this, getString(R.string.finish_app));
-                // 将系统当前的时间赋值给exitTime
-                mExitTime = System.currentTimeMillis();
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     class HomeAdapter extends FragmentPagerAdapter {

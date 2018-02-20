@@ -10,6 +10,15 @@ public class ChangeUserInfo {
     String name;
     String headUrl;
     int gender;
+    boolean emailValid;
+
+    public boolean isEmailValid() {
+        return emailValid;
+    }
+
+    public void setEmailValid(boolean emailValid) {
+        this.emailValid = emailValid;
+    }
 
     public int getGender() {
         return gender;

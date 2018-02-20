@@ -10,6 +10,7 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.RequestEmailVerifyCallback;
+import com.avos.avoscloud.RequestPasswordResetCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 import com.yazhi1992.moon.BaseApplication;
@@ -342,9 +343,9 @@ public class Api {
                             if (exc == null) {
                                 BindLoverBean bindLoverBean = new BindLoverBean();
                                 bindLoverBean.setBindComplete(true);
-                                bindLoverBean.setLoverHeadUrl(peerUser.getString(TableConstant.AVUserClass.HEAD_URL));
+                                bindLoverBean.setLoverHeadUrl(peerUser.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE).getUrl());
                                 bindLoverBean.setLoverId(peerUser.getObjectId());
-                                bindLoverBean.setLoverName(peerUser.getString(TableConstant.AVUserClass.USER_NAME));
+                                bindLoverBean.setLoverName(peerUser.getString(TableConstant.AVUserClass.NICK_NAME));
                                 e.onNext(bindLoverBean);
                             } else {
                                 e.onError(new Throwable(exc.getCode() + exc.getMessage()));
@@ -774,8 +775,8 @@ public class Api {
                         hopeData.setObjectId(object.getObjectId());
                         AVObject user = object.getAVObject(TableConstant.Hope.USER);
                         if (user != null) {
-                            hopeData.setUserName(user.getString(TableConstant.AVUserClass.USER_NAME));
-                            hopeData.setUserHeadUrl(user.getString(TableConstant.AVUserClass.HEAD_URL));
+                            hopeData.setUserName(user.getString(TableConstant.AVUserClass.NICK_NAME));
+                            hopeData.setUserHeadUrl(user.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE).getUrl());
                         }
                         hopeData.setCreateTime(object.getDate(TableConstant.Common.CREATE_TIME));
                         hopeData.setUpdateTime(object.getDate(TableConstant.Common.UPDATE_TIME));
@@ -1382,8 +1383,8 @@ public class Api {
                             AVObject bindLoverItemData = list.get(0);
                             AVObject loverObject = bindLoverItemData.getAVObject(TableConstant.BindLover.LOVER);
                             if (loverObject != null) {
-                                callback.onSuccess(new LoverInfo(loverObject.getString(TableConstant.AVUserClass.USER_NAME)
-                                        , loverObject.getString(TableConstant.AVUserClass.HEAD_URL)));
+                                callback.onSuccess(new LoverInfo(loverObject.getString(TableConstant.AVUserClass.NICK_NAME)
+                                        , loverObject.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE).getUrl()));
                             } else {
                                 callback.onSuccess(null);
                             }
@@ -1418,7 +1419,6 @@ public class Api {
                             public void done(AVObject avObject, AVException e) {
                                 AVFile avFile = avObject.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE);
                                 if(avFile == null) {
-                                    currentUser.put(TableConstant.AVUserClass.HEAD_URL, file.getUrl());
                                     currentUser.put(TableConstant.AVUserClass.HEAD_IMG_FILE, file);
                                     currentUser.saveInBackground(new SaveCallback() {
                                         @Override
@@ -1433,7 +1433,6 @@ public class Api {
                                         @Override
                                         public void done(AVException e) {
                                             //再存储到user表
-                                            currentUser.put(TableConstant.AVUserClass.HEAD_URL, file.getUrl());
                                             currentUser.put(TableConstant.AVUserClass.HEAD_IMG_FILE, file);
                                             currentUser.saveInBackground(new SaveCallback() {
                                                 @Override
@@ -1566,6 +1565,25 @@ public class Api {
 
     private void sendCheckEmail(String email, DataCallback<Boolean> callback) {
         AVUser.requestEmailVerifyInBackground(email, new RequestEmailVerifyCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(true);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 发送重置密码邮件
+     * @param email
+     * @param callback
+     */
+    public void findPwd(String email, DataCallback<Boolean> callback) {
+        AVUser.requestPasswordResetInBackground(email, new RequestPasswordResetCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
