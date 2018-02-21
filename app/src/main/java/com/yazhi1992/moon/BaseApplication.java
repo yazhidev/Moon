@@ -16,6 +16,7 @@ import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
 import com.yazhi1992.moon.event.BuglyUpgrate;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -32,7 +33,7 @@ public class BaseApplication extends Application {
         super.onCreate();
         context = this;
 
-        LibSPUtils.init(this);
+        LibUtils.init(this);
 
         if (BuildConfig.DEBUG) {           // 这两行必须写在init之前，否则这些配置在init过程中将无效
             ARouter.openLog();    // 打印日志

@@ -27,7 +27,6 @@ import org.json.JSONObject;
  * Created by zengyazhi on 2018/1/26.
  */
 
-// TODO: 2018/1/28 未安装QQ状态
 public class LoginPresenter {
     private SNSType ThirdPartyType = SNSType.AVOSCloudSNSQQ;
     private DataCallback<Boolean> mCallback;

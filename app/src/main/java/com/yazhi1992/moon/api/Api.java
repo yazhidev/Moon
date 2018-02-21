@@ -78,9 +78,11 @@ public class Api {
 
     private void handleResult(AVException e, final DataCallback dataCallback, onResultSuc onResultSuc) {
         if (e == null) {
+            // TODO: 2018/2/21 不应该直接加这里，应该有类似过滤器
+            //如果因为之前网络原因注册推送失败，则重新注册
             onResultSuc.onSuc();
         } else {
-            LibUtils.showToast(BaseApplication.getInstance(), e.getCode() + " - " + e.getMessage());
+            LibUtils.showToast(e.getCode() + " - " + e.getMessage());
             dataCallback.onFailed(e.getCode(), e.getMessage());
         }
     }
@@ -1310,18 +1312,22 @@ public class Api {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        int status = avObject.getInt(TableConstant.MC.STATUS);
-                        int gapBetweenTwoDay = Math.abs(LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(avObject.getLong(TableConstant.MC.TIME))));
+                        if(avObject != null) {
+                            int status = avObject.getInt(TableConstant.MC.STATUS);
+                            int gapBetweenTwoDay = Math.abs(LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(avObject.getLong(TableConstant.MC.TIME))));
 
-                        if (status == 0
-                                && LibSPUtils.getInt(SPKeyConstant.MC_GO_MIN_DAY, 25) < gapBetweenTwoDay
-                                && gapBetweenTwoDay < LibSPUtils.getInt(SPKeyConstant.MC_GO_MAX_DAY, 37)) {
-                            //走了 25 < day < 37 要预警
-                            callback.onSuccess(true);
-                        } else if (status == 1
-                                && gapBetweenTwoDay < LibSPUtils.getInt(SPKeyConstant.MC_COME_MAX_DAY, 3)) {
-                            //来 day < 3 要预警
-                            callback.onSuccess(true);
+                            if (status == 0
+                                    && LibSPUtils.getInt(SPKeyConstant.MC_GO_MIN_DAY, 25) < gapBetweenTwoDay
+                                    && gapBetweenTwoDay < LibSPUtils.getInt(SPKeyConstant.MC_GO_MAX_DAY, 37)) {
+                                //走了 25 < day < 37 要预警
+                                callback.onSuccess(true);
+                            } else if (status == 1
+                                    && gapBetweenTwoDay < LibSPUtils.getInt(SPKeyConstant.MC_COME_MAX_DAY, 3)) {
+                                //来 day < 3 要预警
+                                callback.onSuccess(true);
+                            } else {
+                                callback.onSuccess(false);
+                            }
                         } else {
                             callback.onSuccess(false);
                         }
