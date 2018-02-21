@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,6 +81,7 @@ public class HistoryFragment extends Fragment {
     private String mAddCommentInput; //缓存已输入的评论内容
     private String mReplyCommentInput; //缓存已输入的回复内容
     private String mReplyCommentPeerId;
+    private int mRecyclerViewState;
 
     @Nullable
     @Override
@@ -143,7 +145,7 @@ public class HistoryFragment extends Fragment {
                     case TypeConstant.TYPE_TEXT:
                         // TODO: 2018/2/19 过度动画
                         TextBeanWrapper data = (TextBeanWrapper) obj;
-                        if(LibUtils.isNullOrEmpty(data.getData().mImgUrl.get())) {
+                        if (LibUtils.isNullOrEmpty(data.getData().mImgUrl.get())) {
                             ActivityRouter.gotoTextDetail();
                         } else {
                             ActivityRouter.gotoImgPreview(data.getData().mImgUrl.get());
@@ -218,17 +220,26 @@ public class HistoryFragment extends Fragment {
                 if (mShowKeyboard) {
                     LibUtils.hideKeyboard(mBinding.root);
                 }
-                if (dy > 0) {
-                    // Scroll Down
-                    if (mBinding.fab.isShown()) {
-                        mBinding.fab.hide();
-                    }
-                } else if (dy < 0) {
-                    // Scroll Up
-                    if (!mBinding.fab.isShown()) {
-                        mBinding.fab.show();
+                if (mRecyclerViewState == 1) {
+                    //滑动中，smartRefreshLayout autoRefresh 时有时会触发滑动，但是state=2
+                    if (dy > 0) {
+                        // Scroll Down
+                        if (mBinding.fab.isShown()) {
+                            mBinding.fab.hide();
+                        }
+                    } else if (dy < 0) {
+                        // Scroll Up
+                        if (!mBinding.fab.isShown()) {
+                            mBinding.fab.show();
+                        }
                     }
                 }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                mRecyclerViewState = newState;
             }
         });
 

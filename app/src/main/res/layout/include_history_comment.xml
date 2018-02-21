@@ -36,6 +36,7 @@
                 />
 
             <ImageView
+                android:id="@+id/ig_comment"
                 android:padding="12dp"
                 android:layout_marginRight="3dp"
                 android:layout_centerVertical="true"
