@@ -26,14 +26,21 @@ public class AbsUpgrateActivity extends BaseActivity {
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
         EventBus.getDefault().register(this);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
     //版本更新
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void upgrade(BuglyUpgrate event) {
+        EventBus.getDefault().removeStickyEvent(BuglyUpgrate.class);
         UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
         new AlertDialog.Builder(this)
                 .setTitle(upgradeInfo.title)
@@ -45,11 +52,5 @@ public class AbsUpgrateActivity extends BaseActivity {
                 .setNegativeButton(getString(R.string.upgrade_cancel), (dialog, which) -> {
                     dialog.dismiss();
                 }).show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

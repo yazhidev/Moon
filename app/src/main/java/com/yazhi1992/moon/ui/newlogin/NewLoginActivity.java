@@ -11,6 +11,7 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVUser;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.constant.TableConstant;
@@ -31,7 +32,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 @Route(path = ActivityRouter.NEW_LOGIN)
-public class NewLoginActivity extends BaseActivity {
+public class NewLoginActivity extends AbsUpgrateActivity {
 
     private ActivityNewLoginBinding mBinding;
     private LoginPresenter mPresenter = new LoginPresenter();
@@ -39,7 +40,6 @@ public class NewLoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_new_login);
         initToolBar(mBinding.toolbar);
 
@@ -112,7 +112,6 @@ public class NewLoginActivity extends BaseActivity {
                     PushManager.getInstance().register();
                     //继续检查下一个
                     CheckUserDataChain.getInstance().processChain();
-                    mBinding.btnComfirm.setLoading(false);
                 }
 
                 @Override
@@ -124,12 +123,6 @@ public class NewLoginActivity extends BaseActivity {
 
         mBinding.tvRegister.setOnClickListener(v -> ActivityRouter.gotRegister1());
         mBinding.tvForgetPwd.setOnClickListener(v -> ActivityRouter.gotoFindPwd(mBinding.etAccount.getText().toString()));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

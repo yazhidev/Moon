@@ -50,11 +50,11 @@ public class BaseApplication extends Application {
             @Override
             public void onUpgrade(int i, UpgradeInfo upgradeInfo, boolean b, boolean b1) {
                 if (upgradeInfo != null) {
-                    EventBus.getDefault().post(new BuglyUpgrate());
+                    EventBus.getDefault().postSticky(new BuglyUpgrate());
                 }
             }
         };
-        Bugly.init(getApplicationContext(), BuildConfig.BUGLY_ID, BuildConfig.DEBUG);
+        Bugly.init(getApplicationContext(), BuildConfig.BUGLY_ID, false);
 
         //leancloud
         AVOSCloud.initialize(this, BuildConfig.LEAN_CLOUD_ID, BuildConfig.LEAN_CLOUD_KEY);

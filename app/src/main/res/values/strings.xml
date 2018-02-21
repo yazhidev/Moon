@@ -107,7 +107,6 @@
     <string name="mc_lable">小姨妈</string>
     <string name="mc_come_for_women">告诉他姨妈来了</string>
     <string name="mc_go_for_woman">告诉他姨妈走了</string>
-    <string name="configuration">配置</string>
 
     <string name="week_mon">星期一</string>
     <string name="week_tue">星期二</string>
@@ -160,5 +159,12 @@
     <string name="already_change_pwd">已在邮件中修改密码</string>
     <string name="already_send_email">邮件已发送，请注意查收~</string>
     <string name="already_send_check_email">验证邮件已发送，请注意查收~</string>
+
+    <string name="set_title">设置</string>
+    <string name="check_new_version">检查新版本</string>
+    <string name="mc_tip_enable_title">是否启用心烦预警功能</string>
+    <string name="mc_tip_enable_des">在经期来临的附近几天提醒自己要心平气和（或多多包容她）</string>
+    <string name="mc_enable_title">是否启用小姨妈功能</string>
+    <string name="mc_enable_des">记录经期时间</string>
 
 </resources>

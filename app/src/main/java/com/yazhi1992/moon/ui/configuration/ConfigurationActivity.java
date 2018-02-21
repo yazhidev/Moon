@@ -5,15 +5,17 @@ import android.os.Bundle;
 import android.widget.CompoundButton;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.tencent.bugly.beta.Beta;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.activity.AbsUpgrateActivity;
 import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.databinding.ActivityConfigurationBinding;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 
 @Route(path = ActivityRouter.CONFIGURATION)
-public class ConfigurationActivity extends BaseActivity {
+public class ConfigurationActivity extends AbsUpgrateActivity {
 
     private ActivityConfigurationBinding mBinding;
     private ConfigurationViewModel mViewModel = new ConfigurationViewModel();
@@ -51,5 +53,7 @@ public class ConfigurationActivity extends BaseActivity {
         mBinding.rlMcTipEnable.setOnClickListener(v -> {
             mBinding.switchMcTipEnable.setChecked(!mBinding.switchMcTipEnable.isChecked());
         });
+
+        mBinding.tvCheckUpgrade.setOnClickListener(v -> Beta.checkUpgrade(true, false));
     }
 }

@@ -102,7 +102,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@+id/ig_configuration"
-                android:text="配置"
+                android:text="@string/set_title"
                 android:textColor="@color/black"
                 android:textSize="@dimen/set_text_size"
                 />
