@@ -126,8 +126,8 @@ public class HistoryFragment extends Fragment {
                 showDeleteDialog();
             }
         };
+        //点击功能
         WithClicklistenerItemViewBinder.OnItemClickListener onItemClickListener = new WithClicklistenerItemViewBinder.OnItemClickListener() {
-
             @Override
             public void onClick(int position) {
                 //跳转内容详情页
@@ -159,6 +159,7 @@ public class HistoryFragment extends Fragment {
                 }
             }
         };
+        //点击评论图标
         WithClicklistenerItemViewBinder.OnItemClickCommentListener onItemClickCommentListener = new WithClicklistenerItemViewBinder.OnItemClickCommentListener() {
             @Override
             public void onClick(int position) {
@@ -247,13 +248,12 @@ public class HistoryFragment extends Fragment {
         mBinding.smartRefresh.autoRefresh();
 
         KeyBoardHeightUtil.getKeyBoardHeight(mBinding.root, new KeyBoardHeightUtil.KeyBoardHeightListener() {
-
             @Override
             public void onLayoutListener(int keyboardHeight, boolean isShowing) {
                 //监听屏幕尺寸变化
                 if (isShowing) {
                     mShowKeyboard = true;
-                    mShowBottomInpulSubscribe = Observable.timer(225, TimeUnit.MILLISECONDS)
+                    mShowBottomInpulSubscribe = Observable.timer(100, TimeUnit.MILLISECONDS)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Consumer<Long>() {
                                 @Override
