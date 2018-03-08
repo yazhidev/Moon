@@ -105,6 +105,10 @@ public abstract class BaseListActivity<T> extends BaseActivity{
                 } else {
                     mItems.clear();
                     mBinding.smartRefresh.finishRefresh();
+
+                    if (data.size() == 0) {
+                        mBinding.multiView.showEmpty();
+                    }
                 }
                 if (data.size() > 0) {
                     mItems.addAll(data);
@@ -119,6 +123,10 @@ public abstract class BaseListActivity<T> extends BaseActivity{
                     mBinding.smartRefresh.finishLoadmore();
                 } else {
                     mBinding.smartRefresh.finishRefresh();
+
+                    if (mItems.size() == 0) {
+                        mBinding.multiView.showNetErr();
+                    }
                 }
             }
         });

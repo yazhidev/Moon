@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +40,8 @@ import com.yazhi1992.moon.viewmodel.MemorialBeanWrapper;
 import com.yazhi1992.moon.viewmodel.TextBeanWrapper;
 import com.yazhi1992.yazhilib.utils.KeyBoardHeightUtil;
 import com.yazhi1992.yazhilib.utils.LibCalcUtil;
-import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -402,6 +401,10 @@ public class HistoryFragment extends Fragment {
                 } else {
                     mItems.clear();
                     mBinding.smartRefresh.finishRefresh();
+
+                    if (data.size() == 0) {
+                        mBinding.multiView.showEmpty();
+                    }
                 }
                 if (data.size() > 0) {
                     for (HistoryItemDataFromApi loveHistoryItemData : data) {
@@ -418,6 +421,10 @@ public class HistoryFragment extends Fragment {
                     mBinding.smartRefresh.finishLoadmore();
                 } else {
                     mBinding.smartRefresh.finishRefresh();
+
+                    if (mItems.size() == 0) {
+                        mBinding.multiView.showNetErr();
+                    }
                 }
             }
         });

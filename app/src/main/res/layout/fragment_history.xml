@@ -25,6 +25,12 @@
 
         </RelativeLayout>
 
+        <com.yazhi1992.moon.widget.MultiStatusView
+            android:id="@+id/multiView"
+            android:layout_below="@+id/rl_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></com.yazhi1992.moon.widget.MultiStatusView>
+
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/smartRefresh"
             android:layout_below="@+id/rl_top"

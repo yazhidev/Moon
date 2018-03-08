@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <import type="android.view.View"></import>
+
+        <variable
+            name="data"
+            type="com.yazhi1992.moon.widget.MultiStatusViewModel"></variable>
+    </data>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:visibility="@{data.status==1?View.VISIBLE:View.GONE}"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ig_empty"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@mipmap/empty_icon"
+                android:layout_centerHorizontal="true"
+                />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ig_empty"
+                android:layout_centerHorizontal="true"
+                android:text="没有数据"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="@{data.status==2?View.VISIBLE:View.GONE}"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ig_err"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@mipmap/net_err"
+                android:layout_centerHorizontal="true"
+                />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ig_err"
+                android:layout_centerHorizontal="true"
+                android:text="网络连接错误"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>

@@ -28,15 +28,15 @@
         <com.yazhi1992.yazhilib.widget.VerticalText
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
             android:padding="15dp"
             app:vt_text="@{item.mContent}"
             app:vt_textSize="17"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
         <com.yazhi1992.yazhilib.widget.VerticalText

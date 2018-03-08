@@ -18,19 +18,24 @@ import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.databinding.FragmentBaseListBinding;
 import com.yazhi1992.moon.event.AddDataEvent;
 import com.yazhi1992.moon.viewmodel.IHistoryBean;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import me.drakeet.multitype.Items;
 import me.drakeet.multitype.MultiTypeAdapter;
 
 /**
  * Created by zengyazhi on 2018/2/9.
- *
+ * <p>
  * 可复用的列表页
  */
 
@@ -59,7 +64,7 @@ public abstract class BaseListFragment<T> extends Fragment {
 
         mItems = new Items();
         mAdapter.setItems(mItems);
-        if(needAddItemDecoration()) {
+        if (needAddItemDecoration()) {
             mBinding.ry.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         }
         mBinding.ry.setAdapter(mAdapter);
@@ -68,7 +73,15 @@ public abstract class BaseListFragment<T> extends Fragment {
         mBinding.smartRefresh.setOnRefreshListener(refreshlayout -> getDatas(false));
         mBinding.smartRefresh.setOnLoadmoreListener(refreshlayout -> getDatas(true));
 
-        mBinding.smartRefresh.autoRefresh();
+        Observable.timer(200, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        mBinding.smartRefresh.autoRefresh();
+
+                    }
+                });
     }
 
     public boolean needAddItemDecoration() {
@@ -81,16 +94,17 @@ public abstract class BaseListFragment<T> extends Fragment {
 
     public abstract void adapterRegister(MultiTypeAdapter adapter);
 
-    public abstract @ActionConstant.AddAction String autoRefreshWhenReceiveEvent();
+    public abstract @ActionConstant.AddAction
+    String autoRefreshWhenReceiveEvent();
 
     public abstract void getData(int lastItemId, int size, DataCallback<List<T>> callback);
 
     private void getDatas(final boolean loadMore) {
         if (loadMore) {
             //获取末尾id
-            if(mItems.size() > 0) {
+            if (mItems.size() > 0) {
                 Object item = mItems.get(mItems.size() - 1);
-                if(item != null && item instanceof IHistoryBean) {
+                if (item != null && item instanceof IHistoryBean) {
                     lastItemId = ((IHistoryBean) item).getId();
                 }
             }
@@ -101,11 +115,15 @@ public abstract class BaseListFragment<T> extends Fragment {
         getData(lastItemId, SIZE, new DataCallback<List<T>>() {
             @Override
             public void onSuccess(List<T> data) {
-                if(loadMore) {
+                if (loadMore) {
                     mBinding.smartRefresh.finishLoadmore();
                 } else {
                     mItems.clear();
                     mBinding.smartRefresh.finishRefresh();
+
+                    if (data.size() == 0) {
+                        mBinding.multiView.showEmpty();
+                    }
                 }
                 if (data.size() > 0) {
                     mItems.addAll(data);
@@ -116,10 +134,15 @@ public abstract class BaseListFragment<T> extends Fragment {
 
             @Override
             public void onFailed(int code, String msg) {
-                if(loadMore) {
+                LibUtils.showToast(msg);
+                if (loadMore) {
                     mBinding.smartRefresh.finishLoadmore();
                 } else {
                     mBinding.smartRefresh.finishRefresh();
+
+                    if (mItems.size() == 0) {
+                        mBinding.multiView.showNetErr();
+                    }
                 }
             }
         });
@@ -134,7 +157,7 @@ public abstract class BaseListFragment<T> extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void addData(AddDataEvent bean) {
-        if(getDataType().equals(bean.getAction())) {
+        if (getDataType().equals(bean.getAction())) {
             mBinding.smartRefresh.autoRefresh();
         }
     }

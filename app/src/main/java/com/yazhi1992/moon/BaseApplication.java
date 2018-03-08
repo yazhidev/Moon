@@ -10,12 +10,16 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.avos.avoscloud.AVOSCloud;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+import com.scwang.smartrefresh.header.MaterialHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
 import com.yazhi1992.moon.event.BuglyUpgrate;
-import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,6 +31,16 @@ import org.greenrobot.eventbus.EventBus;
 public class BaseApplication extends Application {
 
     public static BaseApplication context;
+
+    static {
+        //设置全局的Header构建器
+        SmartRefreshLayout.setDefaultRefreshHeaderCreater(new DefaultRefreshHeaderCreater() {
+            @Override
+            public RefreshHeader createRefreshHeader(Context context, RefreshLayout layout) {
+                return new MaterialHeader(context);
+            }
+        });
+    }
 
     @Override
     public void onCreate() {

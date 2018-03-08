@@ -7,13 +7,11 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
-import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMMessageHandler;
-import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
@@ -24,7 +22,6 @@ import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.addmemorialday.AddMemorialActivity;
 import com.yazhi1992.moon.ui.home.HomeActivity;
-import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,19 +49,19 @@ public class PushManager {
 
     public void register() {
         //聊天登录
-        AVIMClient msg = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
-        msg.open(new AVIMClientCallback() {
-            @Override
-            public void done(AVIMClient client, AVIMException e) {
-                if (e == null) {
-                    mClient = client;
-                } else {
-                    LibUtils.showToast(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.pushmanager_init_failed));
-                }
-            }
-        });
-
-        AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
+//        AVIMClient msg = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
+//        msg.open(new AVIMClientCallback() {
+//            @Override
+//            public void done(AVIMClient client, AVIMException e) {
+//                if (e == null) {
+//                    mClient = client;
+//                } else {
+//                    LibUtils.showToast(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.pushmanager_init_failed));
+//                }
+//            }
+//        });
+//
+//        AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
     }
 
     public void unregister() {
