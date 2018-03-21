@@ -100,71 +100,72 @@ greendao {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation rootProject.ext.constraintLayout
+    implementation rootProject.ext.supportDesign
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation "com.android.support:design:$rootProject.ext.supportDesignVersion"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     //arouter
-    compile "com.alibaba:arouter-api:$rootProject.ext.arouterApiVersion"
-    annotationProcessor "com.alibaba:arouter-compiler:$rootProject.ext.arouterCompilerVersion"
+    compile rootProject.ext.arouter
+    annotationProcessor rootProject.ext.arouterCompiler
 
     //robolectric
-    testImplementation "org.robolectric:robolectric:$rootProject.ext.robolectricVersion"
+    testImplementation rootProject.ext.robolectric
 
     //dagger
-    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2CompilerVersion"
-    implementation "com.google.dagger:dagger:$rootProject.ext.dagger2Version"
+    annotationProcessor rootProject.ext.dagger2Compiler
+    implementation rootProject.ext.dagger2
 
     //logger
-    implementation "com.orhanobut:logger:$rootProject.ext.loggerVersion"
+    implementation rootProject.ext.logger
 
     //okhttp
-    implementation "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttpVersion"
+    implementation rootProject.ext.okhttp
 
-    compile("com.github.hotchemi:permissionsdispatcher:$rootProject.ext.permissionsDispatcherVersion") {
+    compile(rootProject.ext.permissionsDispatcher) {
         // if you don't use android.app.Fragment you can exclude support for them
         exclude module: "support-v13"
     }
-    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$rootProject.ext.permissionsDispatcherVersion"
+    annotationProcessor rootProject.ext.permissionsDispatcherProcessor
 
     //bugly
-    compile "com.tencent.bugly:crashreport_upgrade:$rootProject.ext.buglyCrashVersion"
-    compile "com.tencent.bugly:nativecrashreport:$rootProject.ext.buglyNativeCrashVersion"
+    compile rootProject.ext.buglyCrash
+    compile rootProject.ext.buglyNativeCrash
 
-    compile "org.greenrobot:eventbus:$rootProject.ext.eventbusVersion"
+    compile rootProject.ext.eventbus
 
     compile project(":yazhilib")
 
     //LeanCould
-    compile "cn.leancloud.android:avoscloud-sdk:v$rootProject.ext.leancloudAvoscloudSdk"
-    compile("cn.leancloud.android:avoscloud-push:v$rootProject.ext.leancloudAvoscloudSdk@aar") {
+    compile rootProject.ext.leancloudAvoscloudSdk
+    compile(rootProject.ext.leancloudAvoscloudAar) {
         transitive = true
     } //IM、Push
     // avoscloud-sns：LeanCloud 第三方登录包
-    compile("cn.leancloud.android:avoscloud-sns:v$rootProject.ext.leancloudAvoscloudSdk@aar")
-    compile('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
+    compile(rootProject.ext.leancloudAvoscloudSns)
+    compile(rootProject.ext.leancloudAvoscloudQq)
 
     //recyclerview 多布局
-    implementation("me.drakeet.multitype:multitype:$rootProject.ext.multitype", {
+    implementation(rootProject.ext.multitype, {
         exclude group: 'com.android.support'
     })
 
-    implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
-    annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.ext.glideVersion"
+    implementation rootProject.ext.glide
+    annotationProcessor rootProject.ext.glideCompiler
 
-    compile "com.android.support:multidex:$rootProject.ext.multiDexVersion"
+    compile rootProject.ext.multiDex
 
     //下拉刷新
-    compile "com.scwang.smartrefresh:SmartRefreshLayout:$rootProject.ext.smartRefreshVersion"
-    compile "com.scwang.smartrefresh:SmartRefreshHeader:$rootProject.ext.smartRefreshVersion"
+    compile rootProject.ext.smartRefresh
+    compile rootProject.ext.smartRefreshHeader
 
-    compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
-    compile "com.google.dagger:dagger-android:$rootProject.ext.daggerVersion"
-    compile "com.google.dagger:dagger-android-support:$rootProject.ext.daggerVersion"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.ext.daggerVersion"
+    compile rootProject.ext.dagger
+    annotationProcessor rootProject.ext.daggerCompiler
+    compile rootProject.ext.daggerAndroid
+//    compile rootProject.ext.daggerAndroidSupport
+//    annotationProcessor rootProject.ext.daggerAndroidProcessor
 
     compile "org.greenrobot:greendao:$rootProject.green_dao_version"
     compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.2'
@@ -173,7 +174,7 @@ dependencies {
         exclude group: 'com.github.bumptech.glide', module: 'glide'
     }
 
-    compile 'top.zibin:Luban:1.1.3'
+    compile rootProject.ext.luban
 }
 
 //apply from: 'tinker-support.gradle'

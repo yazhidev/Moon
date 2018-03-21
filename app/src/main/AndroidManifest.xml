@@ -156,6 +156,8 @@
         </activity>
         <activity android:name=".ui.forgetpwd.ForgetPwdActivity">
         </activity>
+        <activity android:name=".ui.TestActivity">
+        </activity>
     </application>
 
 </manifest>
