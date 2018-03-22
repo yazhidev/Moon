@@ -7,7 +7,13 @@
     android:layout_height="match_parent"
     tools:context="com.yazhi1992.moon.ui.TestActivity">
 
+    <com.yazhi1992.moon.widget.calendarview.Calendarview
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.yazhi1992.moon.widget.calendarview.Calendarview>
+
     <com.yazhi1992.moon.widget.calendarview.MonthView
+        android:id="@+id/monthView"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></com.yazhi1992.moon.widget.calendarview.MonthView>
 

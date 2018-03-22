@@ -7,7 +7,6 @@ import android.util.TypedValue;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 public class CalendarUtil {
 
@@ -18,7 +17,7 @@ public class CalendarUtil {
      * @param month 当前月份
      * @return
      */
-    public static List<DateBean> getMonthDate(int year, int month, Map<String, String> map) {
+    public static List<DateBean> getMonthDate(int year, int month) {
         List<DateBean> datas = new ArrayList<>();
         int week = getFirstWeekOfMonth(year, month - 1);
 
@@ -46,25 +45,25 @@ public class CalendarUtil {
         }
 
         for (int i = 0; i < week; i++) {
-            datas.add(initDateBean(lastYear, lastMonth, lastMonthDays - week + 1 + i, 0, map));
+            datas.add(initDateBean(lastYear, lastMonth, lastMonthDays - week + 1 + i, 0));
         }
 
         for (int i = 0; i < currentMonthDays; i++) {
-            datas.add(initDateBean(year, month, i + 1, 1, map));
+            datas.add(initDateBean(year, month, i + 1, 1));
         }
 
         for (int i = 0; i < 7 * getMonthRows(year, month) - currentMonthDays - week; i++) {
-            datas.add(initDateBean(nextYear, nextMonth, i + 1, 2, map));
+            datas.add(initDateBean(nextYear, nextMonth, i + 1, 2));
         }
 
         return datas;
     }
 
     public static DateBean getDateBean(int year, int month, int day) {
-        return initDateBean(year, month, day, 1, null);
+        return initDateBean(year, month, day, 1);
     }
 
-    private static DateBean initDateBean(int year, int month, int day, int type, Map<String, String> map) {
+    private static DateBean initDateBean(int year, int month, int day, int type) {
         DateBean dateBean = new DateBean();
         dateBean.setDate(year, month, day);
         dateBean.setType(type);
@@ -174,7 +173,7 @@ public class CalendarUtil {
 
     public static int[] strToArray(String str) {
         if (!TextUtils.isEmpty(str)) {
-            String[] strArray = str.split("\\.");
+            String[] strArray = str.split("-");
             int[] result = new int[strArray.length];
             for (int i = 0; i < strArray.length; i++) {
                 result[i] = Integer.valueOf(strArray[i]);
