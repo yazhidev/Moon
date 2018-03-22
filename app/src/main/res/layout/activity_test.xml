@@ -20,6 +20,7 @@
 
     <TextView
         android:id="@+id/tv"
+        android:background="#eeeeee"
         android:layout_below="@+id/calendar"
         android:gravity="center"
         android:layout_width="match_parent"

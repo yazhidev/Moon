@@ -228,6 +228,10 @@ public class MonthView extends ViewGroup {
         }
     }
 
+    public int getChildWidth() {
+        return mChildWidth;
+    }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         if (getChildCount() == 0) {

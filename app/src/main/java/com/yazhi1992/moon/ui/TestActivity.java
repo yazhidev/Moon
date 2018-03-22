@@ -1,5 +1,6 @@
 package com.yazhi1992.moon.ui;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -25,9 +26,13 @@ public class TestActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
+            public void onPageScrollStateChanged(int state, int movePx) {
+                ObjectAnimator valueAnimator = ObjectAnimator.ofFloat(mViewById1, "translationY", movePx);
+                valueAnimator.setDuration(500);
+                valueAnimator.start();
+//                mViewById1.setTranslationY(movePx);
             }
+
         });
         mViewById1 = findViewById(R.id.tv);
 //        viewById.setDateList(CalendarUtil.getMonthDate(2017, 2), CalendarUtil.getMonthDays(2017, 2));

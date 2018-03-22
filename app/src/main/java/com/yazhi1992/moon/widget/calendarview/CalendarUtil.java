@@ -82,7 +82,13 @@ public class CalendarUtil {
     public static int getFirstWeekOfMonth(int year, int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, 1);
-        return calendar.get(Calendar.DAY_OF_WEEK) - 1;
+//        return calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        int i = calendar.get(Calendar.DAY_OF_WEEK);
+        if(i == 1) {
+            return 6;
+        } else {
+            return i -2;
+        }
     }
 
     /**
@@ -128,9 +134,9 @@ public class CalendarUtil {
     public static int getMonthRows(int year, int month) {
         int items = getFirstWeekOfMonth(year, month - 1) + getMonthDays(year, month);
         int rows = items % 7 == 0 ? items / 7 : (items / 7) + 1;
-        if (rows == 4) {
-            rows = 5;
-        }
+//        if (rows == 4) {
+//            rows = 5;
+//        }
         return rows;
     }
 
