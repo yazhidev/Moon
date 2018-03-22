@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * Created by zengyazhi on 2018/3/22.
@@ -36,7 +37,7 @@ public class Calendarview extends ViewPager {
     private void init() {
 //        int[] ints = CalendarUtil.strToArray("2018-05");
         endDate = new int[]{2018, 8};
-        initDate = new int[]{2017, 3};
+        initDate = new int[]{2018, 3};
 
         count = (endDate[0] - startDate[0]) * 12 + endDate[1] - startDate[1] + 1;
         currentPosition = CalendarUtil.dateToPosition(initDate[0], initDate[1], startDate[0], startDate[1]);
@@ -47,12 +48,20 @@ public class Calendarview extends ViewPager {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                Log.e("zyz", "onPageSelected");
+
                 refreshMonthView(position);
                 currentPosition = position;
                 if (pagerChangeListener != null) {
                     int[] date = CalendarUtil.positionToDate(position, startDate[0], startDate[1]);
-                    pagerChangeListener.onPagerChanged(new int[]{date[0], date[1], date[2]});
+                    pagerChangeListener.onPagerChanged(new int[]{date[0], date[1], 0});
                 }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                Log.e("zyz", "onPageScrollStateChanged" + state);
             }
         });
     }

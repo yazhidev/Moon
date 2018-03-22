@@ -35,7 +35,7 @@ public class MonthView extends ViewGroup {
     public MonthView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        setBackgroundColor(Color.GRAY);
+        setBackgroundColor(Color.WHITE);
     }
 
     /**

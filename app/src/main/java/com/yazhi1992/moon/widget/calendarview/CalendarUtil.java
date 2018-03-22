@@ -44,6 +44,8 @@ public class CalendarUtil {
             nextYear = year;
         }
 
+        int index = 0;//周一开始，1周日开始
+
         for (int i = 0; i < week; i++) {
             datas.add(initDateBean(lastYear, lastMonth, lastMonthDays - week + 1 + i, 0));
         }
