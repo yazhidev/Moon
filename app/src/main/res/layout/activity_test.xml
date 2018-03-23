@@ -1,32 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.yazhi1992.moon.ui.TestActivity">
+<layout>
 
-   <com.yazhi1992.moon.widget.calendarview.WeekView
-       android:id="@+id/week"
-       android:layout_width="match_parent"
-       android:layout_height="40dp"/>
 
-    <com.yazhi1992.moon.widget.calendarview.Calendarview
-        android:layout_below="@+id/week"
-        android:id="@+id/calendar"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></com.yazhi1992.moon.widget.calendarview.Calendarview>
+        android:layout_height="match_parent"
+        tools:context="com.yazhi1992.moon.ui.TestActivity">
 
-    <TextView
-        android:id="@+id/tv"
-        android:background="#eeeeee"
-        android:layout_below="@+id/calendar"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        <com.yazhi1992.moon.widget.calendarview.WeekView
+            android:id="@+id/week"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
 
-</RelativeLayout>
+        <com.yazhi1992.moon.widget.calendarview.Calendarview
+            android:id="@+id/calendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/week"></com.yazhi1992.moon.widget.calendarview.Calendarview>
+
+        <RelativeLayout
+            android:id="@+id/rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/calendar">
+
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"/>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv">
+
+                <RadioButton
+                    android:id="@+id/rbCome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="来"/>
+
+                <RadioButton
+                    android:id="@+id/rbGo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="走"/>
+
+            </RadioGroup>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>
 
 
 

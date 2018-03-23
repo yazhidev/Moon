@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
 
 /**
  * Created by zengyazhi on 2018/3/22.
@@ -21,10 +20,19 @@ public class Calendarview extends ViewPager {
     private int lastPosition;
     private OnPagerChangeListener pagerChangeListener;
     private CalendarPagerAdapter mPagerAdapter;
+    private OnSingleChooseListener singleChooseListener;
     private int mMovePx;
 
     public void setPagerChangeListener(OnPagerChangeListener pagerChangeListener) {
         this.pagerChangeListener = pagerChangeListener;
+    }
+
+    public void setSingleChooseListener(OnSingleChooseListener singleChooseListener) {
+        this.singleChooseListener = singleChooseListener;
+    }
+
+    public OnSingleChooseListener getSingleChooseListener() {
+        return singleChooseListener;
     }
 
     public Calendarview(@NonNull Context context) {
@@ -51,8 +59,6 @@ public class Calendarview extends ViewPager {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                Log.e("zyz", "onPageSelected");
-
                 refreshMonthView(position);
                 currentPosition = position;
                 if (pagerChangeListener != null) {
@@ -64,7 +70,6 @@ public class Calendarview extends ViewPager {
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
-                Log.e("zyz", "onPageScrollStateChanged" + state);
                 if(state == 1) {
                     lastPosition = currentPosition;
                 }
@@ -90,9 +95,22 @@ public class Calendarview extends ViewPager {
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
+    public void refresh() {
+        refreshMonthView(currentPosition);
+    }
+
+    public void refresh(DateBean date) {
+        refreshMonthView(date);
+    }
+
     private void refreshMonthView(int position) {
         MonthView monthView = mPagerAdapter.getViews().get(position);
+        monthView.postInvalidate();
+    }
 
+    private void refreshMonthView(DateBean date) {
+        MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
+        monthView.fresh(date);
     }
 
     @Override

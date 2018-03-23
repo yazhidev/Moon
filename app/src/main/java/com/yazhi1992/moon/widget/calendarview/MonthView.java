@@ -3,7 +3,6 @@ package com.yazhi1992.moon.widget.calendarview;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,9 @@ public class MonthView extends ViewGroup {
     private int lastMonthDays;//记录当月显示的上个月天数
     private int nextMonthDays;//记录当月显示的下个月天数
     private Context mContext;
+    List<DateBean> dates;
+    private DateBean clickDate;
+    private View lastClickedView;//记录上次点击的Item
 
     public MonthView(Context context) {
         this(context, null);
@@ -43,6 +45,9 @@ public class MonthView extends ViewGroup {
      * @param currentMonthDays 当月天数
      */
     public void setDateList(List<DateBean> dates, int currentMonthDays) {
+        this.dates = dates;
+
+
         if (getChildCount() > 0) {
             removeAllViews();
         }
@@ -51,163 +56,41 @@ public class MonthView extends ViewGroup {
         for (int i = 0; i < dates.size(); i++) {
             final DateBean date = dates.get(i);
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_month_layout, null);
+
+            freshView(view, date.getMcType());
+
             TextView tv = view.findViewById(R.id.solar_day);
-            if(date.getType() == 1) {
+
+            if (date.getType() == 1) {
+                view.setTag(date.getDate()[2]);
                 tv.setText(String.valueOf(date.getDate()[2]));
+                int finalI = i;
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(lastClickedView != null && date.getMcType() == DateBean.NORMAL) {
+                            freshView(lastClickedView, DateBean.NORMAL);
+                        }
+                        freshView(v, DateBean.CLICKED);
+                        lastClickedView = v;
+
+                        Calendarview parent = (Calendarview) getParent();
+                        OnSingleChooseListener singleChooseListener = parent.getSingleChooseListener();
+                        if(singleChooseListener != null) {
+                            singleChooseListener.onSingleChoose(v, date, finalI);
+                        }
                         LibUtils.showToast(String.valueOf(date.getDate()[2]));
                     }
                 });
             }
             addView(view, i);
         }
-//        for (int i = 0; i < dates.size(); i++) {
-//
-//            if (date.getType() == 0) {
-//                lastMonthDays++;
-//                if (!mAttrsBean.isShowLastNext()) {
-//                    addView(new View(mContext), i);
-//                    continue;
-//                }
-//            }
-//
-//            if (date.getType() == 2) {
-//                nextMonthDays++;
-//                if (!mAttrsBean.isShowLastNext()) {
-//                    addView(new View(mContext), i);
-//                    continue;
-//                }
-//            }
-//
-//            View view;
-//            TextView solarDay;//阳历TextView
-//
-//            view = LayoutInflater.from(mContext).inflate(R.layout.item_month_layout, null);
-//            solarDay = (TextView) view.findViewById(R.id.solar_day);
-//
-//            solarDay.setTextColor(mAttrsBean.getColorSolar());
-//            solarDay.setTextSize(mAttrsBean.getSizeSolar());
-//
-//            //设置上个月和下个月的阳历颜色
-//            if (date.getType() == 0 || date.getType() == 2) {
-//                solarDay.setTextColor(mAttrsBean.getColorLunar());
-//            }
-//            solarDay.setText(String.valueOf(date.getSolar()[2]));
-//
-//
-//            //找到单选时默认选中的日期，并选中（如果有）
-//            if (mAttrsBean.getChooseType() == 0
-//                    && mAttrsBean.getSingleDate() != null
-//                    && !findSingleDate
-//                    && date.getType() == 1
-//                    && mAttrsBean.getSingleDate()[0] == date.getSolar()[0]
-//                    && mAttrsBean.getSingleDate()[1] == date.getSolar()[1]
-//                    && mAttrsBean.getSingleDate()[2] == date.getSolar()[2]) {
-//                lastClickedView = view;
-//                setDayColor(view, COLOR_SET);
-//                findSingleDate = true;
-//            }
-//
-//            //找到多选时默认选中的多个日期，并选中（如果有）
-//            if (mAttrsBean.getChooseType() == 1 && mAttrsBean.getMultiDates() != null) {
-//                for (int[] d : mAttrsBean.getMultiDates()) {
-//                    if (date.getType() == 1
-//                            && d[0] == date.getSolar()[0]
-//                            && d[1] == date.getSolar()[1]
-//                            && d[2] == date.getSolar()[2]) {
-//                        setDayColor(view, COLOR_SET);
-//                        chooseDays.add(d[2]);
-//                        break;
-//                    }
-//                }
-//            }
-//
-//            //设置禁用日期
-//            if (date.getType() == 1) {
-//                view.setTag(date.getSolar()[2]);
-//                if (mAttrsBean.getDisableStartDate() != null
-//                        && (CalendarUtil.dateToMillis(mAttrsBean.getDisableStartDate()) > CalendarUtil.dateToMillis(date.getSolar()))) {
-//                    solarDay.setTextColor(mAttrsBean.getColorLunar());
-//                    lunarDay.setTextColor(mAttrsBean.getColorLunar());
-//                    view.setTag(-1);
-//                    addView(view, i);
-//                    continue;
-//                }
-//
-//                if (mAttrsBean.getDisableEndDate() != null
-//                        && (CalendarUtil.dateToMillis(mAttrsBean.getDisableEndDate()) < CalendarUtil.dateToMillis(date.getSolar()))) {
-//                    solarDay.setTextColor(mAttrsBean.getColorLunar());
-//                    lunarDay.setTextColor(mAttrsBean.getColorLunar());
-//                    view.setTag(-1);
-//                    addView(view, i);
-//                    continue;
-//                }
-//            }
-//
-//            view.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    int day = date.getSolar()[2];
-//                    CalendarView calendarView = (CalendarView) getParent();
-//                    OnSingleChooseListener clickListener = calendarView.getSingleChooseListener();
-//                    OnMultiChooseListener chooseListener = calendarView.getMultiChooseListener();
-//                    if (date.getType() == 1) {//点击当月
-//                        if (mAttrsBean.getChooseType() == 1 && chooseListener != null) {//多选的情况
-//                            boolean flag;
-//                            if (chooseDays.contains(day)) {
-//                                setDayColor(v, COLOR_RESET);
-//                                chooseDays.remove(day);
-//                                flag = false;
-//                            } else {
-//                                setDayColor(v, COLOR_SET);
-//                                chooseDays.add(day);
-//                                flag = true;
-//                            }
-//                            calendarView.setChooseDate(day, flag, -1);
-//                            chooseListener.onMultiChoose(v, date, flag);
-//                        } else {
-//                            calendarView.setLastClickDay(day);
-//                            if (lastClickedView != null) {
-//                                setDayColor(lastClickedView, COLOR_RESET);
-//                            }
-//                            setDayColor(v, COLOR_SET);
-//                            lastClickedView = v;
-//
-//                            if (clickListener != null) {
-//                                clickListener.onSingleChoose(v, date);
-//                            }
-//                        }
-//                    } else if (date.getType() == 0) {//点击上月
-//                        if (mAttrsBean.isSwitchChoose()) {
-//                            calendarView.setLastClickDay(day);
-//                        }
-//                        calendarView.lastMonth();
-//                        if (clickListener != null) {
-//                            clickListener.onSingleChoose(v, date);
-//                        }
-//                    } else if (date.getType() == 2) {//点击下月
-//                        if (mAttrsBean.isSwitchChoose()) {
-//                            calendarView.setLastClickDay(day);
-//                        }
-//                        calendarView.nextMonth();
-//                        if (clickListener != null) {
-//                            clickListener.onSingleChoose(v, date);
-//                        }
-//                    }
-//                }
-//            });
-//            addView(view, i);
-//        }
         requestLayout();
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        Log.e("zyz", "onMeasure");
 
         int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
@@ -238,9 +121,7 @@ public class MonthView extends ViewGroup {
             return;
         }
 
-        Log.e("zyz", "onLayout");
-
-        if(mChildWidth == 0) {
+        if (mChildWidth == 0) {
             mChildWidth = getMeasuredWidth() / COLUMN;
         }
 
@@ -253,5 +134,55 @@ public class MonthView extends ViewGroup {
             int bottom = top + mChildWidth;
             view.layout(left, top, right, bottom);
         }
+    }
+
+    public void fresh(DateBean date) {
+        View destView = findDestView(date.getDate()[2]);
+        freshView(destView, date.getMcType());
+    }
+
+    private void freshView(View destView, @DateBean.VIEW_TYPE int type) {
+        switch (type) {
+            case DateBean.MC_COME:
+                destView.setBackgroundColor(Color.RED);
+                break;
+            case DateBean.MC_GO:
+                destView.setBackgroundColor(Color.GRAY);
+                break;
+            case DateBean.MC_MIDDLE:
+                destView.setBackgroundColor(Color.BLUE);
+                break;
+            case DateBean.CLICKED:
+                destView.setBackgroundColor(Color.GREEN);
+                break;
+            default:
+                destView.setBackgroundColor(Color.WHITE);
+                break;
+        }
+    }
+
+    /**
+     * 查找要跳转到的页面需要展示的日期View
+     *
+     * @param day
+     * @return
+     */
+    private View findDestView(int day) {
+        View view = null;
+        for (int i = lastMonthDays; i < getChildCount() - nextMonthDays; i++) {
+            if(getChildAt(i).getTag() != null && (Integer)getChildAt(i).getTag()  == day) {
+                view = getChildAt(i);
+                break;
+            }
+        }
+
+        if (view == null) {
+            view = getChildAt(currentMonthDays + lastMonthDays - 1);
+        }
+
+        if ((Integer) view.getTag() == -1) {
+            view = null;
+        }
+        return view;
     }
 }
