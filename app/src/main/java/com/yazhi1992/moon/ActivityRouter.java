@@ -39,6 +39,7 @@ public class ActivityRouter {
     public static final String TEXT_DETAIL = "/app/text_detail";
     //小姨妈设置页面
     public static final String MC_DETAIL = "/app/mc_detail";
+    public static final String NEW_MC_DETAIL = "/app/new_mc_detail";
     //性别设置页面
     public static final String SET_GENDER = "/app/set_gender";
     //配置页面
@@ -182,7 +183,7 @@ public class ActivityRouter {
 
     public static void gotoMcDetail() {
         ARouter.getInstance()
-                .build(MC_DETAIL)
+                .build(NEW_MC_DETAIL)
                 .navigation();
     }
 

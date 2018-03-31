@@ -1340,7 +1340,37 @@ public class Api {
     /**
      * 更新mc状态
      */
-    public void updateMcStatus(@TypeConstant.McStatus int status, long time, DataCallback<Boolean> dataCallback) {
+    public void addMcAction(@TypeConstant.McStatus int action, int year, int month, int day, long time, DataCallback<Boolean> dataCallback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        //存到mc表 + 首页历史列表
+        AVObject mcObj = new AVObject(TableConstant.MC.CLAZZ_NAME);
+        mcObj.put(TableConstant.MC.ACTION, Integer.toString(action));
+        mcObj.put(TableConstant.MC.USER, getUserObj(currentUser.getObjectId()));
+        mcObj.put(TableConstant.MC.TIME, time);
+        mcObj.put(TableConstant.MC.YEAR, Integer.toString(year));
+        mcObj.put(TableConstant.MC.MONTH, Integer.toString(month));
+        mcObj.put(TableConstant.MC.DAY, Integer.toString(day));
+
+        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
+        loveHistoryObj.put(TableConstant.LoveHistory.MC, mcObj);
+        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_MC);
+        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+
+        //保存关联对象的同时，被关联的对象也会随之被保存到云端。
+        loveHistoryObj.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+            }
+        });
+    }
+
+
+    /**
+     * 更新mc状态
+     */
+    public void updateMcStatus(@TypeConstant.McAction int status, long time, DataCallback<Boolean> dataCallback) {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //存到mc表 + 首页历史列表

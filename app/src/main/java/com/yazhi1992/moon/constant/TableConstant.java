@@ -93,9 +93,14 @@ public class TableConstant {
     public static class MC {
         public static final String CLAZZ_NAME = "menstrual_cycle";
         public static final String STATUS = "status"; //0 正常状态（姨妈走了），1 例假中（姨妈来了）
+        public static final String ACTION = "action"; //默认0，1来，2走
         public static final String ID = "id";
         public static final String USER = "user";
         public static final String TIME = "time";
+        public static final String YEAR = "year";
+        public static final String MONTH = "month";
+        public static final String DAY = "day";
+
     }
 
     //配置表

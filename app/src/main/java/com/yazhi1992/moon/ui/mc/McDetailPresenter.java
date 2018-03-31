@@ -22,4 +22,8 @@ public class McDetailPresenter {
     public void updateMcStatus(@TypeConstant.McStatus int status, long time, DataCallback<Boolean> callback) {
         Api.getInstance().updateMcStatus(status, time, callback);
     }
+
+    public void addMcAction(@TypeConstant.McAction int action, int year, int month, int day, long time, DataCallback<Boolean> callback) {
+        Api.getInstance().addMcAction(action, year, month, day, time, callback);
+    }
 }

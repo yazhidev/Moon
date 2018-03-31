@@ -19,8 +19,8 @@ import java.util.List;
 
 public class MonthView extends ViewGroup {
 
-    private static final int MAXROW = 6;
-    private static final int COLUMN = 7; //7列，周一到周日
+    public static final int MAXROW = 6;
+    public static final int COLUMN = 7; //7列，周一到周日
     private int mChildWidth; //每个日期的宽高
     private int currentMonthDays;//记录当月天数
     private int lastMonthDays;//记录当月显示的上个月天数
@@ -52,6 +52,8 @@ public class MonthView extends ViewGroup {
             removeAllViews();
         }
 
+        int[] currentDate = CalendarUtil.getCurrentDate();
+
         this.currentMonthDays = currentMonthDays;
         for (int i = 0; i < dates.size(); i++) {
             final DateBean date = dates.get(i);
@@ -65,6 +67,14 @@ public class MonthView extends ViewGroup {
                 view.setTag(date.getDate()[2]);
                 tv.setText(String.valueOf(date.getDate()[2]));
                 int finalI = i;
+                if(currentDate[0] == date.getDate()[0]
+                        &&currentDate[1] == date.getDate()[1]
+                        &&currentDate[2] == date.getDate()[2]) {
+//                if(currentDate == date.getDate()) {
+                    tv.setTextColor(Color.RED);
+                } else {
+                    tv.setTextColor(Color.BLACK);
+                }
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {

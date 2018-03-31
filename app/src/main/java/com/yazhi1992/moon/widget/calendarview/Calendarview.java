@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * Created by zengyazhi on 2018/3/22.
@@ -22,6 +23,11 @@ public class Calendarview extends ViewPager {
     private CalendarPagerAdapter mPagerAdapter;
     private OnSingleChooseListener singleChooseListener;
     private int mMovePx;
+    private InitCallback mInitCallback;
+
+    public void setInitCallback(InitCallback initCallback) {
+        mInitCallback = initCallback;
+    }
 
     public void setPagerChangeListener(OnPagerChangeListener pagerChangeListener) {
         this.pagerChangeListener = pagerChangeListener;
@@ -45,9 +51,9 @@ public class Calendarview extends ViewPager {
     }
 
     private void init() {
-//        int[] ints = CalendarUtil.strToArray("2018-05");
-        endDate = new int[]{2018, 8};
-        initDate = new int[]{2018, 4};
+        int[] currentDate = CalendarUtil.getCurrentDate();
+        endDate = new int[]{currentDate[0] + 1, currentDate[1]};
+        initDate = currentDate;
 
         count = (endDate[0] - startDate[0]) * 12 + endDate[1] - startDate[1] + 1;
         currentPosition = CalendarUtil.dateToPosition(initDate[0], initDate[1], startDate[0], startDate[1]);
@@ -70,12 +76,12 @@ public class Calendarview extends ViewPager {
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
-                if(state == 1) {
+                if (state == 1) {
                     lastPosition = currentPosition;
                 }
                 if (state == 0 && pagerChangeListener != null) {
-                    if(lastPosition == currentPosition) {
-                        pagerChangeListener.onPageScrollStateChanged(state, 0);
+                    if (lastPosition == currentPosition) {
+                        pagerChangeListener.onPageScrollStateChanged(state, mMovePx);
                         return;
                     }
                     int[] date = CalendarUtil.positionToDate(currentPosition, startDate[0], startDate[1]);
@@ -85,6 +91,7 @@ public class Calendarview extends ViewPager {
                     MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
                     mMovePx += (currentRows - lastRows) * monthView.getChildWidth();
                     pagerChangeListener.onPageScrollStateChanged(state, mMovePx);
+                    Log.e("zyz", date[0] + "-" + date[1] + ":" + currentRows + "===" + lastDate[0] + "-" + lastDate[1] + ":" + lastRows);
                 }
             }
         });
@@ -93,6 +100,13 @@ public class Calendarview extends ViewPager {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        if (mInitCallback != null) {
+            int rowHeight = w / MonthView.COLUMN;
+            int currentRows = CalendarUtil.getMonthRows(initDate[0], initDate[1]);
+            mMovePx += (currentRows - MonthView.MAXROW) * rowHeight;
+            mInitCallback.onInit(initDate, mMovePx);
+            Log.e("zyz", mMovePx + ":" + currentRows + "=== onSizeChanged");
+        }
     }
 
     public void refresh() {

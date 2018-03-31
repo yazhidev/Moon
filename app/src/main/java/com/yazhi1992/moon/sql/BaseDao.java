@@ -22,9 +22,10 @@ public class BaseDao<T>{
     }
 
     public void insert(T obj, IDaoOperationListener.IOperationistener listener) {
-        AsyncSession asyncSession = mDaoSession.startAsyncSession();
-        setOperation(asyncSession, listener);
-        asyncSession.insert(obj);
+        mDaoSession.insert(obj);
+//        AsyncSession asyncSession = mDaoSession.startAsyncSession();
+//        setOperation(asyncSession, listener);
+//        asyncSession.insert(obj);
     }
 
     private void setOperation(AsyncSession asyncSession, IDaoOperationListener.IOperationistener listener) {

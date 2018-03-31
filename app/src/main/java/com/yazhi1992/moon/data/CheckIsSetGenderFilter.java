@@ -19,7 +19,7 @@ public class CheckIsSetGenderFilter implements ICheckDataFilter {
     @Override
     public void check(ICheckDataCallBack callBack) {
         UserDaoUtil userDaoUtil = new UserDaoUtil();
-        if(userDaoUtil.getUserDao().getGender() != 0) {
+        if(userDaoUtil.getUserDao() != null && userDaoUtil.getUserDao().getGender() != 0) {
             //通过，传给下一级继续检验
             callBack.doContinue();
         } else {

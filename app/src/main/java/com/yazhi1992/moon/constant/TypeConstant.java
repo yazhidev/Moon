@@ -37,4 +37,10 @@ public class TypeConstant {
 
     @IntDef({MC_NORMAL, MC_LIVING})
     public @interface McStatus {}
+
+    public static final int MC_COME = 1; //来
+    public static final int MC_GO = 2; //走
+
+    @IntDef({MC_COME, MC_GO})
+    public @interface McAction {}
 }
