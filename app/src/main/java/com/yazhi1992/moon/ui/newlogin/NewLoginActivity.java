@@ -109,7 +109,6 @@ public class NewLoginActivity extends AbsUpgrateActivity {
                         user.setLoverId(avUser.getString(TableConstant.AVUserClass.LOVER_ID));
                     }
                     userDaoUtil.insert(user, null);
-                    PushManager.getInstance().register();
                     //继续检查下一个
                     CheckUserDataChain.getInstance().processChain();
                 }

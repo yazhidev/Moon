@@ -85,7 +85,6 @@ public class SetFragment extends Fragment {
                             mPresenter.logout(new DataCallback<Boolean>() {
                                 @Override
                                 public void onSuccess(Boolean data) {
-                                    PushManager.getInstance().unregister();
                                     CheckUserDataChain.getInstance().resetChainIndex();
                                     ActivityRouter.gotoNewLogin();
                                     getActivity().finish();

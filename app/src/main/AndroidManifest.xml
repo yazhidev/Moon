@@ -86,19 +86,6 @@
         </activity>
         <!-- QQ SSO 登录 -->
 
-
-        <!-- 实时通信模块、推送（均需要加入以下声明） START -->
-        <!-- 实时通信模块、推送都要使用 PushService -->
-        <service android:name="com.avos.avoscloud.PushService"/>
-
-        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
-        <!-- 实时通信模块、推送 END -->
         <activity android:name=".ui.login.LoginActivity">
         </activity>
         <activity
@@ -158,6 +145,28 @@
         </activity>
         <activity android:name=".ui.TestActivity">
         </activity>
+
+        <!--推送-->
+        <service android:name="com.avos.avoscloud.PushService" android:exported="true"/>
+
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".util.PushReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.yazhi1992.moon" />
+            </intent-filter>
+        </receiver>
+        <!--推送-->
+
     </application>
 
 </manifest>

@@ -20,6 +20,7 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
 import com.yazhi1992.moon.event.BuglyUpgrate;
+import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -74,6 +75,8 @@ public class BaseApplication extends Application {
         AVOSCloud.initialize(this, BuildConfig.LEAN_CLOUD_ID, BuildConfig.LEAN_CLOUD_KEY);
         // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
         AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
+
+        PushManager.getInstance().register();
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override

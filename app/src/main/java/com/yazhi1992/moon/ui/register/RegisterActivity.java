@@ -71,7 +71,6 @@ public class RegisterActivity extends BaseActivity {
                                 user.setLoverId(avUser.getString(TableConstant.AVUserClass.LOVER_ID));
                             }
                             userDaoUtil.insert(user, null);
-                            PushManager.getInstance().register();
                             //前往验证邮箱
                             ActivityRouter.gotoSetEmail(true);
                             mBinding.btnComfirm.setLoading(false);

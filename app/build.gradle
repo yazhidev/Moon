@@ -140,7 +140,7 @@ dependencies {
 
     //LeanCould
     compile rootProject.ext.leancloudAvoscloudSdk
-    compile(rootProject.ext.leancloudAvoscloudAar) {
+    compile(rootProject.ext.leancloudAvoscloudPush) {
         transitive = true
     } //IM、Push
     // avoscloud-sns：LeanCloud 第三方登录包

@@ -1,30 +1,18 @@
 package com.yazhi1992.moon.util;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMException;
-import com.avos.avoscloud.im.v2.AVIMMessage;
-import com.avos.avoscloud.im.v2.AVIMMessageHandler;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
-import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVInstallation;
+import com.avos.avoscloud.AVPush;
+import com.avos.avoscloud.PushService;
+import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.SendCallback;
 import com.yazhi1992.moon.BaseApplication;
-import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.ui.addmemorialday.AddMemorialActivity;
-import com.yazhi1992.moon.ui.home.HomeActivity;
+import com.yazhi1992.moon.ui.startup.StartActivity;
 
-import java.util.Arrays;
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by zengyazhi on 2018/2/4.
@@ -33,8 +21,7 @@ import java.util.List;
  */
 
 public class PushManager {
-    private AVIMClient mClient;
-    private String mLoverObjid;
+    private String mPeerId;
 
     private PushManager() {
     }
@@ -48,112 +35,28 @@ public class PushManager {
     }
 
     public void register() {
-        //聊天登录
-//        AVIMClient msg = AVIMClient.getInstance(AVUser.getCurrentUser().getObjectId());
-//        msg.open(new AVIMClientCallback() {
-//            @Override
-//            public void done(AVIMClient client, AVIMException e) {
-//                if (e == null) {
-//                    mClient = client;
-//                } else {
-//                    LibUtils.showToast(BaseApplication.getInstance(), BaseApplication.getInstance().getString(R.string.pushmanager_init_failed));
-//                }
-//            }
-//        });
-//
-//        AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
-    }
-
-    public void unregister() {
-        if (getClient() == null) return;
-        getClient().close(new AVIMClientCallback() {
-            @Override
-            public void done(AVIMClient client, AVIMException e) {
+        AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+            public void done(AVException e) {
                 if (e == null) {
-                    //登出成功
+                    // 保存成功
+                    String installationId = AVInstallation.getCurrentInstallation().getInstallationId();
+                    MyLog.log("pushManager register " + installationId);
+                    // 关联  installationId 到用户表等操作……
+                } else {
+                    // 保存失败，输出错误信息
+                    MyLog.log("pushManager register error");
                 }
             }
         });
+        // 设置默认打开的 Activity
+        PushService.setDefaultPushCallback(BaseApplication.getInstance(), StartActivity.class);
     }
 
-    //创建推送
-    public void createNotification(String title, String text) {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(BaseApplication.getInstance().getTopActivity())
-                        .setSmallIcon(R.mipmap.app_icon)
-                        .setContentTitle(title)
-                        .setContentText(text);
-
-        Intent resultIntent = new Intent(BaseApplication.getInstance().getTopActivity(), HomeActivity.class);
-        resultIntent.putExtra(ActionConstant.Notification.ACTION_KEY, ActionConstant.Notification.ACTION_VALUE_HISTORY);
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(BaseApplication.getInstance());
-        stackBuilder.addParentStack(AddMemorialActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) BaseApplication.getInstance().getTopActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, mBuilder.build());
-    }
-
-    public static class CustomMessageHandler extends AVIMMessageHandler {
-        //接收到消息后的处理逻辑
-        @Override
-        public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
-            if (new UserDaoUtil().getUserDao() != null) {
-                if (message instanceof AVIMTextMessage) {
-                    String text = ((AVIMTextMessage) message).getText();
-                    switch (text) {
-                        case ActionConstant.ADD_MEMORIAL:
-                            //对方新增纪念日
-                            PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_add_memorial_title)
-                                    , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
-                            break;
-                        case ActionConstant.ADD_HOPE:
-                            //对方新增愿望
-                            PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_add_hope_title)
-                                    , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
-                            break;
-                        case ActionConstant.ADD_TEXT:
-                            //对方新增文本
-                            PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_add_text_title)
-                                    , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
-                            break;
-                        case ActionConstant.UPDATE_MC:
-                            //对方更新了mc信息
-                            PushManager.getInstance().createNotification(BaseApplication.getInstance().getString(R.string.notification_update_mc_title)
-                                    , BaseApplication.getInstance().getString(R.string.notification_add_memorial_content));
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
+    public String getPeerId() {
+        if (mPeerId == null) {
+            mPeerId = new UserDaoUtil().getUserDao().getLoverId();
         }
-
-        public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
-
-        }
-    }
-
-    public List<String> getComversationList() {
-        if (mLoverObjid == null) {
-            mLoverObjid = new UserDaoUtil().getUserDao().getLoverId();
-        }
-        if (mLoverObjid != null) {
-            return Arrays.asList(mLoverObjid);
-        } else {
-            return null;
-        }
-    }
-
-    public AVIMClient getClient() {
-        return mClient;
+        return mPeerId;
     }
 
     public void pushAction(@ActionConstant.AddAction String action) {
@@ -162,27 +65,29 @@ public class PushManager {
 
     //发消息给对方
     private void postMsg(@ActionConstant.AddAction String action) {
-        if (getClient() == null) return;
-        getClient().createConversation(getComversationList(), action, null,
-                new AVIMConversationCreatedCallback() {
+        if(getPeerId() == null) return;
+        try {
+            AVPush push = new AVPush();
+            JSONObject data =
+                    null;
+            data = new JSONObject(
+                    "{\"action\": \"com.yazhi1992.moon\", \"moonAction\": \"" + action + "\", \"newsItem\": \"Man bites dog\"  }");
 
-                    @Override
-                    public void done(AVIMConversation conversation, AVIMException e) {
-                        if (e == null) {
-                            AVIMTextMessage msg = new AVIMTextMessage();
-                            msg.setText(action);
-                            // 发送消息
-                            conversation.sendMessage(msg, new AVIMConversationCallback() {
+//            839f33b894d062586e64c97136e2aa86
 
-                                @Override
-                                public void done(AVIMException e) {
-                                    if (e == null) {
-                                    }
-                                }
-                            });
-                        }
-                    }
-                });
+            push.setData(data);
+            push.setCloudQuery("select * from _Installation where installationId ='" + getPeerId()
+                    + "'");
+            push.sendInBackground(new SendCallback() {
+
+                @Override
+                public void done(AVException e) {
+
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

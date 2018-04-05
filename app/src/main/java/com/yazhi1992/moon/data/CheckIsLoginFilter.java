@@ -17,7 +17,6 @@ public class CheckIsLoginFilter implements ICheckDataFilter {
             //未登录
             ActivityRouter.gotoNewLogin();
         } else {
-            PushManager.getInstance().register();
             //通过，continue
             callBack.doContinue();
         }

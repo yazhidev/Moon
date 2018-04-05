@@ -34,7 +34,7 @@ ext {
     eventbus = 'org.greenrobot:eventbus:3.1.1'
 
     leancloudAvoscloudSdk = 'cn.leancloud.android:avoscloud-sdk:v4.6.4'
-    leancloudAvoscloudAar = 'cn.leancloud.android:avoscloud-push:v4.6.4@aar'
+    leancloudAvoscloudPush = 'cn.leancloud.android:avoscloud-push:v4.6.4@aar'
     leancloudAvoscloudSns = 'cn.leancloud.android:avoscloud-sns:v4.6.4@aar'
     leancloudAvoscloudQq = 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
 

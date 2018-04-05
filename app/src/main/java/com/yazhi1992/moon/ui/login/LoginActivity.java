@@ -30,7 +30,6 @@ public class LoginActivity extends AbsUpgrateActivity {
         mBinding.igQqLogin.setOnClickListener(v -> mPresenter.loginWithQQ(this, new DataCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean haveLover) {
-                PushManager.getInstance().register();
                 LoadingHelper.getInstance().closeLoading();
                 //继续检查下一个
                 CheckUserDataChain.getInstance().processChain();
