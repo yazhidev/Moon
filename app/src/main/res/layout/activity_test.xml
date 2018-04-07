@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.ui.mc.McModel"></variable>
+
+        <import type="android.view.View"></import>
+    </data>
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -8,7 +15,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.yazhi1992.moon.ui.TestActivity">
+        tools:context="com.yazhi1992.moon.ui.mc.McActivity">
 
         <com.yazhi1992.moon.widget.calendarview.WeekView
             android:id="@+id/week"
@@ -35,19 +42,22 @@
 
             <Button
                 android:id="@+id/btn_update"
+                android:visibility="@{item.mGender == 1 ? View.GONE : View.VISIBLE}"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@+id/tv"
+                app:mcBtn="@{item.data}"
                 android:gravity="center"/>
 
             <RadioGroup
-                android:visibility="gone"
+                android:visibility="@{item.mGender == 1 ? View.GONE : View.VISIBLE}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btn_update">
 
                 <RadioButton
                     android:id="@+id/rbCome"
+                    android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="来"/>

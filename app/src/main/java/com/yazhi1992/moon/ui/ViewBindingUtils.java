@@ -3,12 +3,15 @@ package com.yazhi1992.moon.ui;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yazhi1992.moon.BaseApplication;
+import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.moon.widget.calendarview.DateBean;
 import com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView;
 import com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout;
 import com.yazhi1992.yazhilib.widget.RoundView.RoundTextView;
@@ -64,6 +67,23 @@ public class ViewBindingUtils {
     @BindingAdapter("srcCompat")
     public static void srcCompat(FloatingActionButton btn, Drawable imageDrawble) {
         btn.setImageDrawable(imageDrawble);
+    }
+
+    @BindingAdapter("mcBtn")
+    public static void srcCompat(Button btn, DateBean dateBean) {
+        if(dateBean == null) return;
+        int mcType = dateBean.getMcType();
+        switch (mcType) {
+            case TypeConstant.MC_COME:
+                btn.setText("取消来");
+                break;
+            case TypeConstant.MC_GO:
+                btn.setText("取消去");
+                break;
+            default:
+                btn.setText("提交选择");
+                break;
+        }
     }
 
 //    public static void transformTimeForMemorialDayInHistory(TextView tv, long time) {

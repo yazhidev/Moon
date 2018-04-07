@@ -156,7 +156,7 @@
         </activity>
         <activity android:name=".ui.forgetpwd.ForgetPwdActivity">
         </activity>
-        <activity android:name=".ui.TestActivity">
+        <activity android:name=".ui.mc.McActivity">
         </activity>
     </application>
 

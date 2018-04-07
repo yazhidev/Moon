@@ -24,6 +24,7 @@ import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.home.set.LoverInfo;
 import com.yazhi1992.moon.ui.mc.McData;
+import com.yazhi1992.moon.ui.mc.McDataFromApi;
 import com.yazhi1992.moon.util.MyLog;
 import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.ConfigBean;
@@ -1237,7 +1238,7 @@ public class Api {
                                 mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
 
                                 AVQuery<AVObject> statusQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
-                                mcQuery.whereEqualTo(TableConstant.MC.STATUS, 1);
+                                statusQuery.whereEqualTo(TableConstant.MC.STATUS, 1);
 
                                 AVQuery<AVObject> query = AVQuery.and(Arrays.asList(mcQuery, statusQuery));
 
@@ -1286,6 +1287,107 @@ public class Api {
     }
 
     /**
+     * 获取某个月的mc数据列表
+     * @param year
+     * @param month
+     * @param callback
+     */
+    public void getMonthMcRecord(int year, int month, DataCallback<List<McDataFromApi>> callback) {
+        User userDao = new UserDaoUtil().getUserDao();
+        AVObject userObj = null;
+        if (userDao.getGender() == TypeConstant.MEN) {
+            //获取另一半
+            String loverId = userDao.getLoverId();
+            userObj = getUserObj(loverId);
+        } else {
+            //获取自己
+            userObj = getUserObj(userDao.getObjectId());
+        }
+        AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
+
+        AVQuery<AVObject> mcQueryYear = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQueryYear.whereEqualTo(TableConstant.MC.YEAR, year);
+
+        AVQuery<AVObject> mcQueryMonth = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQueryMonth.whereEqualTo(TableConstant.MC.MONTH, month);
+
+        AVQuery<AVObject> query = AVQuery.and(Arrays.asList(mcQuery, mcQueryYear, mcQueryMonth));
+
+        query.addAscendingOrder(TableConstant.MC.TIME); //按照时间排序
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        List<McDataFromApi> dataList = new ArrayList<>();
+                        for (AVObject object : list) {
+                            int time = object.getInt(TableConstant.MC.TIME);
+                            int year = object.getInt(TableConstant.MC.YEAR);
+                            int month = object.getInt(TableConstant.MC.MONTH);
+                            int day = object.getInt(TableConstant.MC.DAY);
+                            int action = object.getInt(TableConstant.MC.ACTION);
+                            McDataFromApi mcDataFromApi = new McDataFromApi(time, year, month, day, action);
+                            dataList.add(mcDataFromApi);
+                        }
+                        callback.onSuccess(dataList);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 获取mc数据列表
+     * @param lastTime 第一次传0
+     * @param size
+     * @param callback
+     */
+    public void getMcRecord(int lastTime, int size, DataCallback<List<McDataFromApi>> callback) {
+        User userDao = new UserDaoUtil().getUserDao();
+        AVObject userObj = null;
+        if (userDao.getGender() == TypeConstant.MEN) {
+            //获取另一半
+            String loverId = userDao.getLoverId();
+            userObj = getUserObj(loverId);
+        } else {
+            //获取自己
+            userObj = getUserObj(userDao.getObjectId());
+        }
+        AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
+        mcQuery.addDescendingOrder(TableConstant.MC.TIME); //按照时间排序
+        if (lastTime > 0) {
+            mcQuery.whereLessThan(TableConstant.MC.TIME, lastTime);
+        }
+        mcQuery.limit(size);
+        mcQuery.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        List<McDataFromApi> dataList = new ArrayList<>();
+                        for (AVObject object : list) {
+                            long time = object.getLong(TableConstant.MC.TIME);
+                            int year = object.getInt(TableConstant.MC.YEAR);
+                            int month = object.getInt(TableConstant.MC.MONTH);
+                            int day = object.getInt(TableConstant.MC.DAY);
+                            int action = object.getInt(TableConstant.MC.ACTION);
+                            McDataFromApi mcDataFromApi = new McDataFromApi(time, year, month, day, action);
+                            dataList.add(mcDataFromApi);
+                        }
+                        callback.onSuccess(dataList);
+                    }
+                });
+            }
+        });
+    }
+
+    // TODO: 2018/4/5 修改逻辑
+    /**
+     *
      * 获取情侣中女性最近一条mc记录（用于心情预警，如果没来25天或刚来3天，则预警）
      *
      * @param callback
@@ -1338,19 +1440,19 @@ public class Api {
     }
 
     /**
-     * 更新mc状态
+     * 添加mc状态
      */
-    public void addMcAction(@TypeConstant.McStatus int action, int year, int month, int day, long time, DataCallback<Boolean> dataCallback) {
+    public void addMcAction(@TypeConstant.McStatus int action, int year, int month, int day, long time, DataCallback<McDataFromApi> dataCallback) {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //存到mc表 + 首页历史列表
         AVObject mcObj = new AVObject(TableConstant.MC.CLAZZ_NAME);
-        mcObj.put(TableConstant.MC.ACTION, Integer.toString(action));
+        mcObj.put(TableConstant.MC.ACTION, action);
         mcObj.put(TableConstant.MC.USER, getUserObj(currentUser.getObjectId()));
         mcObj.put(TableConstant.MC.TIME, time);
-        mcObj.put(TableConstant.MC.YEAR, Integer.toString(year));
-        mcObj.put(TableConstant.MC.MONTH, Integer.toString(month));
-        mcObj.put(TableConstant.MC.DAY, Integer.toString(day));
+        mcObj.put(TableConstant.MC.YEAR, year);
+        mcObj.put(TableConstant.MC.MONTH, month);
+        mcObj.put(TableConstant.MC.DAY, day);
 
         AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
         loveHistoryObj.put(TableConstant.LoveHistory.MC, mcObj);
@@ -1361,11 +1463,84 @@ public class Api {
         loveHistoryObj.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+                handleResult(e, dataCallback, () -> {
+                    McDataFromApi mcDataFromApi = new McDataFromApi(time, year, month, day, action);
+                    dataCallback.onSuccess(mcDataFromApi);
+                });
             }
         });
     }
 
+    //移除mc数据
+    public void removeMcAction(int year, int month, int day, DataCallback<Boolean> callback) {
+        AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQuery.whereEqualTo(TableConstant.MC.USER, getUserObj(AVUser.getCurrentUser().getObjectId()));
+
+        AVQuery<AVObject> mcQueryYear = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQueryYear.whereEqualTo(TableConstant.MC.YEAR, year);
+
+        AVQuery<AVObject> mcQueryMonth = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQueryMonth.whereEqualTo(TableConstant.MC.MONTH, month);
+
+        AVQuery<AVObject> mcQueryDay = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQueryDay.whereEqualTo(TableConstant.MC.DAY, day);
+
+        AVQuery<AVObject> query = AVQuery.and(Arrays.asList(mcQuery, mcQueryYear, mcQueryMonth, mcQueryDay));
+        query.deleteAllInBackground(new DeleteCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(true);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 获取情侣中女性最近一条mc记录（用于设置中间状态，显示来或去按钮）
+     *
+     * @param callback
+     */
+    public void getLatestMcRecord(DataCallback<McDataFromApi> callback) {
+        User userDao = new UserDaoUtil().getUserDao();
+        AVObject userObj = null;
+        if (userDao.getGender() == TypeConstant.MEN) {
+            //获取另一半
+            String loverId = userDao.getLoverId();
+            userObj = getUserObj(loverId);
+        } else {
+            //获取自己
+            userObj = getUserObj(userDao.getObjectId());
+        }
+        AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
+        mcQuery.addDescendingOrder(TableConstant.MC.TIME); //先按照更新状态的时间排序
+        mcQuery.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                //获取最新一条
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        if(avObject != null) {
+                            int time = avObject.getInt(TableConstant.MC.TIME);
+                            int year = avObject.getInt(TableConstant.MC.YEAR);
+                            int month = avObject.getInt(TableConstant.MC.MONTH);
+                            int day = avObject.getInt(TableConstant.MC.DAY);
+                            int action = avObject.getInt(TableConstant.MC.ACTION);
+                            McDataFromApi mcDataFromApi = new McDataFromApi(time, year, month, day, action);
+                            callback.onSuccess(mcDataFromApi);
+                        } else {
+                            callback.onSuccess(null);
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     /**
      * 更新mc状态

@@ -49,7 +49,8 @@ public class CalendarPagerAdapter extends PagerAdapter {
             view = new MonthView(container.getContext());
         }
         int[] date = CalendarUtil.positionToDate(position, startDate[0], startDate[1]);
-        view.setDateList(CalendarUtil.getMonthDate(date[0], date[1]), CalendarUtil.getMonthDays(date[0], date[1]));
+        view.setBuildInfo(date[0], date[1], CalendarUtil.getMonthDays(date[0], date[1]));
+//        view.setDateList(CalendarUtil.getMonthDate(date[0], date[1]), CalendarUtil.getMonthDays(date[0], date[1]));
         mViews.put(position, view);
         container.addView(view);
         return view;

@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import java.util.List;
@@ -27,8 +30,11 @@ public class MonthView extends ViewGroup {
     private int nextMonthDays;//记录当月显示的下个月天数
     private Context mContext;
     List<DateBean> dates;
-    private DateBean clickDate;
+    private DateBean lastClickDate;
     private View lastClickedView;//记录上次点击的Item
+
+    private int year;
+    private int month;
 
     public MonthView(Context context) {
         this(context, null);
@@ -40,13 +46,33 @@ public class MonthView extends ViewGroup {
         setBackgroundColor(Color.WHITE);
     }
 
+    public void setBuildInfo(int year, int month, int currentMonthDays) {
+        this.year = year;
+        this.month = month;
+        this.currentMonthDays = currentMonthDays;
+        startBuildData();
+    }
+
+    public void startBuildData() {
+        CalendarHelper.getInstance().buildMonthData(year, month, new DataCallback<List<DateBean>>() {
+            @Override
+            public void onSuccess(List<DateBean> data) {
+                setDateList(data, currentMonthDays);
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+                LibUtils.showToast(msg);
+            }
+        });
+    }
+
     /**
      * @param dates            需要展示的日期数据
      * @param currentMonthDays 当月天数
      */
     public void setDateList(List<DateBean> dates, int currentMonthDays) {
         this.dates = dates;
-
 
         if (getChildCount() > 0) {
             removeAllViews();
@@ -59,7 +85,7 @@ public class MonthView extends ViewGroup {
             final DateBean date = dates.get(i);
             View view = LayoutInflater.from(mContext).inflate(R.layout.item_month_layout, null);
 
-            freshView(view, date.getMcType());
+            freshView(view, date);
 
             TextView tv = view.findViewById(R.id.solar_day);
 
@@ -78,11 +104,14 @@ public class MonthView extends ViewGroup {
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(lastClickedView != null && date.getMcType() == DateBean.NORMAL) {
-                            freshView(lastClickedView, DateBean.NORMAL);
+                        if(lastClickedView != null) {
+                            lastClickDate.setClicked(false);
+                            freshView(lastClickedView, lastClickDate);
                         }
-                        freshView(v, DateBean.CLICKED);
+                        date.setClicked(true);
+                        freshView(v, date);
                         lastClickedView = v;
+                        lastClickDate = date;
 
                         Calendarview parent = (Calendarview) getParent();
                         OnSingleChooseListener singleChooseListener = parent.getSingleChooseListener();
@@ -148,26 +177,26 @@ public class MonthView extends ViewGroup {
 
     public void fresh(DateBean date) {
         View destView = findDestView(date.getDate()[2]);
-        freshView(destView, date.getMcType());
+        freshView(destView, date);
     }
 
-    private void freshView(View destView, @DateBean.VIEW_TYPE int type) {
-        switch (type) {
-            case DateBean.MC_COME:
+    private void freshView(View destView, DateBean date) {
+        switch (date.getMcType()) {
+            case TypeConstant.MC_COME:
                 destView.setBackgroundColor(Color.RED);
                 break;
-            case DateBean.MC_GO:
+            case TypeConstant.MC_GO:
                 destView.setBackgroundColor(Color.GRAY);
                 break;
-            case DateBean.MC_MIDDLE:
+            case TypeConstant.MC_MIDDLE:
                 destView.setBackgroundColor(Color.BLUE);
-                break;
-            case DateBean.CLICKED:
-                destView.setBackgroundColor(Color.GREEN);
                 break;
             default:
                 destView.setBackgroundColor(Color.WHITE);
                 break;
+        }
+        if(date.isClicked()) {
+            destView.setBackgroundColor(Color.YELLOW);
         }
     }
 

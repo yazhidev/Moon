@@ -65,7 +65,7 @@ public class Calendarview extends ViewPager {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                refreshMonthView(position);
+                refreshMonthViewByPosition(position);
                 currentPosition = position;
                 if (pagerChangeListener != null) {
                     int[] date = CalendarUtil.positionToDate(position, startDate[0], startDate[1]);
@@ -109,22 +109,27 @@ public class Calendarview extends ViewPager {
         }
     }
 
-    public void refresh() {
-        refreshMonthView(currentPosition);
-    }
-
-    public void refresh(DateBean date) {
-        refreshMonthView(date);
-    }
-
-    private void refreshMonthView(int position) {
-        MonthView monthView = mPagerAdapter.getViews().get(position);
-        monthView.postInvalidate();
-    }
-
-    private void refreshMonthView(DateBean date) {
+    /**
+     * 刷新某一天的view
+     * @param date
+     */
+    public void refreshViewByDateBean(DateBean date) {
         MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
         monthView.fresh(date);
+    }
+
+    public void rebuildView() {
+        MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
+        monthView.startBuildData();
+    }
+
+    /**
+     * 刷新某个月份
+     * @param position
+     */
+    private void refreshMonthViewByPosition(int position) {
+        MonthView monthView = mPagerAdapter.getViews().get(position);
+        monthView.postInvalidate();
     }
 
     @Override

@@ -43,4 +43,22 @@ public class TypeConstant {
 
     @IntDef({MC_COME, MC_GO})
     public @interface McAction {}
+
+    public static final int NORMAL = 0;
+    public static final int MC_MIDDLE = 3;
+    public static final int CLICKED = 4;
+    public static final int TODAY = 5; //今天
+
+    @IntDef({MC_COME, MC_GO, MC_MIDDLE, NORMAL, CLICKED, TODAY})
+    public @interface MC_VIEW_TYPE {
+    }
+
+    //0上月，1本月，2下月
+    public static final int CALENDAR_LAST_MONTH = 0;
+    public static final int CALENDAR_THIS_MONTH = 1;
+    public static final int CALENDAR_NEXT_MONTH = 2;
+
+    @IntDef({CALENDAR_LAST_MONTH, CALENDAR_THIS_MONTH, CALENDAR_NEXT_MONTH})
+    public @interface MONTH_TYPE {
+    }
 }
