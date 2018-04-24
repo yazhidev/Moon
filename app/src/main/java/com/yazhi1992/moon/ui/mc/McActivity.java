@@ -13,6 +13,7 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.ActivityTestBinding;
 import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.moon.widget.calendarview.CalendarInfoCache;
 import com.yazhi1992.moon.widget.calendarview.Calendarview;
 import com.yazhi1992.moon.widget.calendarview.DateBean;
 import com.yazhi1992.moon.widget.calendarview.InitCallback;
@@ -48,6 +49,17 @@ public class McActivity extends AppCompatActivity {
             public void onInit(int[] date, int movePx) {
                 mBinding.tv.setText(date[0] + "-" + date[1]);
                 anim(movePx);
+                CalendarInfoCache.getInstance().getData(date[0], date[1], new DataCallback<List<McDataFromApi>>() {
+                    @Override
+                    public void onSuccess(List<McDataFromApi> data) {
+                        mCalendarView.rebuildView();
+                    }
+
+                    @Override
+                    public void onFailed(int code, String msg) {
+
+                    }
+                });
             }
         });
 
@@ -130,17 +142,26 @@ public class McActivity extends AppCompatActivity {
             }
         });
 
-        mPresenter.getMcRecord(mLastTime, size, new DataCallback<List<McDataFromApi>>() {
-            @Override
-            public void onSuccess(List<McDataFromApi> data) {
 
-            }
 
-            @Override
-            public void onFailed(int code, String msg) {
+//
+//        mPresenter.getAllMcRecord(new DataCallback<List<McDataFromApi>>() {
+//            @Override
+//            public void onSuccess(List<McDataFromApi> data) {
+//                mCalendarView.rebuildView();
+//            }
+//
+//            @Override
+//            public void onFailed(int code, String msg) {
+//
+//            }
+//        });
+    }
 
-            }
-        });
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CalendarInfoCache.getInstance().reset();
     }
 
     private void anim(int movePx) {

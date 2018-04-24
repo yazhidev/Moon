@@ -83,6 +83,7 @@ public class CalendarHelper {
                 });
     }
 
+    //获取不带mc信息的日程数据
     public List<DateBean> getNoInfoDatas(BuildMonthDataHelper buildMonthDataHelper) {
         int year = buildMonthDataHelper.getYear();
         int month = buildMonthDataHelper.getMonth();
@@ -136,6 +137,12 @@ public class CalendarHelper {
         return Observable.create(new ObservableOnSubscribe<BuildMonthDataHelper>() {
             @Override
             public void subscribe(ObservableEmitter<BuildMonthDataHelper> e) throws Exception {
+                if(CalendarInfoCache.getInstance().getMcDataFromApis() == null) {
+                    //未初始化
+                    e.onNext(buildMonthDataHelper);
+                    e.onComplete();
+                    return;
+                }
                 CalendarInfoCache.getInstance().getData(year, month, new DataCallback<List<McDataFromApi>>() {
                     @Override
                     public void onSuccess(List<McDataFromApi> data) {
@@ -155,7 +162,7 @@ public class CalendarHelper {
 
     public Observable<BuildMonthDataHelper> getFinalDate(BuildMonthDataHelper helper) {
         List<McDataFromApi> apiDatas = helper.getApiDatas();
-        if (apiDatas.isEmpty()) {
+        if (apiDatas == null || apiDatas.isEmpty()) {
             return Observable.just(helper);
         } else {
             return Observable.create(new ObservableOnSubscribe<BuildMonthDataHelper>() {
@@ -190,23 +197,48 @@ public class CalendarHelper {
         return Observable.create(new ObservableOnSubscribe<McDataFromApi>() {
             @Override
             public void subscribe(ObservableEmitter<McDataFromApi> e) throws Exception {
+                int nowBuildYear = helper.getYear();
+                int nowBuildMonth = helper.getMonth();
                 int day = mcDataFromApi.getDay();
                 List<DateBean> monthDatas = helper.getMonthDatas();
-                int week = helper.getFirstDayPosition();
-                monthDatas.get(day - 1 + week).setMcType(mcDataFromApi.getAction());
+
+                long thisYearMinTime = CalendarUtil.getTime(nowBuildYear, nowBuildMonth, 1);
+//                long nextMonthTime;
+//                if (nowBuildMonth == 12) {
+//                    nextMonthTime = CalendarUtil.getTime(nowBuildYear + 1, 1, 1);
+//                } else {
+//                    nextMonthTime = CalendarUtil.getTime(nowBuildYear, nowBuildMonth + 1, 1);
+//                }
+
+                if(mcDataFromApi.getMonth() == nowBuildMonth && mcDataFromApi.getYear() == nowBuildYear) {
+                    int week = helper.getFirstDayPosition();
+                    monthDatas.get(day - 1 + week).setMcType(mcDataFromApi.getAction());
+                } else if(mcDataFromApi.getTime() < thisYearMinTime){
+                    //上个月的数据
+                    if(mcDataFromApi.getAction() == TypeConstant.MC_COME) {
+                        helper.setLastComeDay(0);
+                    }
+                    e.onNext(mcDataFromApi);
+                    e.onComplete();
+                    return;
+                } else {
+                    //下个月数据
+                    day = Integer.MAX_VALUE;
+                }
                 if(mcDataFromApi.getAction() == TypeConstant.MC_COME) {
                     helper.setLastComeDay(mcDataFromApi.getDay());
                     e.onNext(mcDataFromApi);
                     e.onComplete();
                 } else if(mcDataFromApi.getAction() == TypeConstant.MC_GO) {
                     //如果是去，需要往前设置所有上一次来之前的日期中间状态
+                    int finalDay = day;
                     Observable.fromIterable(monthDatas)
                             .filter(new Predicate<DateBean>() {
                                 @Override
                                 public boolean test(DateBean dateBean) throws Exception {
                                     return dateBean.getType() == TypeConstant.CALENDAR_THIS_MONTH
-                                            && helper.getLastComeDay() > 0
-                                            && dateBean.getDate()[2] < day
+                                            && helper.getLastComeDay() >= 0
+                                            && dateBean.getDate()[2] < finalDay
                                             && dateBean.getDate()[2] > helper.getLastComeDay();
                                 }
                             })

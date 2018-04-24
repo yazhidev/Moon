@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 
 /**
  * Created by zengyazhi on 2018/3/22.
@@ -111,6 +112,7 @@ public class Calendarview extends ViewPager {
 
     /**
      * 刷新某一天的view
+     *
      * @param date
      */
     public void refreshViewByDateBean(DateBean date) {
@@ -119,12 +121,16 @@ public class Calendarview extends ViewPager {
     }
 
     public void rebuildView() {
-        MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
-        monthView.startBuildData();
+        SparseArray<MonthView> views = mPagerAdapter.getViews();
+        for (int i = 0, nsize = views.size(); i < nsize; i++) {
+            MonthView view = views.valueAt(i);
+            view.startBuildData();
+        }
     }
 
     /**
      * 刷新某个月份
+     *
      * @param position
      */
     private void refreshMonthViewByPosition(int position) {

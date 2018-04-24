@@ -84,10 +84,10 @@ public class CalendarUtil {
         calendar.set(year, month, 1);
 //        return calendar.get(Calendar.DAY_OF_WEEK) - 1;
         int i = calendar.get(Calendar.DAY_OF_WEEK);
-        if(i == 1) {
+        if (i == 1) {
             return 6;
         } else {
-            return i -2;
+            return i - 2;
         }
     }
 
@@ -208,6 +208,11 @@ public class CalendarUtil {
 
     public static int getTextSize(Context context, int size) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, size, context.getResources().getDisplayMetrics());
+    }
 
+    public static long getTime(int year, int month, int day) {
+        Calendar instance = Calendar.getInstance();
+        instance.set(year, month - 1, day);
+        return instance.getTime().getTime() / 1000;
     }
 }

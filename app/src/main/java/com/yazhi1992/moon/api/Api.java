@@ -1340,6 +1340,48 @@ public class Api {
 
     /**
      * 获取mc数据列表
+     * @param callback
+     */
+    public void getAllMcRecord(DataCallback<List<McDataFromApi>> callback) {
+        User userDao = new UserDaoUtil().getUserDao();
+        AVObject userObj = null;
+        if (userDao.getGender() == TypeConstant.MEN) {
+            //获取另一半
+            String loverId = userDao.getLoverId();
+            userObj = getUserObj(loverId);
+        } else {
+            //获取自己
+            userObj = getUserObj(userDao.getObjectId());
+        }
+        AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
+        mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
+        mcQuery.addAscendingOrder(TableConstant.MC.TIME); //按照时间排序
+        mcQuery.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        List<McDataFromApi> dataList = new ArrayList<>();
+                        for (AVObject object : list) {
+                            long time = object.getLong(TableConstant.MC.TIME);
+                            int year = object.getInt(TableConstant.MC.YEAR);
+                            int month = object.getInt(TableConstant.MC.MONTH);
+                            int day = object.getInt(TableConstant.MC.DAY);
+                            int action = object.getInt(TableConstant.MC.ACTION);
+                            McDataFromApi mcDataFromApi = new McDataFromApi(time, year, month, day, action);
+                            dataList.add(mcDataFromApi);
+                        }
+                        callback.onSuccess(dataList);
+                    }
+                });
+            }
+        });
+    }
+
+
+    /**
+     * 获取mc数据列表
      * @param lastTime 第一次传0
      * @param size
      * @param callback

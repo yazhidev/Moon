@@ -73,4 +73,8 @@ public class McDetailPresenter {
     public void getLatestMcRecord(DataCallback<McDataFromApi> callback) {
         Api.getInstance().getLatestMcRecord(callback);
     }
+
+    public void getAllMcRecord(DataCallback<List<McDataFromApi>> callback) {
+        Api.getInstance().getAllMcRecord(callback);
+    }
 }

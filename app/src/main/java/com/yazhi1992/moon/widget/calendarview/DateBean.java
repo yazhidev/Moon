@@ -50,9 +50,7 @@ public class DateBean {
     }
 
     private long getTimeFromStr(int year, int month, int day) {
-        Calendar instance = Calendar.getInstance();
-        instance.set(year, month - 1, day);
-        return instance.getTime().getTime() / 1000;
+        return CalendarUtil.getTime(year, month, day);
     }
 
     public int getType() {
