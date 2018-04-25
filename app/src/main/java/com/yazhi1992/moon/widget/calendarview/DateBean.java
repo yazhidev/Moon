@@ -1,13 +1,6 @@
 package com.yazhi1992.moon.widget.calendarview;
 
-import android.support.annotation.IntDef;
-import android.util.Log;
-
 import com.yazhi1992.moon.constant.TypeConstant;
-import com.zhihu.matisse.internal.ui.PreviewItemFragment;
-
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by zengyazhi on 2018/3/21.
@@ -19,6 +12,15 @@ public class DateBean {
     private int type; //0上月，1本月，2下月
     private int mcType; //1来，2走, 3中间（不可更改状态）
     private boolean clicked;
+    private boolean isToday;
+
+    public boolean isToday() {
+        return isToday;
+    }
+
+    public void setToday(boolean today) {
+        isToday = today;
+    }
 
     public boolean isClicked() {
         return clicked;

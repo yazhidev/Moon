@@ -1,16 +1,12 @@
 package com.yazhi1992.moon.widget.calendarview;
 
-import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.ui.mc.McDataFromApi;
-import com.yazhi1992.moon.ui.mc.McDetailPresenter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -124,7 +120,10 @@ public class CalendarHelper {
             datas.add(initDateBean(year, month, i + 1, TypeConstant.CALENDAR_THIS_MONTH));
         }
 
-        for (int i = 0; i < 7 * getMonthRows(year, month) - currentMonthDays - week; i++) {
+//        for (int i = 0; i < 7 * getMonthRows(year, month) - currentMonthDays - week; i++) {
+//            datas.add(initDateBean(nextYear, nextMonth, i + 1, TypeConstant.CALENDAR_NEXT_MONTH));
+//        }
+        for (int i = 0; i < 7 * 6 - currentMonthDays - week; i++) {
             datas.add(initDateBean(nextYear, nextMonth, i + 1, TypeConstant.CALENDAR_NEXT_MONTH));
         }
 

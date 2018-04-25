@@ -17,10 +17,17 @@
         android:layout_height="match_parent"
         tools:context="com.yazhi1992.moon.ui.mc.McActivity">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/toolbar"
+            android:layout_width="match_parent"
+            app:title="@string/mc_name"></android.support.v7.widget.Toolbar>
+
         <com.yazhi1992.moon.widget.calendarview.WeekView
             android:id="@+id/week"
+            android:layout_below="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="30dp"/>
 
         <com.yazhi1992.moon.widget.calendarview.Calendarview
             android:id="@+id/calendar"
@@ -30,6 +37,7 @@
 
         <RelativeLayout
             android:id="@+id/rl"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/calendar">

@@ -44,12 +44,11 @@ public class TypeConstant {
     @IntDef({MC_COME, MC_GO})
     public @interface McAction {}
 
-    public static final int NORMAL = 0;
     public static final int MC_MIDDLE = 3;
     public static final int CLICKED = 4;
     public static final int TODAY = 5; //今天
 
-    @IntDef({MC_COME, MC_GO, MC_MIDDLE, NORMAL, CLICKED, TODAY})
+    @IntDef({MC_COME, MC_GO, MC_MIDDLE, MC_NORMAL, CLICKED, TODAY})
     public @interface MC_VIEW_TYPE {
     }
 

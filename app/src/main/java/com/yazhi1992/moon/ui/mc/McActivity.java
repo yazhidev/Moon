@@ -3,7 +3,6 @@ package com.yazhi1992.moon.ui.mc;
 import android.animation.ObjectAnimator;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -11,8 +10,9 @@ import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.TypeConstant;
-import com.yazhi1992.moon.databinding.ActivityTestBinding;
+import com.yazhi1992.moon.databinding.ActivityMcBinding;
 import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.widget.calendarview.CalendarInfoCache;
 import com.yazhi1992.moon.widget.calendarview.Calendarview;
 import com.yazhi1992.moon.widget.calendarview.DateBean;
@@ -24,22 +24,23 @@ import com.yazhi1992.yazhilib.utils.LibUtils;
 import java.util.List;
 
 @Route(path = ActivityRouter.NEW_MC_DETAIL)
-public class McActivity extends AppCompatActivity {
+public class McActivity extends BaseActivity {
 
-    private ActivityTestBinding mBinding;
+    private ActivityMcBinding mBinding;
     private DateBean mDateBean;
     private Calendarview mCalendarView;
     private McDetailPresenter mPresenter = new McDetailPresenter();
     private McModel mModel = new McModel();
-    private int mLastTime;
-    private int size = 10;
 
     // TODO: 2018/4/6
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_test);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_mc);
+
+        initToolBar(mBinding.toolbar);
+
         mModel.mGender.set(new UserDaoUtil().getUserDao().getGender());
         mBinding.setItem(mModel);
 
@@ -75,22 +76,6 @@ public class McActivity extends AppCompatActivity {
             }
 
         });
-//
-//        mBinding.rbCome.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mDateBean.setMcType(TypeConstant.MC_COME);
-//                mCalendarView.refreshViewByDateBean(mDateBean);
-//            }
-//        });
-//
-//        mBinding.rbGo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mDateBean.setMcType(TypeConstant.MC_GO);
-//                mCalendarView.refreshViewByDateBean(mDateBean);
-//            }
-//        });
 
         mBinding.btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,21 +126,6 @@ public class McActivity extends AppCompatActivity {
                 mModel.data.set(mDateBean);
             }
         });
-
-
-
-//
-//        mPresenter.getAllMcRecord(new DataCallback<List<McDataFromApi>>() {
-//            @Override
-//            public void onSuccess(List<McDataFromApi> data) {
-//                mCalendarView.rebuildView();
-//            }
-//
-//            @Override
-//            public void onFailed(int code, String msg) {
-//
-//            }
-//        });
     }
 
     @Override

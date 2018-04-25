@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.yazhi1992.moon.R;
+
 public class WeekView extends View {
 
     private String[] weekArray = {"一", "二", "三", "四", "五", "六", "日"};
@@ -90,12 +92,17 @@ public class WeekView extends View {
         int width = getWidth();
         int height = getHeight();
         int itemWidth = width / 7;
-
+        canvas.drawColor(Color.parseColor("#f5f5f5"));
         for (int i = 0; i < weekArray.length; i++) {
             String text = weekArray[i];
             int textWidth = (int) mPaint.measureText(text);
             int startX = itemWidth * i + (itemWidth - textWidth) / 2;
             int startY = (int) (height / 2 - (mPaint.ascent() + mPaint.descent()) / 2);
+            if(i > 4) {
+                mPaint.setColor(getResources().getColor(R.color.pink));
+            } else {
+                mPaint.setColor(Color.parseColor("#a6a6a6"));
+            }
             canvas.drawText(text, startX, startY, mPaint);
         }
     }

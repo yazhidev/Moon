@@ -34,4 +34,9 @@
     <color name="line">#cccccc</color>
     <color name="light_bg_color">#f0f2f8</color>
 
+    <color name="pink">#f4d3e6</color>
+    <color name="mc_green">#bae4ab</color>
+    <color name="mc_red">#e5797e</color>
+
+
 </resources>

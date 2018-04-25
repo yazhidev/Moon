@@ -90,7 +90,7 @@ public class Calendarview extends ViewPager {
                     int[] lastDate = CalendarUtil.positionToDate(lastPosition, startDate[0], startDate[1]);
                     int lastRows = CalendarUtil.getMonthRows(lastDate[0], lastDate[1]);
                     MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
-                    mMovePx += (currentRows - lastRows) * monthView.getChildWidth();
+                    mMovePx += (currentRows - lastRows) * monthView.getChildHeight();
                     pagerChangeListener.onPageScrollStateChanged(state, mMovePx);
                     Log.e("zyz", date[0] + "-" + date[1] + ":" + currentRows + "===" + lastDate[0] + "-" + lastDate[1] + ":" + lastRows);
                 }
@@ -102,7 +102,7 @@ public class Calendarview extends ViewPager {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (mInitCallback != null) {
-            int rowHeight = w / MonthView.COLUMN;
+            int rowHeight = (int) (w / MonthView.COLUMN * MonthView.HEIGHT_SIZE);
             int currentRows = CalendarUtil.getMonthRows(initDate[0], initDate[1]);
             mMovePx += (currentRows - MonthView.MAXROW) * rowHeight;
             mInitCallback.onInit(initDate, mMovePx);
