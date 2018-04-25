@@ -30,9 +30,18 @@ public class McDetailPresenter {
         Api.getInstance().addMcAction(action, year, month, day, time, new DataCallback<McDataFromApi>() {
             @Override
             public void onSuccess(McDataFromApi data) {
-                CalendarInfoCache.getInstance().addSingleData(data);
-                //添加到缓存中
-                callback.onSuccess(true);
+                CalendarInfoCache.getInstance().addSingleData(data, new DataCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean data) {
+                        //添加到缓存中
+                        callback.onSuccess(true);
+                    }
+
+                    @Override
+                    public void onFailed(int code, String msg) {
+
+                    }
+                });
             }
 
             @Override

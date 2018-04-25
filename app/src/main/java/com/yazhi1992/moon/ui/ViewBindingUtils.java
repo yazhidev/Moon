@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yazhi1992.moon.BaseApplication;
+import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.util.AppUtils;
 import com.yazhi1992.moon.widget.calendarview.DateBean;
@@ -70,18 +71,16 @@ public class ViewBindingUtils {
     }
 
     @BindingAdapter("mcBtn")
-    public static void srcCompat(Button btn, DateBean dateBean) {
+    public static void srcCompat(FloatingActionButton fab, DateBean dateBean) {
         if(dateBean == null) return;
         int mcType = dateBean.getMcType();
         switch (mcType) {
             case TypeConstant.MC_COME:
-                btn.setText("取消来");
-                break;
             case TypeConstant.MC_GO:
-                btn.setText("取消去");
+                fab.setImageResource(R.mipmap.mc_delete);
                 break;
             default:
-                btn.setText("提交选择");
+                fab.setImageResource(R.mipmap.mc_add);
                 break;
         }
     }

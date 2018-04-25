@@ -124,6 +124,9 @@
     <string name="mc_tip_for_woman">最近你可能会感觉心情烦躁。爱就是克制，不要对他乱发脾气哦~</string>
     <string name="mc_gap_day">%s 天</string>
     <string name="comfirm_update_mc">是否更新小姨妈状态？</string>
+    <string name="comfirm_delete_mc">是否移除该状态？</string>
+    <string name="mc_come_item">姨妈来了</string>
+    <string name="mc_go_item">姨妈走了</string>
 
     <string name="man_str">男</string>
     <string name="woman_str">女</string>

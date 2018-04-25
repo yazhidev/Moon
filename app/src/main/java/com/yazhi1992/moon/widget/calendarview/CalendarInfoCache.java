@@ -7,9 +7,7 @@ import com.yazhi1992.moon.ui.mc.McDataFromApi;
 import com.yazhi1992.moon.ui.mc.McDetailPresenter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zengyazhi on 2018/4/5.
@@ -37,7 +35,7 @@ public class CalendarInfoCache {
         return mMcDataFromApis;
     }
 
-    public synchronized void addSingleData(McDataFromApi addData) {
+    public synchronized void addSingleData(McDataFromApi addData, DataCallback<Boolean> callback) {
         getCalendarInfo(new DataCallback<List<McDataFromApi>>() {
             @Override
             public void onSuccess(List<McDataFromApi> data) {
@@ -49,10 +47,17 @@ public class CalendarInfoCache {
                     if (addData.getTime() < CalendarUtil.getTime(year, month, day)) {
                         if(i > 0) {
                             McDataFromApi lastData = data.get(i - 1);
-                            if(lastData.getTime() == addData.getTime()) break;
-                            data.add(i, addData);
+                            if(lastData.getTime() == addData.getTime()) {
+                                //已有，不用添加
+                                callback.onSuccess(true);
+                                break;
+                            } else {
+                                data.add(i, addData);
+                                callback.onSuccess(true);
+                            }
                         } else {
                             data.add(0, addData);
+                            callback.onSuccess(true);
                             break;
                         }
                     }

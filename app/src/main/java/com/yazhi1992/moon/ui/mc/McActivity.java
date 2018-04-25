@@ -11,8 +11,10 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.ActivityMcBinding;
+import com.yazhi1992.moon.dialog.ItemsDialog;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
+import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.widget.calendarview.CalendarInfoCache;
 import com.yazhi1992.moon.widget.calendarview.Calendarview;
 import com.yazhi1992.moon.widget.calendarview.DateBean;
@@ -21,6 +23,7 @@ import com.yazhi1992.moon.widget.calendarview.OnPagerChangeListener;
 import com.yazhi1992.moon.widget.calendarview.OnSingleChooseListener;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Route(path = ActivityRouter.NEW_MC_DETAIL)
@@ -31,7 +34,7 @@ public class McActivity extends BaseActivity {
     private Calendarview mCalendarView;
     private McDetailPresenter mPresenter = new McDetailPresenter();
     private McModel mModel = new McModel();
-
+    private ItemsDialog mAddDialog;
     // TODO: 2018/4/6
 
     @Override
@@ -64,6 +67,18 @@ public class McActivity extends BaseActivity {
             }
         });
 
+        mCalendarView.setSingleChooseListener(new OnSingleChooseListener() {
+            @Override
+            public void onSingleChoose(View view, DateBean date, int position) {
+                mBinding.mcFab.setVisibility(View.VISIBLE);
+                if(!mBinding.mcFab.isShown()) {
+                    mBinding.mcFab.show();
+                }
+                mDateBean = date;
+                mModel.data.set(mDateBean);
+            }
+        });
+
         mCalendarView.setPagerChangeListener(new OnPagerChangeListener() {
             @Override
             public void onPagerChanged(int[] date) {
@@ -84,46 +99,68 @@ public class McActivity extends BaseActivity {
                 DateBean dateBean = mModel.data.get();
                 int type = dateBean.getMcType();
                 if(type == TypeConstant.MC_COME || type == TypeConstant.MC_GO) {
-                    //本来就是来或去状态，则点击按钮移除现有状态
-                    mPresenter.removeMcAction(mDateBean.getDate()[0], mDateBean.getDate()[1], mDateBean.getDate()[2], new DataCallback<Boolean>() {
-                        @Override
-                        public void onSuccess(Boolean data) {
-                            LibUtils.showToast("remove suc");
-                            mCalendarView.rebuildView();
-                        }
 
-                        @Override
-                        public void onFailed(int code, String msg) {
-                            LibUtils.showToast("remove onFailed");
-                        }
-                    });
                 } else {
-                    //根据radiobutton提交状态
-                    mPresenter.addMcAction(mBinding.rbCome.isChecked() ? TypeConstant.MC_COME: TypeConstant.MC_GO
-                            , mDateBean.getDate()[0]
-                            , mDateBean.getDate()[1]
-                            , mDateBean.getDate()[2]
-                            , mDateBean.getTime(), new DataCallback<Boolean>() {
+
+                }
+            }
+        });
+
+        mBinding.mcFab.setOnClickListener(v -> {
+            switch (mDateBean.getMcType()) {
+                case TypeConstant.MC_COME:
+                case TypeConstant.MC_GO:
+                    //删除
+                    TipDialogHelper.getInstance().showDialog(this, getString(R.string.comfirm_delete_mc), new TipDialogHelper.OnComfirmListener() {
+                        @Override
+                        public void comfirm() {
+                            //本来就是来或去状态，则点击按钮移除现有状态
+                            mPresenter.removeMcAction(mDateBean.getDate()[0], mDateBean.getDate()[1], mDateBean.getDate()[2], new DataCallback<Boolean>() {
                                 @Override
                                 public void onSuccess(Boolean data) {
-                                    LibUtils.showToast("add suc");
+                                    LibUtils.showToast("remove suc");
+                                    // TODO: 2018/4/25 修改为不需要每次 rebuild 都重新构造数据、重新addview
                                     mCalendarView.rebuildView();
                                 }
 
                                 @Override
                                 public void onFailed(int code, String msg) {
-                                    LibUtils.showToast("add onFailed");
+                                    LibUtils.showToast("remove onFailed");
                                 }
                             });
-                }
-            }
-        });
+                        }
+                    });
+                    break;
+                default:
+                    if(mAddDialog == null) {
+                        ArrayList<String> items = new ArrayList<>();
+                        items.add(getString(R.string.mc_come_item));
+                        items.add(getString(R.string.mc_go_item));
+                        mAddDialog = ItemsDialog.getInstance(items, new ItemsDialog.OnClickItemListener() {
+                            @Override
+                            public void onClick(int position) {
+                                //根据radiobutton提交状态
+                                mPresenter.addMcAction(position == 0 ? TypeConstant.MC_COME: TypeConstant.MC_GO
+                                        , mDateBean.getDate()[0]
+                                        , mDateBean.getDate()[1]
+                                        , mDateBean.getDate()[2]
+                                        , mDateBean.getTime(), new DataCallback<Boolean>() {
+                                            @Override
+                                            public void onSuccess(Boolean data) {
+                                                LibUtils.showToast("add suc");
+                                                mCalendarView.rebuildView();
+                                            }
 
-        mCalendarView.setSingleChooseListener(new OnSingleChooseListener() {
-            @Override
-            public void onSingleChoose(View view, DateBean date, int position) {
-                mDateBean = date;
-                mModel.data.set(mDateBean);
+                                            @Override
+                                            public void onFailed(int code, String msg) {
+                                                LibUtils.showToast("add onFailed");
+                                            }
+                                        });
+                            }
+                        });
+                    }
+                    mAddDialog.show(getFragmentManager());
+                    break;
             }
         });
     }
