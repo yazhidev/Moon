@@ -48,36 +48,6 @@
                 android:layout_height="50dp"
                 android:gravity="center"/>
 
-            <Button
-                android:id="@+id/btn_update"
-                android:visibility="@{item.mGender == 1 ? View.GONE : View.VISIBLE}"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@+id/tv"
-
-                android:gravity="center"/>
-
-            <RadioGroup
-                android:visibility="@{item.mGender == 1 ? View.GONE : View.VISIBLE}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/btn_update">
-
-                <RadioButton
-                    android:id="@+id/rbCome"
-                    android:checked="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="来"/>
-
-                <RadioButton
-                    android:id="@+id/rbGo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="走"/>
-
-            </RadioGroup>
-
         </RelativeLayout>
 
         <android.support.design.widget.FloatingActionButton

@@ -70,7 +70,12 @@ public class MonthView extends ViewGroup {
         this.dates = dates;
 
         if (getChildCount() > 0) {
-            removeAllViews();
+            for (int i = 0; i < getChildCount(); i++) {
+                DayView childAt = (DayView) getChildAt(i);
+                childAt.setDataBean(dates.get(i));
+                childAt.postInvalidate();
+            }
+            return;
         }
 
         int[] currentDate = CalendarUtil.getCurrentDate();

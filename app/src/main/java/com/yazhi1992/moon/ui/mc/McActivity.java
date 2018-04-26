@@ -92,20 +92,6 @@ public class McActivity extends BaseActivity {
 
         });
 
-        mBinding.btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mBinding.btnUpdate.getText().toString().isEmpty()) return;
-                DateBean dateBean = mModel.data.get();
-                int type = dateBean.getMcType();
-                if(type == TypeConstant.MC_COME || type == TypeConstant.MC_GO) {
-
-                } else {
-
-                }
-            }
-        });
-
         mBinding.mcFab.setOnClickListener(v -> {
             switch (mDateBean.getMcType()) {
                 case TypeConstant.MC_COME:

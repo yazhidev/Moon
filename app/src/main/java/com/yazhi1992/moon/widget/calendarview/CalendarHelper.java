@@ -48,7 +48,9 @@ public class CalendarHelper {
                 .doOnNext(new Consumer<BuildMonthDataHelper>() {
                     @Override
                     public void accept(BuildMonthDataHelper buildMonthDataHelper) throws Exception {
-                        buildMonthDataHelper.setMonthDatas(getNoInfoDatas(buildMonthDataHelper));
+                        int week = CalendarInfoCache.getFirstWeekOfMonth(year, month - 1);
+                        buildMonthDataHelper.setFirstDayPosition(week);
+                        buildMonthDataHelper.setMonthDatas(CalendarInfoCache.getInstance().getDataBeanList(year, month));
                     }
                 })
                 .concatMap(new Function<BuildMonthDataHelper, ObservableSource<BuildMonthDataHelper>>() {
@@ -62,7 +64,6 @@ public class CalendarHelper {
                     @Override
                     public ObservableSource<BuildMonthDataHelper> apply(BuildMonthDataHelper helper) throws Exception {
                         return getFinalDate(helper);
-
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -79,56 +80,6 @@ public class CalendarHelper {
                 });
     }
 
-    //获取不带mc信息的日程数据
-    public List<DateBean> getNoInfoDatas(BuildMonthDataHelper buildMonthDataHelper) {
-        int year = buildMonthDataHelper.getYear();
-        int month = buildMonthDataHelper.getMonth();
-        List<DateBean> datas = new ArrayList<>();
-        int week = getFirstWeekOfMonth(year, month - 1);
-        buildMonthDataHelper.setFirstDayPosition(week);
-
-        int lastYear;
-        int lastMonth;
-        if (month == 1) {
-            lastMonth = 12;
-            lastYear = year - 1;
-        } else {
-            lastMonth = month - 1;
-            lastYear = year;
-        }
-        int lastMonthDays = getMonthDays(lastYear, lastMonth);//上个月总天数
-
-        int currentMonthDays = getMonthDays(year, month);//当前月总天数
-
-        int nextYear;
-        int nextMonth;
-        if (month == 12) {
-            nextMonth = 1;
-            nextYear = year + 1;
-        } else {
-            nextMonth = month + 1;
-            nextYear = year;
-        }
-
-        int index = 0;//周一开始，1周日开始
-
-        for (int i = 0; i < week; i++) {
-            datas.add(initDateBean(lastYear, lastMonth, lastMonthDays - week + 1 + i, TypeConstant.CALENDAR_LAST_MONTH));
-        }
-
-        for (int i = 0; i < currentMonthDays; i++) {
-            datas.add(initDateBean(year, month, i + 1, TypeConstant.CALENDAR_THIS_MONTH));
-        }
-
-//        for (int i = 0; i < 7 * getMonthRows(year, month) - currentMonthDays - week; i++) {
-//            datas.add(initDateBean(nextYear, nextMonth, i + 1, TypeConstant.CALENDAR_NEXT_MONTH));
-//        }
-        for (int i = 0; i < 7 * 6 - currentMonthDays - week; i++) {
-            datas.add(initDateBean(nextYear, nextMonth, i + 1, TypeConstant.CALENDAR_NEXT_MONTH));
-        }
-
-        return datas;
-    }
 
     public Observable<BuildMonthDataHelper> getMonthDataFromApi(BuildMonthDataHelper buildMonthDataHelper) {
         int year = buildMonthDataHelper.getYear();
@@ -264,78 +215,6 @@ public class CalendarHelper {
         });
     }
 
-    /**
-     * 计算当月1号是周几
-     *
-     * @param year
-     * @param month
-     * @return
-     */
-    public int getFirstWeekOfMonth(int year, int month) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, 1);
-//        return calendar.get(Calendar.DAY_OF_WEEK) - 1;
-        int i = calendar.get(Calendar.DAY_OF_WEEK);
-        if (i == 1) {
-            return 6;
-        } else {
-            return i - 2;
-        }
-    }
 
-    private DateBean initDateBean(int year, int month, int day, @TypeConstant.MONTH_TYPE int type) {
-        DateBean dateBean = new DateBean();
-        dateBean.setDate(year, month, day);
-        dateBean.setType(type);
-        return dateBean;
-    }
 
-    /**
-     * 计算指定月份的天数
-     *
-     * @param year
-     * @param month
-     * @return
-     */
-    public static int getMonthDays(int year, int month) {
-        switch (month) {
-            case 1:
-            case 3:
-            case 5:
-            case 7:
-            case 8:
-            case 10:
-            case 12:
-                return 31;
-            case 4:
-            case 6:
-            case 9:
-            case 11:
-                return 30;
-            case 2:
-                if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
-                    return 29;
-                } else {
-                    return 28;
-                }
-            default:
-                return -1;
-        }
-    }
-
-    /**
-     * 计算当前月需要显示几行
-     *
-     * @param year
-     * @param month
-     * @return
-     */
-    public int getMonthRows(int year, int month) {
-        int items = getFirstWeekOfMonth(year, month - 1) + getMonthDays(year, month);
-        int rows = items % 7 == 0 ? items / 7 : (items / 7) + 1;
-//        if (rows == 4) {
-//            rows = 5;
-//        }
-        return rows;
-    }
 }

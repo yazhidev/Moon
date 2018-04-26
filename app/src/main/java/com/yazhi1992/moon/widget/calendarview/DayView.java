@@ -111,16 +111,18 @@ public class DayView extends View {
         canvas.drawRoundRect(mRect, mRadius, mRadius, mPaint);
         if (mDateBean != null) {
             //绘制日期文字
-            setPaintTextColor();
-            mPaint.setTextSize(mTextSize);
-            String textStr = String.valueOf(mDateBean.getDate()[2]);
-            float textHeight = Math.abs(mPaint.ascent());
-            canvas.drawText(textStr, mTextMargin + mMargin, textHeight + mTextMargin + mMargin, mPaint);
-            if (mDateBean.isToday()) {
-                String todayStr = "今天";
-                mPaint.setTextSize(mTodayTextSize);
-                float textWidth = mPaint.measureText(todayStr);
-                canvas.drawText(todayStr, width - mMargin - textWidth - mTodayTextRightMargin, height - mMargin - mTodayTextBottomMargin, mPaint);
+            if(mDateBean.getType() == 1) {
+                setPaintTextColor();
+                mPaint.setTextSize(mTextSize);
+                String textStr = String.valueOf(mDateBean.getDate()[2]);
+                float textHeight = Math.abs(mPaint.ascent());
+                canvas.drawText(textStr, mTextMargin + mMargin, textHeight + mTextMargin + mMargin, mPaint);
+                if (mDateBean.isToday()) {
+                    String todayStr = "今天";
+                    mPaint.setTextSize(mTodayTextSize);
+                    float textWidth = mPaint.measureText(todayStr);
+                    canvas.drawText(todayStr, width - mMargin - textWidth - mTodayTextRightMargin, height - mMargin - mTodayTextBottomMargin, mPaint);
+                }
             }
             //绘制点击状态
             if(mDateBean.isClicked()) {

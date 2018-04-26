@@ -55,8 +55,17 @@ public class McDetailPresenter {
         Api.getInstance().removeMcAction(year, month, day, new DataCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean data) {
-                CalendarInfoCache.getInstance().removeSingleData(year, month, day);
-                callback.onSuccess(true);
+                CalendarInfoCache.getInstance().removeSingleData(year, month, day, new DataCallback<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean data) {
+                        callback.onSuccess(true);
+                    }
+
+                    @Override
+                    public void onFailed(int code, String msg) {
+
+                    }
+                });
             }
 
             @Override
