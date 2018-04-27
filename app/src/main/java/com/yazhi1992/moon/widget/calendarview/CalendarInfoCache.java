@@ -55,15 +55,16 @@ public class CalendarInfoCache {
                             if(lastData.getTime() == addData.getTime()) {
                                 //已有，不用添加
                                 callback.onSuccess(true);
-                                break;
+                                return;
                             } else {
                                 data.add(i, addData);
                                 callback.onSuccess(true);
+                                return;
                             }
                         } else {
                             data.add(0, addData);
                             callback.onSuccess(true);
-                            break;
+                            return;
                         }
                     }
                 }

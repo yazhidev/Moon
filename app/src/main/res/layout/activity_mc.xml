@@ -43,7 +43,9 @@
             android:layout_below="@+id/calendar">
 
             <TextView
+                android:textSize="18sp"
                 android:id="@+id/tv"
+                android:textColor="#a6a6a6"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center"/>

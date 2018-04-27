@@ -7,7 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.event.OnMcStatusChanged;
 import com.yazhi1992.yazhilib.utils.LibUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -75,6 +78,7 @@ public class MonthView extends ViewGroup {
                 childAt.setDataBean(dates.get(i));
                 childAt.postInvalidate();
             }
+            EventBus.getDefault().post(new OnMcStatusChanged());
             return;
         }
 
@@ -104,7 +108,6 @@ public class MonthView extends ViewGroup {
                         if(singleChooseListener != null) {
                             singleChooseListener.onSingleChoose(v, date, finalI);
                         }
-                        LibUtils.showToast(String.valueOf(date.getDate()[2]));
                     }
                 });
             }

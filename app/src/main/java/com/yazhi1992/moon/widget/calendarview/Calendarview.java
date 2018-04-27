@@ -58,6 +58,7 @@ public class Calendarview extends ViewPager {
 
         count = (endDate[0] - startDate[0]) * 12 + endDate[1] - startDate[1] + 1;
         currentPosition = CalendarUtil.dateToPosition(initDate[0], initDate[1], startDate[0], startDate[1]);
+        lastPosition = currentPosition;
         mPagerAdapter = new CalendarPagerAdapter(count, startDate);
         setAdapter(mPagerAdapter);
         setCurrentItem(currentPosition);
@@ -67,9 +68,16 @@ public class Calendarview extends ViewPager {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 refreshMonthViewByPosition(position);
+
                 currentPosition = position;
+                int[] date = CalendarUtil.positionToDate(currentPosition, startDate[0], startDate[1]);
+                int currentRows = CalendarUtil.getMonthRows(date[0], date[1]);
+                int[] lastDate = CalendarUtil.positionToDate(lastPosition, startDate[0], startDate[1]);
+                int lastRows = CalendarUtil.getMonthRows(lastDate[0], lastDate[1]);
+                MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
+                mMovePx += (currentRows - lastRows) * monthView.getChildHeight();
+
                 if (pagerChangeListener != null) {
-                    int[] date = CalendarUtil.positionToDate(position, startDate[0], startDate[1]);
                     pagerChangeListener.onPagerChanged(new int[]{date[0], date[1], 0});
                 }
             }
@@ -81,18 +89,7 @@ public class Calendarview extends ViewPager {
                     lastPosition = currentPosition;
                 }
                 if (state == 0 && pagerChangeListener != null) {
-                    if (lastPosition == currentPosition) {
-                        pagerChangeListener.onPageScrollStateChanged(state, mMovePx);
-                        return;
-                    }
-                    int[] date = CalendarUtil.positionToDate(currentPosition, startDate[0], startDate[1]);
-                    int currentRows = CalendarUtil.getMonthRows(date[0], date[1]);
-                    int[] lastDate = CalendarUtil.positionToDate(lastPosition, startDate[0], startDate[1]);
-                    int lastRows = CalendarUtil.getMonthRows(lastDate[0], lastDate[1]);
-                    MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
-                    mMovePx += (currentRows - lastRows) * monthView.getChildHeight();
                     pagerChangeListener.onPageScrollStateChanged(state, mMovePx);
-                    Log.e("zyz", date[0] + "-" + date[1] + ":" + currentRows + "===" + lastDate[0] + "-" + lastDate[1] + ":" + lastRows);
                 }
             }
         });

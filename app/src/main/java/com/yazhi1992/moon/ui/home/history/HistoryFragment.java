@@ -354,6 +354,9 @@ public class HistoryFragment extends Fragment {
                                     mBinding.smartRefresh.autoRefresh();
                                 } else {
                                     mMultiTypeAdapter.remove(mDeletePosition);
+                                    if(mMultiTypeAdapter.getItems().isEmpty()) {
+                                        mBinding.multiView.showEmpty();
+                                    }
                                 }
                             }
 
@@ -404,6 +407,8 @@ public class HistoryFragment extends Fragment {
 
                     if (data.size() == 0) {
                         mBinding.multiView.showEmpty();
+                    } else {
+                        mBinding.multiView.setVisibility(View.GONE);
                     }
                 }
                 if (data.size() > 0) {

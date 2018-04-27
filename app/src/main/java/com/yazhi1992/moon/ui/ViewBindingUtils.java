@@ -3,6 +3,7 @@ package com.yazhi1992.moon.ui;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -84,7 +85,5 @@ public class ViewBindingUtils {
                 break;
         }
     }
-
-//    public static void transformTimeForMemorialDayInHistory(TextView tv, long time) {
 
 }

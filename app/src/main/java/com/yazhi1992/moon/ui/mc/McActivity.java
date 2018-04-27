@@ -12,8 +12,10 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.ActivityMcBinding;
 import com.yazhi1992.moon.dialog.ItemsDialog;
+import com.yazhi1992.moon.event.OnMcStatusChanged;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
+import com.yazhi1992.moon.ui.ViewBindingUtils;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.widget.calendarview.CalendarInfoCache;
 import com.yazhi1992.moon.widget.calendarview.Calendarview;
@@ -22,6 +24,10 @@ import com.yazhi1992.moon.widget.calendarview.InitCallback;
 import com.yazhi1992.moon.widget.calendarview.OnPagerChangeListener;
 import com.yazhi1992.moon.widget.calendarview.OnSingleChooseListener;
 import com.yazhi1992.yazhilib.utils.LibUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +47,7 @@ public class McActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_mc);
-
+        EventBus.getDefault().register(this);
         initToolBar(mBinding.toolbar);
 
         mModel.mGender.set(new UserDaoUtil().getUserDao().getGender());
@@ -51,7 +57,7 @@ public class McActivity extends BaseActivity {
         mCalendarView.setInitCallback(new InitCallback() {
             @Override
             public void onInit(int[] date, int movePx) {
-                mBinding.tv.setText(date[0] + "-" + date[1]);
+                mBinding.tv.setText(date[0] + "年" + date[1] + "月");
                 anim(movePx);
                 CalendarInfoCache.getInstance().getData(date[0], date[1], new DataCallback<List<McDataFromApi>>() {
                     @Override
@@ -104,7 +110,6 @@ public class McActivity extends BaseActivity {
                             mPresenter.removeMcAction(mDateBean.getDate()[0], mDateBean.getDate()[1], mDateBean.getDate()[2], new DataCallback<Boolean>() {
                                 @Override
                                 public void onSuccess(Boolean data) {
-                                    LibUtils.showToast("remove suc");
                                     // TODO: 2018/4/25 修改为不需要每次 rebuild 都重新构造数据、重新addview
                                     mCalendarView.rebuildView();
                                 }
@@ -133,7 +138,6 @@ public class McActivity extends BaseActivity {
                                         , mDateBean.getTime(), new DataCallback<Boolean>() {
                                             @Override
                                             public void onSuccess(Boolean data) {
-                                                LibUtils.showToast("add suc");
                                                 mCalendarView.rebuildView();
                                             }
 
@@ -155,11 +159,17 @@ public class McActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         CalendarInfoCache.getInstance().reset();
+        EventBus.getDefault().unregister(this);
     }
 
     private void anim(int movePx) {
         ObjectAnimator valueAnimator = ObjectAnimator.ofFloat(mBinding.rl, "translationY", movePx);
         valueAnimator.setDuration(500);
         valueAnimator.start();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMcStatusChanged(OnMcStatusChanged bean) {
+        ViewBindingUtils.srcCompat(mBinding.mcFab, mDateBean);
     }
 }

@@ -1,6 +1,7 @@
 package com.yazhi1992.moon.widget.calendarview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -10,6 +11,7 @@ import android.view.View;
 
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.TypeConstant;
+import com.yazhi1992.yazhilib.utils.LibBitmapUtil;
 import com.yazhi1992.yazhilib.utils.LibCalcUtil;
 
 /**
@@ -18,7 +20,6 @@ import com.yazhi1992.yazhilib.utils.LibCalcUtil;
 
 public class DayView extends View {
 
-    public int mMcType = TypeConstant.MC_NORMAL;
     private Paint mPaint;
     private Context mContext;
     private int mTextSize;//文字尺寸
@@ -26,6 +27,8 @@ public class DayView extends View {
     private int mTextMargin; //日期的左、上margin
     private int mTodayTextRightMargin;  //今天 文字的右margin
     private int mTodayTextBottomMargin;  //今天 文字的下margin
+    private int mBitmapLeftMargin;  //图片的左margin
+    private int mBitmapBottomMargin;  //图片的下margin
     private int mPaintWidth;
     private int mRadius;
     private int mMargin;
@@ -43,7 +46,9 @@ public class DayView extends View {
         mMargin = (int) LibCalcUtil.dp2px(context, 1);
         mTextMargin = (int) LibCalcUtil.dp2px(context, 6);
         mTodayTextRightMargin = (int) LibCalcUtil.dp2px(context, 4);
-        mTodayTextBottomMargin = (int) LibCalcUtil.dp2px(context, 4);
+        mTodayTextBottomMargin = (int) LibCalcUtil.dp2px(context, 6);
+        mBitmapLeftMargin = (int) LibCalcUtil.dp2px(context, 6);
+        mBitmapBottomMargin = (int) LibCalcUtil.dp2px(context, 4);
         mTextSize = (int) LibCalcUtil.dp2px(context, 16);
         mTodayTextSize = (int) LibCalcUtil.dp2px(context, 12);
         mPaintWidth = (int) LibCalcUtil.dp2px(context, 1);
@@ -59,12 +64,15 @@ public class DayView extends View {
 
     public void setDataBean(DateBean dataBean) {
         mDateBean = dataBean;
-        mMcType = dataBean.getMcType();
         postInvalidate();
     }
 
     private void setBgPaintColor() {
-        switch (mMcType) {
+        if (mDateBean == null) {
+            mPaint.setColor(getResources().getColor(R.color.white));
+            return;
+        }
+        switch (mDateBean.getMcType()) {
             case TypeConstant.MC_COME:
             case TypeConstant.MC_GO:
             case TypeConstant.MC_MIDDLE:
@@ -77,7 +85,7 @@ public class DayView extends View {
     }
 
     private void setPaintTextColor() {
-        switch (mMcType) {
+        switch (mDateBean.getMcType()) {
             case TypeConstant.MC_COME:
             case TypeConstant.MC_GO:
             case TypeConstant.MC_MIDDLE:
@@ -90,7 +98,7 @@ public class DayView extends View {
     }
 
     private void setClickedColor() {
-        mPaint.setColor(getResources().getColor(R.color.mc_red));
+        mPaint.setColor(getResources().getColor(R.color.red_pressed));
     }
 
     @Override
@@ -111,7 +119,8 @@ public class DayView extends View {
         canvas.drawRoundRect(mRect, mRadius, mRadius, mPaint);
         if (mDateBean != null) {
             //绘制日期文字
-            if(mDateBean.getType() == 1) {
+            if (mDateBean.getType() == 1) {
+                //本月，绘制日期文字
                 setPaintTextColor();
                 mPaint.setTextSize(mTextSize);
                 String textStr = String.valueOf(mDateBean.getDate()[2]);
@@ -124,8 +133,17 @@ public class DayView extends View {
                     canvas.drawText(todayStr, width - mMargin - textWidth - mTodayTextRightMargin, height - mMargin - mTodayTextBottomMargin, mPaint);
                 }
             }
+            //绘制来/去小图标
+            int mcType = mDateBean.getMcType();
+            if (mcType == TypeConstant.MC_COME || mcType == TypeConstant.MC_GO) {
+                int widthValue = (int) (height * 0.25);
+                Bitmap bitmap = LibBitmapUtil.getBitmap(mContext, widthValue, widthValue, mcType == TypeConstant.MC_GO ? R.mipmap.mc_pause : R.mipmap.mc_play);
+                canvas.drawBitmap(bitmap, mMargin + mBitmapLeftMargin, height - mMargin - mBitmapBottomMargin - widthValue, mPaint);
+            } else {
+
+            }
             //绘制点击状态
-            if(mDateBean.isClicked()) {
+            if (mDateBean.isClicked()) {
                 setClickedColor();
                 mPaint.setStyle(Paint.Style.STROKE);
                 canvas.drawRoundRect(mRect, mRadius, mRadius, mPaint);
