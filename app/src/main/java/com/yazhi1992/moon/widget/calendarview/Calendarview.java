@@ -25,6 +25,7 @@ public class Calendarview extends ViewPager {
     private OnSingleChooseListener singleChooseListener;
     private int mMovePx;
     private InitCallback mInitCallback;
+    private boolean mClickble;
 
     public void setInitCallback(InitCallback initCallback) {
         mInitCallback = initCallback;
@@ -59,7 +60,7 @@ public class Calendarview extends ViewPager {
         count = (endDate[0] - startDate[0]) * 12 + endDate[1] - startDate[1] + 1;
         currentPosition = CalendarUtil.dateToPosition(initDate[0], initDate[1], startDate[0], startDate[1]);
         lastPosition = currentPosition;
-        mPagerAdapter = new CalendarPagerAdapter(count, startDate);
+        mPagerAdapter = new CalendarPagerAdapter(mClickble, count, startDate);
         setAdapter(mPagerAdapter);
         setCurrentItem(currentPosition);
         addOnPageChangeListener(new SimpleOnPageChangeListener() {
@@ -95,6 +96,22 @@ public class Calendarview extends ViewPager {
         });
     }
 
+    public boolean isClickble() {
+        return mClickble;
+    }
+
+    public void setClickble(boolean clickble) {
+        mClickble = clickble;
+        if(mPagerAdapter != null) {
+            mPagerAdapter.setClickble(clickble);
+        }
+        SparseArray<MonthView> views = mPagerAdapter.getViews();
+        for (int i = 0, nsize = views.size(); i < nsize; i++) {
+            MonthView view = views.valueAt(i);
+            view.setClickble(clickble);
+        }
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -105,16 +122,6 @@ public class Calendarview extends ViewPager {
             mInitCallback.onInit(initDate, mMovePx);
             Log.e("zyz", mMovePx + ":" + currentRows + "=== onSizeChanged");
         }
-    }
-
-    /**
-     * 刷新某一天的view
-     *
-     * @param date
-     */
-    public void refreshViewByDateBean(DateBean date) {
-        MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
-        monthView.fresh(date);
     }
 
     public void rebuildView() {

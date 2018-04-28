@@ -30,9 +30,9 @@ public class MonthView extends ViewGroup {
     private int nextMonthDays;//记录当月显示的下个月天数
     private Context mContext;
     List<DateBean> dates;
-
     private int year;
     private int month;
+    private boolean mClickble;
 
     public MonthView(Context context) {
         this(context, null);
@@ -42,6 +42,11 @@ public class MonthView extends ViewGroup {
         super(context, attrs);
         mContext = context;
         setBackgroundColor(Color.parseColor("#efefef"));
+    }
+
+    public MonthView(boolean clickble, Context context) {
+        super(context);
+        mClickble = clickble;
     }
 
     public void setBuildInfo(int year, int month, int currentMonthDays) {
@@ -63,6 +68,10 @@ public class MonthView extends ViewGroup {
                 LibUtils.showToast(msg);
             }
         });
+    }
+
+    public void setClickble(boolean clickble) {
+        mClickble = clickble;
     }
 
     /**
@@ -91,21 +100,23 @@ public class MonthView extends ViewGroup {
             if (date.getType() == 1) {
                 view.setTag(date.getDate()[2]);
                 int finalI = i;
-                if(currentDate[0] == date.getDate()[0]
-                        &&currentDate[1] == date.getDate()[1]
-                        &&currentDate[2] == date.getDate()[2]) {
+                if (currentDate[0] == date.getDate()[0]
+                        && currentDate[1] == date.getDate()[1]
+                        && currentDate[2] == date.getDate()[2]) {
                     date.setToday(true);
                 }
                 view.setDataBean(date);
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mOnSingleChooseListener != null) {
+                        if (!mClickble) return;
+
+                        if (mOnSingleChooseListener != null) {
                             mOnSingleChooseListener.onSingleChoose(v, date, finalI);
                         }
                         Calendarview parent = (Calendarview) getParent();
                         OnSingleChooseListener singleChooseListener = parent.getSingleChooseListener();
-                        if(singleChooseListener != null) {
+                        if (singleChooseListener != null) {
                             singleChooseListener.onSingleChoose(v, date, finalI);
                         }
                     }
@@ -177,7 +188,7 @@ public class MonthView extends ViewGroup {
     }
 
     private void freshView(DayView destView, DateBean date) {
-       destView.setDataBean(date);
+        destView.setDataBean(date);
     }
 
     /**
@@ -189,7 +200,7 @@ public class MonthView extends ViewGroup {
     private View findDestView(int day) {
         View view = null;
         for (int i = lastMonthDays; i < getChildCount() - nextMonthDays; i++) {
-            if(getChildAt(i).getTag() != null && (Integer)getChildAt(i).getTag()  == day) {
+            if (getChildAt(i).getTag() != null && (Integer) getChildAt(i).getTag() == day) {
                 view = getChildAt(i);
                 break;
             }

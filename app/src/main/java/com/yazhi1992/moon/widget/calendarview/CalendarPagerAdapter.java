@@ -21,10 +21,12 @@ public class CalendarPagerAdapter extends PagerAdapter {
     private LinkedList<MonthView> cache = new LinkedList<>();
     private DateBean lastClickDate;
     private DayView lastClickedView;//记录上次点击的Item
+    private boolean mClickble;
 
-    public CalendarPagerAdapter(int count, int[] startDate) {
+    public CalendarPagerAdapter(boolean clickble, int count, int[] startDate) {
         this.count = count;
         this.startDate = startDate;
+        this.mClickble = clickble;
     }
 
     @Override
@@ -63,12 +65,17 @@ public class CalendarPagerAdapter extends PagerAdapter {
                 }
             });
         }
+        view.setClickble(mClickble);
         int[] date = CalendarUtil.positionToDate(position, startDate[0], startDate[1]);
         view.setBuildInfo(date[0], date[1], CalendarUtil.getMonthDays(date[0], date[1]));
 //        view.setDateList(CalendarUtil.getMonthDate(date[0], date[1]), CalendarUtil.getMonthDays(date[0], date[1]));
         mViews.put(position, view);
         container.addView(view);
         return view;
+    }
+
+    public void setClickble(boolean clickble) {
+        mClickble = clickble;
     }
 
     @Override

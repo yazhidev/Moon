@@ -54,6 +54,7 @@ public class McActivity extends BaseActivity {
         mBinding.setItem(mModel);
 
         mCalendarView = findViewById(R.id.calendar);
+        mCalendarView.setClickble(mModel.mGender.get() == TypeConstant.WOMEN);
         mCalendarView.setInitCallback(new InitCallback() {
             @Override
             public void onInit(int[] date, int movePx) {
