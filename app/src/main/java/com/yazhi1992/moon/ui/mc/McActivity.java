@@ -147,7 +147,7 @@ public class McActivity extends BaseActivity {
                                                     @Override
                                                     public void onSuccess(Boolean data) {
                                                         mCalendarView.rebuildView();
-                                                        LibUtils.showToast(McActivity.this, position == 1 ? getString(R.string.add_mc_go_suc) : getString(R.string.add_mc_go_suc));
+                                                        LibUtils.showToast(McActivity.this, position == 1 ? getString(R.string.add_mc_go_suc) : getString(R.string.add_mc_come_suc));
                                                         PushManager.getInstance().pushAction(ActionConstant.UPDATE_MC);
                                                     }
 
