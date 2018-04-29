@@ -2,6 +2,7 @@
 <layout>
 
     <data>
+
         <variable
             name="item"
             type="com.yazhi1992.moon.ui.mc.McModel"></variable>
@@ -25,31 +26,32 @@
 
         <com.yazhi1992.moon.widget.calendarview.WeekView
             android:id="@+id/week"
-            android:layout_below="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp"
+            android:layout_below="@+id/toolbar"/>
 
         <com.yazhi1992.moon.widget.calendarview.Calendarview
             android:id="@+id/calendar"
-            android:clickable="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/week"></com.yazhi1992.moon.widget.calendarview.Calendarview>
+            android:layout_below="@+id/week"
+            android:clickable="false"></com.yazhi1992.moon.widget.calendarview.Calendarview>
 
         <RelativeLayout
             android:id="@+id/rl"
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/calendar">
+            android:layout_below="@+id/calendar"
+            android:background="@color/white">
 
             <TextView
-                android:textSize="18sp"
                 android:id="@+id/tv"
-                android:textColor="#a6a6a6"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center"/>
+                android:layout_height="200dp"
+                android:paddingTop="15dp"
+                android:gravity="center_horizontal|top"
+                android:textColor="#a6a6a6"
+                android:textSize="18sp"/>
 
         </RelativeLayout>
 
@@ -60,8 +62,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_gravity="bottom|end"
-            android:visibility="invisible"
             android:layout_margin="@dimen/fab_margin"
+            android:visibility="invisible"
             app:mcBtn="@{item.data}"/>
 
     </RelativeLayout>

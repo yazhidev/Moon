@@ -32,16 +32,6 @@ public class BaseApplication extends Application {
 
     public static BaseApplication context;
 
-    static {
-        //设置全局的Header构建器
-        SmartRefreshLayout.setDefaultRefreshHeaderCreater(new DefaultRefreshHeaderCreater() {
-            @Override
-            public RefreshHeader createRefreshHeader(Context context, RefreshLayout layout) {
-                return new MaterialHeader(context);
-            }
-        });
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();

@@ -480,7 +480,7 @@ public class Api {
      *
      * @param callback
      */
-    public void deleteHistoryData(@TypeConstant.DataTypeInHistory int type, String dataObjId, DataCallback<Boolean> callback) {
+    public void deleteMemorialDayData(@TypeConstant.DataTypeInHistory int type, String dataObjId, DataCallback<Boolean> callback) {
         //先删除对应类型的数据
         String clazzName = null;
         String clazzInhistoryName = null;
@@ -541,7 +541,7 @@ public class Api {
         AVObject data = AVObject.createWithoutData(clazzName, dataObjId);
         String finalClazzInhistoryName = clazzInhistoryName;
         if (type == TypeConstant.TYPE_MC) {
-            //只删除history表数据
+            //男方无权删除女方相关信息，只删除history表数据
             deleteHistoryItemData(finalClazzInhistoryName, data, callback, type);
         } else {
             //先删除关联的表数据，再删除history表数据
@@ -593,7 +593,7 @@ public class Api {
      *
      * @param callback
      */
-    public void deleteHistoryData(String memorialDayId, DataCallback<Boolean> callback) {
+    public void deleteMemorialDayData(String memorialDayId, DataCallback<Boolean> callback) {
         //先查该纪念日在history表中的对应数据
         AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
         AVObject memorialDay = AVObject.createWithoutData(TableConstant.MemorialDay.CLAZZ_NAME, memorialDayId);
@@ -1514,7 +1514,7 @@ public class Api {
     }
 
     //移除mc数据
-    public void removeMcAction(int year, int month, int day, DataCallback<Boolean> callback) {
+    public void deleteMcAction(int year, int month, int day, DataCallback<Boolean> callback) {
         AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
         mcQuery.whereEqualTo(TableConstant.MC.USER, getUserObj(AVUser.getCurrentUser().getObjectId()));
 
@@ -1528,13 +1528,22 @@ public class Api {
         mcQueryDay.whereEqualTo(TableConstant.MC.DAY, day);
 
         AVQuery<AVObject> query = AVQuery.and(Arrays.asList(mcQuery, mcQueryYear, mcQueryMonth, mcQueryDay));
-        query.deleteAllInBackground(new DeleteCallback() {
+        query.getFirstInBackground(new GetCallback<AVObject>() {
             @Override
-            public void done(AVException e) {
+            public void done(AVObject avObject, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        callback.onSuccess(true);
+                        avObject.deleteInBackground();
+                        //先查在history表中的对应数据
+                        AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
+                        loveHistoryQuery.whereEqualTo(TableConstant.LoveHistory.MC, avObject);
+                        loveHistoryQuery.deleteAllInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                callback.onSuccess(true);
+                            }
+                        });
                     }
                 });
             }

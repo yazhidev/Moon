@@ -3,7 +3,6 @@ package com.yazhi1992.moon.ui.mc;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.TypeConstant;
-import com.yazhi1992.moon.viewmodel.McBean;
 import com.yazhi1992.moon.widget.calendarview.CalendarInfoCache;
 
 import java.util.List;
@@ -52,7 +51,7 @@ public class McDetailPresenter {
     }
 
     public void removeMcAction(int year, int month, int day, DataCallback<Boolean> callback) {
-        Api.getInstance().removeMcAction(year, month, day, new DataCallback<Boolean>() {
+        Api.getInstance().deleteMcAction(year, month, day, new DataCallback<Boolean>() {
             @Override
             public void onSuccess(Boolean data) {
                 CalendarInfoCache.getInstance().removeSingleData(year, month, day, new DataCallback<Boolean>() {

@@ -9,6 +9,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.ActivityMcBinding;
 import com.yazhi1992.moon.dialog.ItemsDialog;
@@ -16,6 +17,7 @@ import com.yazhi1992.moon.event.OnMcStatusChanged;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
+import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.widget.calendarview.CalendarInfoCache;
 import com.yazhi1992.moon.widget.calendarview.Calendarview;
@@ -89,7 +91,7 @@ public class McActivity extends BaseActivity {
         mCalendarView.setPagerChangeListener(new OnPagerChangeListener() {
             @Override
             public void onPagerChanged(int[] date) {
-                mBinding.tv.setText(date[0] + "-" + date[1]);
+                mBinding.tv.setText(date[0] + "年" + date[1] + "月");
             }
 
             @Override
@@ -104,7 +106,8 @@ public class McActivity extends BaseActivity {
                 case TypeConstant.MC_COME:
                 case TypeConstant.MC_GO:
                     //删除
-                    TipDialogHelper.getInstance().showDialog(this, getString(R.string.comfirm_delete_mc), new TipDialogHelper.OnComfirmListener() {
+                    String showMsg = String.format(getString(R.string.comfirm_delete_mc), mDateBean.getDate()[0] + "年" + mDateBean.getDate()[1] + "月" + mDateBean.getDate()[2] + "日");
+                    TipDialogHelper.getInstance().showDialog(this, showMsg, new TipDialogHelper.OnComfirmListener() {
                         @Override
                         public void comfirm() {
                             //本来就是来或去状态，则点击按钮移除现有状态
@@ -131,22 +134,30 @@ public class McActivity extends BaseActivity {
                         mAddDialog = ItemsDialog.getInstance(items, new ItemsDialog.OnClickItemListener() {
                             @Override
                             public void onClick(int position) {
-                                //根据radiobutton提交状态
-                                mPresenter.addMcAction(position == 0 ? TypeConstant.MC_COME: TypeConstant.MC_GO
-                                        , mDateBean.getDate()[0]
-                                        , mDateBean.getDate()[1]
-                                        , mDateBean.getDate()[2]
-                                        , mDateBean.getTime(), new DataCallback<Boolean>() {
-                                            @Override
-                                            public void onSuccess(Boolean data) {
-                                                mCalendarView.rebuildView();
-                                            }
+                                String showMsg = String.format(getString(R.string.comfirm_update_mc), mDateBean.getDate()[0] + "年" + mDateBean.getDate()[1] + "月" + mDateBean.getDate()[2] + "日");
+                                TipDialogHelper.getInstance().showDialog(McActivity.this, showMsg, new TipDialogHelper.OnComfirmListener() {
+                                    @Override
+                                    public void comfirm() {
+                                        //根据radiobutton提交状态
+                                        mPresenter.addMcAction(position == 0 ? TypeConstant.MC_COME: TypeConstant.MC_GO
+                                                , mDateBean.getDate()[0]
+                                                , mDateBean.getDate()[1]
+                                                , mDateBean.getDate()[2]
+                                                , mDateBean.getTime(), new DataCallback<Boolean>() {
+                                                    @Override
+                                                    public void onSuccess(Boolean data) {
+                                                        mCalendarView.rebuildView();
+                                                        LibUtils.showToast(McActivity.this, position == 1 ? getString(R.string.add_mc_go_suc) : getString(R.string.add_mc_go_suc));
+                                                        PushManager.getInstance().pushAction(ActionConstant.UPDATE_MC);
+                                                    }
 
-                                            @Override
-                                            public void onFailed(int code, String msg) {
-                                                LibUtils.showToast("add onFailed");
-                                            }
-                                        });
+                                                    @Override
+                                                    public void onFailed(int code, String msg) {
+                                                        LibUtils.showToast("add onFailed");
+                                                    }
+                                                });
+                                    }
+                                });
                             }
                         });
                     }
