@@ -6,7 +6,6 @@
     <string name="upgrade_comfirm">更新</string>
 
     <string name="title_add_memorial">请输入标题</string>
-    <string name="error_invite_num">请确认邀请码是否正确</string>
     <string name="about_us">关于小本本</string>
     <string name="log_out">退出登录</string>
     <string name="version_name">小本本 %s</string>
@@ -25,11 +24,17 @@
     <!--bind-->
     <string name="bind_error_code">请输入正确的邀请码</string>
     <string name="bind_error_code_peer">请输入对方的邀请码</string>
+    <string name="your_bind_code">你的邀请码：</string>
+    <string name="input_peer_code">请输入 ta 的邀请码</string>
     <string name="bind_state_suc">有情人终成眷属</string>
-    <string name="bind_state_single">已有心上人，尚在单相思</string>
-    <string name="bind_state_original">还未添加心上人\n马上拨打电话订购吧！</string>
+    <string name="bind_state_single">等待对方</string>
+    <string name="bind_state_original">还未绑定心上人\n快邀请 ta 下载吧~</string>
     <string name="bind_state_finish">来日方长，请多关照~</string>
     <string name="bind_state_refresh">状态已更新</string>
+    <string name="bind_lover_title">连理</string>
+    <string name="bind_lover">绑定心上人</string>
+    <string name="update_state">更新状态</string>
+    <string name="error_invite_num">请确认邀请码是否正确</string>
 
     <string name="history_comment_empty">还没有输入内容~</string>
 
@@ -69,7 +74,6 @@
     <string name="title_add_text">请输入想说的话</string>
     <string name="add_text_empty">内容不能为空</string>
     <!--add text-->
-
 
     <string name="hope_list_title">愿望清单</string>
     <string name="memorial_day_list_title">我怀念的</string>
@@ -124,7 +128,13 @@
     <string name="mc_tip_for_man">最近她可能会心情烦躁，她也很辛苦的。喜欢才会放肆，要多多体谅她哦~</string>
     <string name="mc_tip_for_woman">最近你可能会感觉心情烦躁。爱就是克制，不要对他乱发脾气哦~</string>
     <string name="mc_gap_day">%s 天</string>
-    <string name="comfirm_update_mc">是否更新小姨妈状态？</string>
+    <string name="comfirm_update_mc">选中日期：%s\n\n是否新增状态？</string>
+    <string name="comfirm_delete_mc">选中日期：%s\n是否移除状态？</string>
+    <string name="mc_come_item">姨妈来了</string>
+    <string name="mc_go_item">姨妈走了</string>
+    <string name="add_mc_go_suc">撒花~愉快地玩耍吧~</string>
+    <string name="add_mc_come_suc">要注意休息，保重身体哦~</string>
+
 
     <string name="man_str">男</string>
     <string name="woman_str">女</string>

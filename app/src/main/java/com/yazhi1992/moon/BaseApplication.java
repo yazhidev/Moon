@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
@@ -32,16 +33,6 @@ import org.greenrobot.eventbus.EventBus;
 public class BaseApplication extends Application {
 
     public static BaseApplication context;
-
-    static {
-        //设置全局的Header构建器
-        SmartRefreshLayout.setDefaultRefreshHeaderCreater(new DefaultRefreshHeaderCreater() {
-            @Override
-            public RefreshHeader createRefreshHeader(Context context, RefreshLayout layout) {
-                return new MaterialHeader(context);
-            }
-        });
-    }
 
     @Override
     public void onCreate() {
@@ -75,6 +66,7 @@ public class BaseApplication extends Application {
         AVOSCloud.initialize(this, BuildConfig.LEAN_CLOUD_ID, BuildConfig.LEAN_CLOUD_KEY);
         // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
         AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
+        AVAnalytics.enableCrashReport(this, true);
 
         PushManager.getInstance().register();
 

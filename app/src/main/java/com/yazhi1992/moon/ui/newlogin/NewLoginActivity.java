@@ -20,6 +20,7 @@ import com.yazhi1992.moon.databinding.ActivityNewLoginBinding;
 import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.event.ChangePwd;
 import com.yazhi1992.moon.event.ChangeUserInfo;
+import com.yazhi1992.moon.event.RegisterEvent;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
@@ -132,4 +133,12 @@ public class NewLoginActivity extends AbsUpgrateActivity {
         LibUtils.showKeyoard(this, mBinding.etPwd);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void changeUserName(RegisterEvent bean) {
+        String oldAccount = LibSPUtils.getString(SPKeyConstant.LOGIN_ACCOUNT, "");
+        if(LibUtils.notNullNorEmpty(oldAccount)) {
+            mBinding.etAccount.setText(oldAccount);
+            mBinding.etAccount.setSelection(oldAccount.length());
+        }
+    }
 }

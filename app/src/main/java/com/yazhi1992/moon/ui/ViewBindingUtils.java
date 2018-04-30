@@ -3,12 +3,17 @@ package com.yazhi1992.moon.ui;
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yazhi1992.moon.BaseApplication;
+import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.util.AppUtils;
+import com.yazhi1992.moon.widget.calendarview.DateBean;
 import com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView;
 import com.yazhi1992.yazhilib.widget.RoundView.RoundRelativeLayout;
 import com.yazhi1992.yazhilib.widget.RoundView.RoundTextView;
@@ -66,6 +71,19 @@ public class ViewBindingUtils {
         btn.setImageDrawable(imageDrawble);
     }
 
-//    public static void transformTimeForMemorialDayInHistory(TextView tv, long time) {
+    @BindingAdapter("mcBtn")
+    public static void srcCompat(FloatingActionButton fab, DateBean dateBean) {
+        if(dateBean == null) return;
+        int mcType = dateBean.getMcType();
+        switch (mcType) {
+            case TypeConstant.MC_COME:
+            case TypeConstant.MC_GO:
+                fab.setImageResource(R.mipmap.mc_delete);
+                break;
+            default:
+                fab.setImageResource(R.mipmap.mc_add);
+                break;
+        }
+    }
 
 }

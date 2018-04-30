@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 
 /**
  * Created by zengyazhi on 2018/3/22.
@@ -24,6 +25,7 @@ public class Calendarview extends ViewPager {
     private OnSingleChooseListener singleChooseListener;
     private int mMovePx;
     private InitCallback mInitCallback;
+    private boolean mClickble;
 
     public void setInitCallback(InitCallback initCallback) {
         mInitCallback = initCallback;
@@ -57,7 +59,8 @@ public class Calendarview extends ViewPager {
 
         count = (endDate[0] - startDate[0]) * 12 + endDate[1] - startDate[1] + 1;
         currentPosition = CalendarUtil.dateToPosition(initDate[0], initDate[1], startDate[0], startDate[1]);
-        mPagerAdapter = new CalendarPagerAdapter(count, startDate);
+        lastPosition = currentPosition;
+        mPagerAdapter = new CalendarPagerAdapter(mClickble, count, startDate);
         setAdapter(mPagerAdapter);
         setCurrentItem(currentPosition);
         addOnPageChangeListener(new SimpleOnPageChangeListener() {
@@ -65,10 +68,17 @@ public class Calendarview extends ViewPager {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                refreshMonthView(position);
+                refreshMonthViewByPosition(position);
+
                 currentPosition = position;
+                int[] date = CalendarUtil.positionToDate(currentPosition, startDate[0], startDate[1]);
+                int currentRows = CalendarUtil.getMonthRows(date[0], date[1]);
+                int[] lastDate = CalendarUtil.positionToDate(lastPosition, startDate[0], startDate[1]);
+                int lastRows = CalendarUtil.getMonthRows(lastDate[0], lastDate[1]);
+                MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
+                mMovePx += (currentRows - lastRows) * monthView.getChildHeight();
+
                 if (pagerChangeListener != null) {
-                    int[] date = CalendarUtil.positionToDate(position, startDate[0], startDate[1]);
                     pagerChangeListener.onPagerChanged(new int[]{date[0], date[1], 0});
                 }
             }
@@ -80,28 +90,33 @@ public class Calendarview extends ViewPager {
                     lastPosition = currentPosition;
                 }
                 if (state == 0 && pagerChangeListener != null) {
-                    if (lastPosition == currentPosition) {
-                        pagerChangeListener.onPageScrollStateChanged(state, mMovePx);
-                        return;
-                    }
-                    int[] date = CalendarUtil.positionToDate(currentPosition, startDate[0], startDate[1]);
-                    int currentRows = CalendarUtil.getMonthRows(date[0], date[1]);
-                    int[] lastDate = CalendarUtil.positionToDate(lastPosition, startDate[0], startDate[1]);
-                    int lastRows = CalendarUtil.getMonthRows(lastDate[0], lastDate[1]);
-                    MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
-                    mMovePx += (currentRows - lastRows) * monthView.getChildWidth();
                     pagerChangeListener.onPageScrollStateChanged(state, mMovePx);
-                    Log.e("zyz", date[0] + "-" + date[1] + ":" + currentRows + "===" + lastDate[0] + "-" + lastDate[1] + ":" + lastRows);
                 }
             }
         });
+    }
+
+    public boolean isClickble() {
+        return mClickble;
+    }
+
+    public void setClickble(boolean clickble) {
+        mClickble = clickble;
+        if(mPagerAdapter != null) {
+            mPagerAdapter.setClickble(clickble);
+        }
+        SparseArray<MonthView> views = mPagerAdapter.getViews();
+        for (int i = 0, nsize = views.size(); i < nsize; i++) {
+            MonthView view = views.valueAt(i);
+            view.setClickble(clickble);
+        }
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (mInitCallback != null) {
-            int rowHeight = w / MonthView.COLUMN;
+            int rowHeight = (int) (w / MonthView.COLUMN * MonthView.HEIGHT_SIZE);
             int currentRows = CalendarUtil.getMonthRows(initDate[0], initDate[1]);
             mMovePx += (currentRows - MonthView.MAXROW) * rowHeight;
             mInitCallback.onInit(initDate, mMovePx);
@@ -109,22 +124,22 @@ public class Calendarview extends ViewPager {
         }
     }
 
-    public void refresh() {
-        refreshMonthView(currentPosition);
+    public void rebuildView() {
+        SparseArray<MonthView> views = mPagerAdapter.getViews();
+        for (int i = 0, nsize = views.size(); i < nsize; i++) {
+            MonthView view = views.valueAt(i);
+            view.startBuildData();
+        }
     }
 
-    public void refresh(DateBean date) {
-        refreshMonthView(date);
-    }
-
-    private void refreshMonthView(int position) {
+    /**
+     * 刷新某个月份
+     *
+     * @param position
+     */
+    private void refreshMonthViewByPosition(int position) {
         MonthView monthView = mPagerAdapter.getViews().get(position);
         monthView.postInvalidate();
-    }
-
-    private void refreshMonthView(DateBean date) {
-        MonthView monthView = mPagerAdapter.getViews().get(currentPosition);
-        monthView.fresh(date);
     }
 
     @Override

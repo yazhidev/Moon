@@ -23,4 +23,6 @@
     <dimen name="config_text_size_small">14sp</dimen>
     <dimen name="config_padding">15dp</dimen>
 
+    <dimen name="mc_bg">3dp</dimen>
+
 </resources>

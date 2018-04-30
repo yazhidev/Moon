@@ -39,7 +39,7 @@
             android:layout_below="@+id/tv_name"
             android:layout_alignLeft="@+id/tv_name"
             style="@style/content_in_history"
-            android:text="@{item.mData.mStatus == 0 ? @string/mc_go_for_man : @string/mc_come_for_man}"
+            android:text="@{item.mData.mStatus == 2 ? @string/mc_go_for_man : @string/mc_come_for_man}"
             />
 
         <include

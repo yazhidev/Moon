@@ -9,8 +9,8 @@ android {
         applicationId "com.yazhi1992.moon"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 7
+        versionName "0.0.6"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -52,7 +52,7 @@ android {
             buildConfigField "String", "LEAN_CLOUD_KEY", properties.getProperty("leanCloudKey")
             buildConfigField "String", "QQ_ID", "\"1106624697\""
             buildConfigField "String", "QQ_KEY", "\"IeOM0d7nzg2uIAps\""
-            buildConfigField "String", "BUGLY_ID", "\"5d768fb313\""
+            buildConfigField "String", "BUGLY_ID", "\"d29b66c253\""
             buildConfigField "String", "LEANCLOUD_QQ_LOGIN_URL", "\"https://leancloud.cn/1.1/sns/callback/ypt2m1s8xla33l8o\""
 
             minifyEnabled false // 是否进行混淆
@@ -90,6 +90,15 @@ android {
         debug {
             res.srcDirs = ['src/debug/res']
         }
+    }
+
+    //为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions{
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -144,8 +153,10 @@ dependencies {
         transitive = true
     } //IM、Push
     // avoscloud-sns：LeanCloud 第三方登录包
-    compile(rootProject.ext.leancloudAvoscloudSns)
-    compile(rootProject.ext.leancloudAvoscloudQq)
+    compile rootProject.ext.leancloudAvoscloudSns
+    compile rootProject.ext.leancloudAvoscloudQq
+    //统计
+    compile rootProject.ext.leancloudAvoscloudStatisticd
 
     //recyclerview 多布局
     implementation(rootProject.ext.multitype, {

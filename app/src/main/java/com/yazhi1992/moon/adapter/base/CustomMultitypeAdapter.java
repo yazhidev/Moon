@@ -13,8 +13,8 @@ public class CustomMultitypeAdapter extends MultiTypeAdapter {
     public void remove(int position) {
         getItems().remove(position);
         notifyItemRemoved(position);
-        if(position != getItemCount()) {
-            notifyItemRangeChanged(position, getItemCount() - position);
-        }
+//        if(position != getItemCount()) {
+//            notifyItemRangeChanged(position, getItemCount() - position);
+//        }
     }
 }

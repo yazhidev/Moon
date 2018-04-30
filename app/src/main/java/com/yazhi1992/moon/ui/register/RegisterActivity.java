@@ -8,15 +8,20 @@ import com.avos.avoscloud.AVUser;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
+import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.databinding.ActivityRegisterBinding;
+import com.yazhi1992.moon.event.RegisterEvent;
 import com.yazhi1992.moon.sql.IDaoOperationListener;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.util.TipDialogHelper;
+import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * 第一步，输入账号密码并注册
@@ -37,17 +42,17 @@ public class RegisterActivity extends BaseActivity {
 
         mBinding.btnComfirm.setOnClickListener(v -> {
             String accout = mBinding.etAccount.getText().toString();
-            if(accout.isEmpty() || !accout.contains("@")) {
+            if (accout.isEmpty() || !accout.contains("@")) {
                 LibUtils.showToast(this, getString(R.string.error_email));
                 return;
             }
             String pwd = mBinding.etPwd.getText().toString();
-            if(pwd.isEmpty()) {
+            if (pwd.isEmpty()) {
                 LibUtils.showToast(this, getString(R.string.empty_pwd));
                 return;
             }
             String nickname = mBinding.etNickname.getText().toString();
-            if(nickname.isEmpty()) {
+            if (nickname.isEmpty()) {
                 LibUtils.showToast(this, getString(R.string.empty_nickname));
                 return;
             }
@@ -74,6 +79,10 @@ public class RegisterActivity extends BaseActivity {
                             //前往验证邮箱
                             ActivityRouter.gotoSetEmail(true);
                             mBinding.btnComfirm.setLoading(false);
+                            //通知登录页更新记住的账号
+                            LibSPUtils.setString(SPKeyConstant.LOGIN_ACCOUNT, accout);
+                            LibSPUtils.setString(SPKeyConstant.LOGIN_PWD, "");
+                            EventBus.getDefault().post(new RegisterEvent());
                         }
 
                         @Override

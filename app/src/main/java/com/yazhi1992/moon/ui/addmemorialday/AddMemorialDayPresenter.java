@@ -18,6 +18,6 @@ public class AddMemorialDayPresenter {
     }
 
     public void delete(String objId, DataCallback<Boolean> callback) {
-        Api.getInstance().deleteHistoryData(objId, callback);
+        Api.getInstance().deleteMemorialDayData(objId, callback);
     }
 }

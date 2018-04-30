@@ -6,7 +6,6 @@ import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.viewmodel.CommentBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
-import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class HistoryPresenter {
     }
 
     public void delete(int type, String dayObjId, DataCallback<Boolean> callback) {
-        Api.getInstance().deleteHistoryData(type, dayObjId, callback);
+        Api.getInstance().deleteMemorialDayData(type, dayObjId, callback);
     }
 
     public void addComment(String content, String parentObjId,final DataCallback<CommentBean> dataCallback) {
