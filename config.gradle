@@ -37,6 +37,7 @@ ext {
     leancloudAvoscloudPush = 'cn.leancloud.android:avoscloud-push:v4.6.4@aar'
     leancloudAvoscloudSns = 'cn.leancloud.android:avoscloud-sns:v4.6.4@aar'
     leancloudAvoscloudQq = 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+    leancloudAvoscloudStatisticd = 'cn.leancloud.android:avoscloud-statistics:v4.6.4'
 
     multitype = 'me.drakeet.multitype:multitype:3.4.2'
 
