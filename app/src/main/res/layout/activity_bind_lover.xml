@@ -16,7 +16,7 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:title="连理"
+            app:title="@string/bind_lover_title"
             android:background="@color/colorAccent"
             app:titleTextColor="@color/white"></android.support.v7.widget.Toolbar>
 
@@ -28,7 +28,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:gravity="center_vertical"
-            android:text="你的心意："
+            android:text="@string/your_bind_code"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
-                android:hint="输入 ta 的心意"
+                android:hint="@string/input_peer_code"
                 android:textSize="18sp"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -78,7 +78,7 @@
             app:rv_backgroundColor="@color/theme_color"
             app:rv_backgroundPressColor="@color/theme_color_pressed"
             app:rv_cornerRadius="10dp"
-            app:rv_text="添加心上人"
+            app:rv_text="@string/bind_lover"
             app:rv_textColor="@color/white"
             app:rv_textPressColor="@color/white"
             app:rv_textSize="18"
@@ -107,7 +107,7 @@
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            app:rv_text="更新状态"
+            app:rv_text="@string/update_state"
             android:gravity="center"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_state"
