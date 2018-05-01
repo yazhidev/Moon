@@ -104,7 +104,7 @@ android {
 
 //greendao配置
 greendao {
-    schemaVersion 3  //版本号
+    schemaVersion 4  //版本号
 }
 
 dependencies {
@@ -186,6 +186,8 @@ dependencies {
     }
 
     compile rootProject.ext.luban
+
+    compile project(":keepalive")
 }
 
 //apply from: 'tinker-support.gradle'

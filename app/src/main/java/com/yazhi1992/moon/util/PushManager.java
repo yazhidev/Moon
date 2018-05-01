@@ -1,5 +1,7 @@
 package com.yazhi1992.moon.util;
 
+import android.util.Log;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVPush;
@@ -7,9 +9,14 @@ import com.avos.avoscloud.PushService;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SendCallback;
 import com.yazhi1992.moon.BaseApplication;
+import com.yazhi1992.moon.api.Api;
+import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
+import com.yazhi1992.moon.push.PushJson;
+import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.ui.startup.StartActivity;
+import com.yazhi1992.moon.ui.home.HomeActivity;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +28,6 @@ import org.json.JSONObject;
  */
 
 public class PushManager {
-    private String mPeerId;
 
     private PushManager() {
     }
@@ -41,7 +47,22 @@ public class PushManager {
                     // 保存成功
                     String installationId = AVInstallation.getCurrentInstallation().getInstallationId();
                     MyLog.log("pushManager register " + installationId);
-                    // 关联  installationId 到用户表等操作……
+                    UserDaoUtil userDaoUtil = new UserDaoUtil();
+                    User userDao = userDaoUtil.getUserDao();
+                    String loverId = userDao.getLoverId();
+                    if(LibUtils.notNullNorEmpty(loverId)) {
+                        //同步pushiD
+                        Api.getInstance().registerPushIdToUser(installationId, new DataCallback<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean data) {
+                            }
+
+                            @Override
+                            public void onFailed(int code, String msg) {
+
+                            }
+                        });
+                    }
                 } else {
                     // 保存失败，输出错误信息
                     MyLog.log("pushManager register error");
@@ -49,14 +70,26 @@ public class PushManager {
             }
         });
         // 设置默认打开的 Activity
-        PushService.setDefaultPushCallback(BaseApplication.getInstance(), StartActivity.class);
+        PushService.setDefaultPushCallback(BaseApplication.getInstance(), HomeActivity.class);
+        getPeerPushId(new DataCallback<String>() {
+            @Override
+            public void onSuccess(String data) {
+                new UserDaoUtil().updatePeerPushId(data);
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+
+            }
+        });
     }
 
-    public String getPeerId() {
-        if (mPeerId == null) {
-            mPeerId = new UserDaoUtil().getUserDao().getLoverId();
-        }
-        return mPeerId;
+    public void getPeerPushId(DataCallback<String> callback) {
+        Api.getInstance().getPeerPushId(callback);
+    }
+
+    public String getPeerPushId() {
+        return new UserDaoUtil().getUserDao().getPushId();
     }
 
     public void pushAction(@ActionConstant.AddAction String action) {
@@ -65,29 +98,39 @@ public class PushManager {
 
     //发消息给对方
     private void postMsg(@ActionConstant.AddAction String action) {
-        if(getPeerId() == null) return;
+        Log.e("zyz", "peerId " + getPeerPushId());
+        String peerPushId = getPeerPushId();
+        if(LibUtils.isNullOrEmpty(peerPushId)) return;
         try {
             AVPush push = new AVPush();
-            JSONObject data =
-                    null;
+            JSONObject data = null;
+            String userId = new UserDaoUtil().getUserDao().getObjectId();
             data = new JSONObject(
-                    "{\"action\": \"com.yazhi1992.moon\", \"moonAction\": \"" + action + "\", \"newsItem\": \"Man bites dog\"  }");
-
-//            839f33b894d062586e64c97136e2aa86
-
+                    "{\"action\": \"com.yazhi1992.moon\", \"moonAction\": \"" + action + "\", \"moonUserId\": \"" + userId + "\", \"newsItem\": \"Man bites dog\"  }");
             push.setData(data);
-            push.setCloudQuery("select * from _Installation where installationId ='" + getPeerId()
+            push.setCloudQuery("select * from _Installation where installationId ='" + peerPushId
                     + "'");
             push.sendInBackground(new SendCallback() {
-
                 @Override
                 public void done(AVException e) {
-
+                    Log.e("zyz", "push ");
                 }
             });
         } catch (JSONException e) {
             e.printStackTrace();
         }
+//
+//        AVQuery pushQuery = AVInstallation.getQuery();
+//        // 假设 THE_INSTALLATION_ID 是保存在用户表里的 installationId，
+//        // 可以在应用启动的时候获取并保存到用户表
+//        pushQuery.whereEqualTo("installationId", getPeerPushId());
+//
+//        AVPush.sendMessageInBackground(pushJson.toString(),  pushQuery, new SendCallback() {
+//            @Override
+//            public void done(AVException e) {
+//
+//            }
+//        });
     }
 
 }

@@ -1,5 +1,7 @@
 package com.yazhi1992.moon.sql;
 
+import com.yazhi1992.yazhilib.utils.LibUtils;
+
 import java.util.List;
 
 /**
@@ -66,6 +68,13 @@ public class UserDaoUtil extends BaseDao<User> {
     public void updateEmailStatus(boolean valid) {
         User userDao = getUserDao();
         userDao.setEmailVerified(valid);
+        update(userDao);
+    }
+
+    public void updatePeerPushId(String pushId) {
+        if(LibUtils.isNullOrEmpty(pushId)) return;
+        User userDao = getUserDao();
+        userDao.setPushId(pushId);
         update(userDao);
     }
 

@@ -1884,4 +1884,50 @@ public class Api {
             }
         });
     }
+
+    public void registerPushIdToUser(String pushId, DataCallback<Boolean> callback) {
+        String loverId = new UserDaoUtil().getUserDao().getLoverId();
+        AVQuery<AVObject> query = new AVQuery<>(TableConstant.BindLover.CLAZZ_NAME);
+        query.whereEqualTo(TableConstant.BindLover.USER, getUserObj(loverId));
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        avObject.put(TableConstant.BindLover.LOVER_PUSH_ID, pushId);
+                        avObject.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                handleResult(e, callback, new onResultSuc() {
+                                    @Override
+                                    public void onSuc() {
+                                        callback.onSuccess(true);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    public void getPeerPushId(DataCallback<String> callback) {
+        AVQuery<AVObject> query = new AVQuery<>(TableConstant.BindLover.CLAZZ_NAME);
+        query.whereEqualTo(TableConstant.BindLover.USER, AVUser.getCurrentUser());
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        String peerPushId = avObject.getString(TableConstant.BindLover.LOVER_PUSH_ID);
+                        callback.onSuccess(peerPushId);
+                    }
+                });
+            }
+        });
+    }
+
 }

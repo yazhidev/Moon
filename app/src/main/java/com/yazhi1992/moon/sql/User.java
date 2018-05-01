@@ -5,7 +5,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
 
-/**\
+/**
  * Created by zengyazhi on 2018/1/25.
  */
 
@@ -48,11 +48,14 @@ public class User {
     @Property(nameInDb = "emailVerified")
     private boolean emailVerified;
 
-    @Generated(hash = 889710475)
+    @Property(nameInDb = "pushId")
+    private String pushId;
+
+    @Generated(hash = 326836355)
     public User(Long id, String name, String objectId, String headUrl,
             String inviteNumber, boolean haveLover, String loverId,
             String loverHeadUrl, String loverName, int gender, String email,
-            boolean emailVerified) {
+            boolean emailVerified, String pushId) {
         this.id = id;
         this.name = name;
         this.objectId = objectId;
@@ -65,6 +68,7 @@ public class User {
         this.gender = gender;
         this.email = email;
         this.emailVerified = emailVerified;
+        this.pushId = pushId;
     }
 
     @Generated(hash = 586692638)
@@ -165,5 +169,13 @@ public class User {
 
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
+    }
+
+    public String getPushId() {
+        return this.pushId;
+    }
+
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 }

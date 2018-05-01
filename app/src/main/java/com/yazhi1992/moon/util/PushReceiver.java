@@ -7,12 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.ActionConstant;
+import com.yazhi1992.moon.push.PushJson;
+import com.yazhi1992.moon.sql.User;
+import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.addmemorialday.AddMemorialActivity;
 import com.yazhi1992.moon.ui.home.HomeActivity;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,16 +33,15 @@ public class PushReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
-            String action = intent.getAction();
-            String channel = intent.getExtras().getString("com.avos.avoscloud.Channel");
             //获取消息内容
             JSONObject json = new JSONObject(intent.getExtras().getString("com.avos.avoscloud.Data"));
-            Iterator itr = json.keys();
-            while (itr.hasNext()) {
-                String key = (String) itr.next();
-                if("moonAction".equals(key)) {
-                    handlAction(json.getString(key));
-                }
+            String userId = json.getString("moonUserId");
+            String moonAction = json.getString("moonAction");
+            Log.e("zyz", "receive " + moonAction);
+            User userDao = new UserDaoUtil().getUserDao();
+            String loverId = userDao.getLoverId();
+            if(LibUtils.notNullNorEmpty(loverId) && loverId.equals(userId)) {
+                handlAction(moonAction);
             }
         } catch (JSONException e) {
             e.printStackTrace();

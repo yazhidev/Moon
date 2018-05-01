@@ -20,6 +20,7 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
+import com.yazhi1992.keepalive.KeepAliveManager;
 import com.yazhi1992.moon.event.BuglyUpgrate;
 import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -68,8 +69,6 @@ public class BaseApplication extends Application {
         AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
         AVAnalytics.enableCrashReport(this, true);
 
-        PushManager.getInstance().register();
-
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -107,6 +106,7 @@ public class BaseApplication extends Application {
             }
         });
 
+        KeepAliveManager.getInstance().keepAlive(this);
     }
 
     private Activity mTopActivity;

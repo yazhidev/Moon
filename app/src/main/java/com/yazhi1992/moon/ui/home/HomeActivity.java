@@ -31,6 +31,7 @@ import com.yazhi1992.moon.ui.home.set.SetFragment;
 import com.yazhi1992.moon.ui.mc.McDetailPresenter;
 import com.yazhi1992.moon.util.AppUtils;
 import com.yazhi1992.moon.util.IUploader;
+import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.util.StorageUtil;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.util.UploadPhotoHelper;
@@ -73,6 +74,8 @@ public class HomeActivity extends AbsUpgrateActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LibStatusBarUtils.with(this).init();
+
+        PushManager.getInstance().register();
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 

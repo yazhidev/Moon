@@ -58,6 +58,7 @@ public class TableConstant {
         public static final String USER_NAME = "user_name";
         public static final String USER = "user";
         public static final String LOVER = "lover";
+        public static final String LOVER_PUSH_ID = "loverPushId";
     }
 
     //心愿表
