@@ -5,24 +5,19 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
-import com.scwang.smartrefresh.header.MaterialHeader;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
 import com.yazhi1992.keepalive.KeepAliveManager;
 import com.yazhi1992.moon.event.BuglyUpgrate;
-import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -39,6 +34,8 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         context = this;
+
+        Log.e("zyz", "BaseApplication onCreate");
 
         LibUtils.init(this);
 

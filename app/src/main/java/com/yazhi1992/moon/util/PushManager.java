@@ -12,7 +12,6 @@ import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
-import com.yazhi1992.moon.push.PushJson;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.home.HomeActivity;
@@ -71,17 +70,6 @@ public class PushManager {
         });
         // 设置默认打开的 Activity
         PushService.setDefaultPushCallback(BaseApplication.getInstance(), HomeActivity.class);
-        getPeerPushId(new DataCallback<String>() {
-            @Override
-            public void onSuccess(String data) {
-                new UserDaoUtil().updatePeerPushId(data);
-            }
-
-            @Override
-            public void onFailed(int code, String msg) {
-
-            }
-        });
     }
 
     public void getPeerPushId(DataCallback<String> callback) {
@@ -93,7 +81,18 @@ public class PushManager {
     }
 
     public void pushAction(@ActionConstant.AddAction String action) {
-        postMsg(action);
+        getPeerPushId(new DataCallback<String>() {
+            @Override
+            public void onSuccess(String data) {
+                new UserDaoUtil().updatePeerPushId(data);
+                postMsg(action);
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+                postMsg(action);
+            }
+        });
     }
 
     //发消息给对方

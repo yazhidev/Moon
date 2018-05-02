@@ -8,7 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -23,7 +23,6 @@ import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.ActivityHomeBinding;
 import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.event.AddHomeImg;
-import com.yazhi1992.moon.event.ChangeUserInfo;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.home.history.HistoryFragment;
 import com.yazhi1992.moon.ui.home.home.HomeFragment;
@@ -32,11 +31,8 @@ import com.yazhi1992.moon.ui.mc.McDetailPresenter;
 import com.yazhi1992.moon.util.AppUtils;
 import com.yazhi1992.moon.util.IUploader;
 import com.yazhi1992.moon.util.PushManager;
-import com.yazhi1992.moon.util.StorageUtil;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.util.UploadPhotoHelper;
-import com.yazhi1992.moon.viewmodel.McBean;
-import com.yazhi1992.yazhilib.utils.LibFileUtils;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -44,23 +40,9 @@ import com.zhihu.matisse.Matisse;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 @Route(path = ActivityRouter.HOME_PAGE)
 public class HomeActivity extends AbsUpgrateActivity {
@@ -75,6 +57,7 @@ public class HomeActivity extends AbsUpgrateActivity {
         super.onCreate(savedInstanceState);
         LibStatusBarUtils.with(this).init();
 
+        Log.e("zyz", "HomeActivity onCreate");
         PushManager.getInstance().register();
 
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
