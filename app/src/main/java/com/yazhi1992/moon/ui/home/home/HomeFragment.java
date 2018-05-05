@@ -1,6 +1,8 @@
 package com.yazhi1992.moon.ui.home.home;
 
+import android.animation.ValueAnimator;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,8 +10,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
@@ -34,6 +41,7 @@ public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding mBinding;
     private HomeFragmentPresenter mPresenter = new HomeFragmentPresenter();
+    private ValueAnimator mValueAnimator;
 
     @Nullable
     @Override
@@ -50,7 +58,23 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSuccess(String data) {
                 if (LibUtils.notNullNorEmpty(data)) {
+                    initLoadingView();
                     Glide.with(view.getContext()).load(data)
+                            .listener(new RequestListener<Drawable>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    Glide.with(view.getContext()).load(R.mipmap.bg_home)
+                                            .into(mBinding.igHome);
+                                    hideLoadingView();
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    hideLoadingView();
+                                    return false;
+                                }
+                            })
                             .into(mBinding.igHome);
                 } else {
                     Glide.with(view.getContext()).load(R.mipmap.bg_home)
@@ -79,6 +103,30 @@ public class HomeFragment extends Fragment {
 
         mBinding.rlMcComming.setOnClickListener(v -> ActivityRouter.gotoMcDetail());
 
+    }
+
+    private void initLoadingView() {
+        mValueAnimator = ValueAnimator.ofFloat(360);
+        mValueAnimator.setDuration(3000);
+        mValueAnimator.setStartDelay(250);
+        mValueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mValueAnimator.setInterpolator(new LinearInterpolator());
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mBinding.igLoading.setPivotX(mBinding.igLoading.getWidth() / 2);
+                mBinding.igLoading.setPivotY(mBinding.igLoading.getHeight() / 2);
+                mBinding.igLoading.setRotation((Float) animation.getAnimatedValue());
+            }
+        });
+        mValueAnimator.start();
+    }
+
+    private void hideLoadingView() {
+        if (mValueAnimator != null) {
+            mValueAnimator.end();
+        }
+        mBinding.igLoading.setVisibility(View.GONE);
     }
 
     @Override
