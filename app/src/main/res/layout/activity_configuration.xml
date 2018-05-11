@@ -131,6 +131,29 @@
             android:layout_height="0.5dp"></View>
 
         <TextView
+            android:id="@+id/tv_feedback"
+            android:background="@drawable/theme_white_press_selector"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:padding="@dimen/config_padding"
+            android:text="@string/feed_back"
+            android:textSize="@dimen/config_text_size"
+            android:textColor="@color/dark_text_color"
+            app:layout_constraintTop_toBottomOf="@+id/line2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:id="@+id/line3"
+            app:layout_constraintTop_toBottomOf="@+id/tv_feedback"
+            android:layout_marginLeft="@dimen/config_padding"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:background="@color/line"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"></View>
+
+        <TextView
             android:id="@+id/tv_check_upgrade"
             android:background="@drawable/theme_white_press_selector"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -139,9 +162,10 @@
             android:text="@string/check_new_version"
             android:textSize="@dimen/config_text_size"
             android:textColor="@color/dark_text_color"
-            app:layout_constraintTop_toBottomOf="@+id/line2"
+            app:layout_constraintTop_toBottomOf="@+id/line3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
+
 
     </android.support.constraint.ConstraintLayout>
 </layout>

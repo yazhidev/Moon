@@ -172,9 +172,12 @@
 
     <string name="set_title">设置</string>
     <string name="check_new_version">检查新版本</string>
+    <string name="feed_back">意见反馈</string>
     <string name="mc_tip_enable_title">是否启用心烦预警功能</string>
     <string name="mc_tip_enable_des">在经期来临的附近几天提醒自己要心平气和（或多多包容她）</string>
     <string name="mc_enable_title">是否启用小姨妈功能</string>
     <string name="mc_enable_des">记录经期时间</string>
-
+    <string name="bind_lover_dialog_cancel">取消</string>
+    <string name="bind_lover_dialog_text">邀请你一起使用小本本</string>
+    <string name="bind_lover_dialog_recieve">接受</string>
 </resources>

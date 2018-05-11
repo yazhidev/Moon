@@ -14,8 +14,9 @@ ext {
             kotlin_version: '1.2.41',
     ]
     dependencies = [
-            kotlin_jdk8                    : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${rootProject.kotlin_version}",
+            kotlin_jdk8                   : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${rootProject.kotlin_version}",
 
+            cardview                      : "com.android.support:cardview-v7:${dependVersion.support}",
             appcompatV7                   : "com.android.support:appcompat-v7:${dependVersion.support}",
             supportDesign                 : "com.android.support:design:${dependVersion.support}",
             supportV4                     : "com.android.support:support-v4:${dependVersion.support}",

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -16,9 +16,9 @@ android {
         versionName "0.0.7"
         multiDexEnabled true
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [moduleName: project.getName()]
+        kapt {
+            arguments {
+                arg("moduleName", project.getName())
             }
         }
 
@@ -88,7 +88,7 @@ android {
     }
 
     //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
@@ -104,14 +104,18 @@ greendao {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    kapt rootProject.ext.dependencies.databindingCompiler
+
     implementation rootProject.ext.dependencies.constraintLayout
     implementation rootProject.ext.dependencies.supportDesign
     //arouter
     implementation rootProject.ext.dependencies.arouter
-    annotationProcessor rootProject.ext.dependencies.arouterCompiler
+    kapt rootProject.ext.dependencies.arouterCompiler
 
     //dagger
-    annotationProcessor rootProject.ext.dependencies.dagger2Compiler
+    kapt rootProject.ext.dependencies.dagger2Compiler
     implementation rootProject.ext.dependencies.dagger2
 
     //logger
@@ -124,7 +128,7 @@ dependencies {
         // if you don't use android.app.Fragment you can exclude support for them
         exclude module: "support-v13"
     }
-    annotationProcessor rootProject.ext.dependencies.permissionsDispatcherProcessor
+    kapt rootProject.ext.dependencies.permissionsDispatcherProcessor
 
     //bugly
     implementation rootProject.ext.dependencies.buglyCrash
@@ -151,7 +155,7 @@ dependencies {
     })
 
     implementation rootProject.ext.dependencies.glide
-    annotationProcessor rootProject.ext.dependencies.glideCompiler
+    kapt rootProject.ext.dependencies.glideCompiler
 
     api rootProject.ext.dependencies.multiDex
 
@@ -160,7 +164,7 @@ dependencies {
     api rootProject.ext.dependencies.smartRefreshHeader
 
     api rootProject.ext.dependencies.dagger
-    annotationProcessor rootProject.ext.dependencies.daggerCompiler
+    kapt rootProject.ext.dependencies.daggerCompiler
     api rootProject.ext.dependencies.daggerAndroid
 
     api rootProject.ext.dependencies.greenDao
@@ -175,6 +179,8 @@ dependencies {
     api project(":keepalive")
 
     implementation rootProject.ext.dependencies.kotlin_jdk8
+
+    implementation rootProject.ext.dependencies.cardview
 }
 
 //apply from: 'tinker-support.gradle'

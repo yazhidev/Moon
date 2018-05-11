@@ -4,7 +4,6 @@ import android.content.Intent;
 
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.yazhi1992.moon.constant.SPKeyConstant;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -58,6 +57,8 @@ public class ActivityRouter {
     public static final String SET_EMAIL = "/app/set_email";
     //找回密码
     public static final String FORGET_PWD = "/app/forget_pwd";
+    //意见反馈
+    public static final String FEED_BACK = "/app/feed_back";
 
     public static class KeyName {
         public static final String OBJECT_ID_KEY = "objectid";
@@ -219,4 +220,9 @@ public class ActivityRouter {
                 .navigation();
     }
 
+    public static void gotoFeedBack() {
+        ARouter.getInstance()
+                .build(FEED_BACK)
+                .navigation();
+    }
 }

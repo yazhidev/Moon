@@ -146,27 +146,32 @@
         <activity android:name=".ui.mc.McActivity">
         </activity>
 
-        <!--推送-->
-        <service android:name="com.avos.avoscloud.PushService" android:exported="true"/>
+        <!-- 推送 -->
+        <service
+            android:name="com.avos.avoscloud.PushService"
+            android:exported="true"/>
 
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".util.PushReceiver" android:exported="false">
+        <receiver
+            android:name=".util.PushReceiver"
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="com.yazhi1992.moon" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="com.yazhi1992.moon"/>
             </intent-filter>
         </receiver>
-        <!--推送-->
+        <!-- 推送 -->
 
+        <activity android:name=".ui.feedback.FeedBackActivity">
+        </activity>
     </application>
 
 </manifest>

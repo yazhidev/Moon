@@ -23,6 +23,7 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.CodeConstant;
 import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.databinding.FragmentHomeBinding;
+import com.yazhi1992.moon.dialog.RecieveBindRequestDialog;
 import com.yazhi1992.moon.event.AddHomeImg;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.util.UploadPhotoHelper;
@@ -53,6 +54,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        RecieveBindRequestDialog recieveBindRequestDialog = new RecieveBindRequestDialog();
+        recieveBindRequestDialog.show(getActivity().getFragmentManager());
 
         mPresenter.getImgUrl(new DataCallback<String>() {
             @Override
