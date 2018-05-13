@@ -55,5 +55,7 @@ public class ConfigurationActivity extends AbsUpgrateActivity {
         });
 
         mBinding.tvCheckUpgrade.setOnClickListener(v -> Beta.checkUpgrade(true, false));
+
+        mBinding.tvFeedback.setOnClickListener(v -> ActivityRouter.gotoFeedBack());
     }
 }

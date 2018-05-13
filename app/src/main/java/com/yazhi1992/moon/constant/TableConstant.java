@@ -112,4 +112,15 @@ public class TableConstant {
         public static final String MC_GO_MAX_DAY = "mc_go_max_day"; //mc 没来结束预警天数
         public static final String MC_COME_MAX_DAY = "mc_come_max_day"; //mc 来了预警天数
     }
+
+    public static class FeedBack {
+        public static final String CLAZZ_NAME = "feedback";
+        public static final String UPLOADER = "uploader";
+        public static final String USER_NUMBBER = "userNumber";
+        public static final String IMG = "img";
+        public static final String CONTANT = "content";
+        public static final String SYSTEM_VERSION = "systemVersion";
+        public static final String APP_VERSION = "appVersion";
+        public static final String BAND = "band";
+    }
 }

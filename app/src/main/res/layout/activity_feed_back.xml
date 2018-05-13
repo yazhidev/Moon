@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,11 +12,114 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             style="@style/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:title="@string/feed_back"></android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/feedback_top_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/feedback_connect_number"
+            android:textColor="@color/dark_text_color"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+
+        <EditText
+            android:id="@+id/feedback_et_connect_number"
             android:layout_width="0dp"
-            app:title="@string/feed_back"
-            android:layout_height="wrap_content"></android.support.v7.widget.Toolbar>
+            android:layout_height="40dp"
+            android:inputType="number"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:background="@null"
+            android:gravity="right|center_vertical"
+            android:hint="@string/feedback_connect_number_hint"
+            android:textSize="15sp"
+            android:textColor="@color/dark_text_color"
+            android:textColorHint="@color/light_text_color"
+            app:layout_constraintBottom_toBottomOf="@+id/feedback_top_title"
+            app:layout_constraintLeft_toRightOf="@+id/feedback_top_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/feedback_top_title"/>
+
+        <View
+            android:id="@+id/feedback_line1"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/line"
+            app:layout_constraintLeft_toLeftOf="@+id/feedback_top_title"
+            app:layout_constraintRight_toRightOf="@+id/feedback_et_connect_number"
+            app:layout_constraintTop_toBottomOf="@+id/feedback_et_connect_number"></View>
+
+        <TextView
+            android:id="@+id/feedback_des_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/feedback_des"
+            android:textColor="@color/dark_text_color"
+            android:textSize="15sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/feedback_line1"/>
+
+        <android.support.v7.widget.CardView
+            app:cardBackgroundColor="#f4f8fb"
+            android:id="@+id/feedback_rl_des_input"
+            app:layout_constraintLeft_toLeftOf="@+id/feedback_des_title"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/feedback_des_title"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="0dp"
+            android:layout_width="0dp"
+            android:layout_height="100dp">
+
+            <EditText
+                android:layout_margin="10dp"
+                android:id="@+id/feedbackEtContent"
+                android:background="@null"
+                android:hint="@string/feedback_des_hint"
+                android:textColor="@color/dark_text_color"
+                android:textColorHint="@color/light_text_color"
+                android:gravity="top|left"
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </android.support.v7.widget.CardView>
+
+        <ImageView
+            android:id="@+id/feedback_ig_add"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/add_img_icon"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@+id/feedback_rl_des_input"
+            app:layout_constraintTop_toBottomOf="@+id/feedback_rl_des_input"
+            />
+
+        <com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView
+            android:id="@+id/feedback_btn_add"
+            style="@style/loading_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="100dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/feedback_rl_des_input"
+            app:rv_text="@string/feedback_btn_add"></com.yazhi1992.yazhilib.widget.RoundView.RoundLoadingView>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

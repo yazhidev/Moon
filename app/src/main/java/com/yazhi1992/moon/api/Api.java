@@ -1,5 +1,8 @@
 package com.yazhi1992.moon.api;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
@@ -31,6 +34,7 @@ import com.yazhi1992.moon.viewmodel.ConfigBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
+import com.yazhi1992.yazhilib.utils.LibDeviceUtils;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibTimeUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -1288,6 +1292,7 @@ public class Api {
 
     /**
      * 获取某个月的mc数据列表
+     *
      * @param year
      * @param month
      * @param callback
@@ -1340,6 +1345,7 @@ public class Api {
 
     /**
      * 获取mc数据列表
+     *
      * @param callback
      */
     public void getAllMcRecord(DataCallback<List<McDataFromApi>> callback) {
@@ -1382,6 +1388,7 @@ public class Api {
 
     /**
      * 获取mc数据列表
+     *
      * @param lastTime 第一次传0
      * @param size
      * @param callback
@@ -1428,8 +1435,8 @@ public class Api {
     }
 
     // TODO: 2018/4/5 修改逻辑
+
     /**
-     *
      * 获取情侣中女性最近一条mc记录（用于心情预警，如果没来25天或刚来3天，则预警）
      *
      * @param callback
@@ -1456,7 +1463,7 @@ public class Api {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        if(avObject != null) {
+                        if (avObject != null) {
                             int status = avObject.getInt(TableConstant.MC.STATUS);
                             int gapBetweenTwoDay = Math.abs(LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(avObject.getLong(TableConstant.MC.TIME))));
 
@@ -1576,7 +1583,7 @@ public class Api {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        if(avObject != null) {
+                        if (avObject != null) {
                             int time = avObject.getInt(TableConstant.MC.TIME);
                             int year = avObject.getInt(TableConstant.MC.YEAR);
                             int month = avObject.getInt(TableConstant.MC.MONTH);
@@ -1930,4 +1937,90 @@ public class Api {
         });
     }
 
+    public void addFeedBack(String content, String userNumber, String filePath, final DataCallback<Boolean> dataCallback) {
+        Observable observable = null;
+        if (LibUtils.isNullOrEmpty(filePath)) {
+            observable = addFeedBack(content, userNumber, null);
+        } else {
+            observable = uploadPic(filePath).concatMap(new Function<AVFile, Observable<Boolean>>() {
+                @Override
+                public Observable<Boolean> apply(AVFile avFile) throws Exception {
+                    return addFeedBack(content, userNumber, avFile);
+                }
+            });
+        }
+        observable.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        dataCallback.onSuccess(true);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        dataCallback.onFailed(-1, throwable.getMessage());
+                    }
+                });
+    }
+
+    private Observable uploadPic(String filePath) {
+        return Observable.create(new ObservableOnSubscribe<AVFile>() {
+            @Override
+            public void subscribe(ObservableEmitter<AVFile> emitter) throws Exception {
+                String name = "img.jpg";
+                if (filePath.contains("/")) {
+                    name = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+                }
+                try {
+                    AVFile file = AVFile.withAbsoluteLocalPath(name, filePath);
+                    file.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(AVException e) {
+                            if (e == null) {
+                                emitter.onNext(file);
+                            } else {
+                                emitter.onError(new Throwable(e.getMessage() + e.getCode()));
+                            }
+                        }
+                    });
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    emitter.onError(new Throwable("FileNotFoundException"));
+                }
+            }
+        }).subscribeOn(Schedulers.newThread());
+    }
+
+    private Observable addFeedBack(String content, String userNumber, AVFile imgFile) {
+        return Observable.create((ObservableOnSubscribe<Boolean>) emitter -> {
+            AVObject feedbackObj = new AVObject(TableConstant.FeedBack.CLAZZ_NAME);
+            feedbackObj.put(TableConstant.FeedBack.CONTANT, content);
+            if (imgFile != null) {
+                feedbackObj.put(TableConstant.FeedBack.IMG, imgFile);
+            }
+            feedbackObj.put(TableConstant.FeedBack.BAND, LibDeviceUtils.getBand() + " " + LibDeviceUtils.getModel());
+            feedbackObj.put(TableConstant.FeedBack.UPLOADER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, AVUser.getCurrentUser().getObjectId()));
+
+            feedbackObj.put(TableConstant.FeedBack.SYSTEM_VERSION, LibDeviceUtils.getAndroidVersion());
+            feedbackObj.put(TableConstant.FeedBack.APP_VERSION, getAppVersion());
+            feedbackObj.put(TableConstant.FeedBack.USER_NUMBBER, userNumber);
+            feedbackObj.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    emitter.onNext(true);
+                }
+            });
+        }).subscribeOn(Schedulers.newThread());
+    }
+
+    private String getAppVersion() {
+        Context applicationContext = BaseApplication.getInstance().getApplicationContext();
+        String versionName = "";
+        try {
+            versionName = applicationContext.getPackageManager().getPackageInfo(applicationContext.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
 }

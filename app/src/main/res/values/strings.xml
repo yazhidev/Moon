@@ -180,4 +180,10 @@
     <string name="bind_lover_dialog_cancel">取消</string>
     <string name="bind_lover_dialog_text">邀请你一起使用小本本</string>
     <string name="bind_lover_dialog_recieve">接受</string>
+    <string name="feedback_connect_number">联系方式</string>
+    <string name="feedback_des">问题描述</string>
+    <string name="feedback_connect_number_hint">请输入您的qq号或手机号</string>
+    <string name="feedback_des_hint">如果您有什么问题或想法、建议，请告诉我们</string>
+    <string name="feedback_btn_add">提交</string>
+    <string name="feed_back_suc">感谢您的反馈！小本本会努力变得更好的！</string>
 </resources>

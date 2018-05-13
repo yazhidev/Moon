@@ -141,6 +141,7 @@ public class AddTextActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(int code, String msg) {
+                        LibUtils.showToast(AddTextActivity.this, msg);
                         mBinding.btnAdd.setLoading(false);
                     }
                 });
@@ -154,7 +155,6 @@ public class AddTextActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10 && resultCode == RESULT_OK) {
             List<String> uris = Matisse.obtainPathResult(data);
-            String path = uris.get(0);
             imgPath = uris.get(0);
             ViewBindingUtils.imgUrl(mBinding.igAdd, imgPath);
         }
