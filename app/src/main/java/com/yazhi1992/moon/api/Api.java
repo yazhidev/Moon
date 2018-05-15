@@ -522,7 +522,7 @@ public class Api {
                         public void onSuc() {
                             AVFile avFile = avObject.getAVFile(TableConstant.Text.IMG_FILE);
                             if (avFile != null) {
-                                //如果原来有图片文件，则先删除原来的头像图片，节约空间
+                                //如果原来有图片文件，则先删除原来的图片，节约空间
                                 avFile.deleteInBackground(new DeleteCallback() {
                                     @Override
                                     public void done(AVException e) {
