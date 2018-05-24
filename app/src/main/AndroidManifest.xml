@@ -24,6 +24,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/app_name"
+        android:resizeableActivity="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.startup.StartActivity">
@@ -171,6 +172,8 @@
         <!-- 推送 -->
 
         <activity android:name=".ui.feedback.FeedBackActivity">
+        </activity>
+        <activity android:name=".ui.setuserinfo.SetUserInfoActivity">
         </activity>
     </application>
 

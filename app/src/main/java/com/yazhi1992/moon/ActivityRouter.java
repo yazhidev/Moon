@@ -41,6 +41,8 @@ public class ActivityRouter {
     public static final String NEW_MC_DETAIL = "/app/new_mc_detail";
     //性别设置页面
     public static final String SET_GENDER = "/app/set_gender";
+    //首次注册后设置个人信息页面
+    public static final String SET_USER_INFO = "/app/set_user_info";
     //配置页面
     public static final String CONFIGURATION = "/app/configuration";
     //预览图片
@@ -105,6 +107,13 @@ public class ActivityRouter {
         if (clearTask) {
             build.withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         }
+        build.navigation();
+    }
+
+    public static void gotoSetUserInfo() {
+        Postcard build = ARouter.getInstance()
+                .build(SET_USER_INFO);
+        build.withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         build.navigation();
     }
 

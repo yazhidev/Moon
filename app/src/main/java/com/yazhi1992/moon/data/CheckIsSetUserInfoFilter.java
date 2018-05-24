@@ -6,20 +6,23 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.GetCallback;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.constant.TableConstant;
+import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
+import com.yazhi1992.yazhilib.utils.LibUtils;
 
 /**
  * Created by zengyazhi on 2018/2/14.
  *
- * 是否设置性别
+ * 是否设置用户信息
  */
 
-public class CheckIsSetGenderFilter implements ICheckDataFilter {
+public class CheckIsSetUserInfoFilter implements ICheckDataFilter {
 
     @Override
     public void check(ICheckDataCallBack callBack) {
         UserDaoUtil userDaoUtil = new UserDaoUtil();
-        if(userDaoUtil.getUserDao() != null && userDaoUtil.getUserDao().getGender() != 0) {
+        User userDao = userDaoUtil.getUserDao();
+        if(check(userDao)) {
             //通过，传给下一级继续检验
             callBack.doContinue();
         } else {
@@ -29,8 +32,9 @@ public class CheckIsSetGenderFilter implements ICheckDataFilter {
                 @Override
                 public void done(AVObject object, AVException e) {
                     if(e == null) {
-                        if(object.getInt(TableConstant.AVUserClass.GENDER) != 0) {
-                            userDaoUtil.updateGender(object.getInt(TableConstant.AVUserClass.GENDER));
+                        userDaoUtil.updateGender(object.getInt(TableConstant.AVUserClass.GENDER));
+                        userDaoUtil.updateUserHeadUrl(object.getString(TableConstant.AVUserClass.HEAD_URL));
+                        if(check(userDaoUtil.getUserDao())) {
                             //已设置
                             callBack.doContinue();
                         } else {
@@ -44,5 +48,11 @@ public class CheckIsSetGenderFilter implements ICheckDataFilter {
                 }
             });
         }
+    }
+
+    private boolean check(User userDao) {
+        return userDao != null
+                && LibUtils.notNullNorEmpty(userDao.getHeadUrl())
+                && userDao.getGender() != 0;
     }
 }

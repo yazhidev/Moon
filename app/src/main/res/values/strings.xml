@@ -120,6 +120,8 @@
     <string name="week_sat">星期六</string>
     <string name="week_sun">星期日</string>
 
+    <string name="set_user_info">填写个人信息</string>
+
     <string name="set_gender_lable">设置性别</string>
     <string name="user_center">个人信息</string>
     <string name="set_user_name">设置昵称</string>
