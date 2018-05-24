@@ -6,17 +6,11 @@ import android.content.pm.ActivityInfo;
 
 import com.yazhi1992.moon.BuildConfig;
 import com.yazhi1992.moon.api.DataCallback;
-import com.yazhi1992.moon.dialog.LoadingHelper;
-import com.yazhi1992.moon.event.AddHomeImg;
-import com.yazhi1992.moon.ui.home.HomeActivity;
-import com.yazhi1992.yazhilib.utils.LibFileUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
@@ -84,10 +78,10 @@ public class UploadPhotoHelper {
 
                                                 @Override
                                                 public void onSuccess(File file) {
-                                                    if(!file.getPath().equals(path)) {
-                                                        //小于100k不压缩，则不删除图片
-                                                        LibFileUtils.deleteFile(path);
-                                                    }
+//                                                    if(!file.getPath().equals(path)) {
+//                                                        //小于100k不压缩，则不删除图片
+//                                                        LibFileUtils.deleteFile(path);
+//                                                    }
                                                     emitter.onNext(file);
                                                 }
 
@@ -111,7 +105,7 @@ public class UploadPhotoHelper {
                                         @Override
                                         public void onSuccess(String data) {
                                             //上传成功，删除本地图片
-                                            LibFileUtils.deleteFile(file.getPath());
+//                                            LibFileUtils.deleteFile(file.getPath());
                                             emitter.onNext(data);
                                         }
 
