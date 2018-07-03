@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
         applicationId "com.yazhi1992.moon"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode 7
-        versionName "0.0.6"
+        versionName "0.0.7"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -100,70 +100,70 @@ greendao {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation rootProject.ext.constraintLayout
-    implementation rootProject.ext.supportDesign
+    implementation rootProject.ext.dependencies.constraintLayout
+    implementation rootProject.ext.dependencies.supportDesign
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     //arouter
-    compile rootProject.ext.arouter
-    annotationProcessor rootProject.ext.arouterCompiler
+    compile rootProject.ext.dependencies.arouter
+    annotationProcessor rootProject.ext.dependencies.arouterCompiler
 
     //robolectric
-    testImplementation rootProject.ext.robolectric
+    testImplementation rootProject.ext.dependencies.robolectric
 
     //dagger
-    annotationProcessor rootProject.ext.dagger2Compiler
-    implementation rootProject.ext.dagger2
+    annotationProcessor rootProject.ext.dependencies.dagger2Compiler
+    implementation rootProject.ext.dependencies.dagger2
 
     //logger
-    implementation rootProject.ext.logger
+    implementation rootProject.ext.dependencies.logger
 
     //okhttp
-    implementation rootProject.ext.okhttp
+    implementation rootProject.ext.dependencies.okhttp
 
-    compile(rootProject.ext.permissionsDispatcher) {
+    compile(rootProject.ext.dependencies.permissionsDispatcher) {
         // if you don't use android.app.Fragment you can exclude support for them
         exclude module: "support-v13"
     }
-    annotationProcessor rootProject.ext.permissionsDispatcherProcessor
+    annotationProcessor rootProject.ext.dependencies.permissionsDispatcherProcessor
 
     //bugly
-    compile rootProject.ext.buglyCrash
-    compile rootProject.ext.buglyNativeCrash
+    compile rootProject.ext.dependencies.buglyCrash
+    compile rootProject.ext.dependencies.buglyNativeCrash
 
-    compile rootProject.ext.eventbus
+    compile rootProject.ext.dependencies.eventbus
 
     compile project(":yazhilib")
 
     //LeanCould
-    compile rootProject.ext.leancloudAvoscloudSdk
-    compile(rootProject.ext.leancloudAvoscloudPush) {
+    compile rootProject.ext.dependencies.leancloudAvoscloudSdk
+    compile(rootProject.ext.dependencies.leancloudAvoscloudPush) {
         transitive = true
     } //IM、Push
     // avoscloud-sns：LeanCloud 第三方登录包
-    compile(rootProject.ext.leancloudAvoscloudSns)
-    compile(rootProject.ext.leancloudAvoscloudQq)
+    compile(rootProject.ext.dependencies.leancloudAvoscloudSns)
+    compile(rootProject.ext.dependencies.leancloudAvoscloudQq)
 
     //recyclerview 多布局
-    implementation(rootProject.ext.multitype, {
+    implementation(rootProject.ext.dependencies.multitype, {
         exclude group: 'com.android.support'
     })
 
-    implementation rootProject.ext.glide
-    annotationProcessor rootProject.ext.glideCompiler
+    implementation rootProject.ext.dependencies.glide
+    annotationProcessor rootProject.ext.dependencies.glideCompiler
 
-    compile rootProject.ext.multiDex
+    compile rootProject.ext.dependencies.multiDex
 
     //下拉刷新
-    compile rootProject.ext.smartRefresh
-    compile rootProject.ext.smartRefreshHeader
+    compile rootProject.ext.dependencies.smartRefresh
+    compile rootProject.ext.dependencies.smartRefreshHeader
 
-    compile rootProject.ext.dagger
-    annotationProcessor rootProject.ext.daggerCompiler
-    compile rootProject.ext.daggerAndroid
+    compile rootProject.ext.dependencies.dagger
+    annotationProcessor rootProject.ext.dependencies.daggerCompiler
+    compile rootProject.ext.dependencies.daggerAndroid
 //    compile rootProject.ext.daggerAndroidSupport
 //    annotationProcessor rootProject.ext.daggerAndroidProcessor
 
@@ -174,7 +174,7 @@ dependencies {
         exclude group: 'com.github.bumptech.glide', module: 'glide'
     }
 
-    compile rootProject.ext.luban
+    compile rootProject.ext.dependencies.luban
 }
 
 //apply from: 'tinker-support.gradle'
