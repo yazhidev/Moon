@@ -1,8 +1,6 @@
 package com.yazhi1992.moon.ui.newlogin;
 
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.CompoundButton;
 
@@ -17,17 +15,12 @@ import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.data.CheckUserDataChain;
 import com.yazhi1992.moon.databinding.ActivityNewLoginBinding;
-import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.event.ChangePwd;
-import com.yazhi1992.moon.event.ChangeUserInfo;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.ui.BaseActivity;
-import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -109,7 +102,6 @@ public class NewLoginActivity extends AbsUpgrateActivity {
                         user.setLoverId(avUser.getString(TableConstant.AVUserClass.LOVER_ID));
                     }
                     userDaoUtil.insert(user, null);
-                    PushManager.getInstance().register();
                     //继续检查下一个
                     CheckUserDataChain.getInstance().processChain();
                 }

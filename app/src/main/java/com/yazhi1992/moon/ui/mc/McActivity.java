@@ -9,7 +9,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
-import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
 import com.yazhi1992.moon.databinding.ActivityMcBinding;
 import com.yazhi1992.moon.dialog.ItemsDialog;
@@ -17,7 +16,6 @@ import com.yazhi1992.moon.event.OnMcStatusChanged;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
-import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.widget.calendarview.CalendarInfoCache;
 import com.yazhi1992.moon.widget.calendarview.Calendarview;
@@ -148,7 +146,6 @@ public class McActivity extends BaseActivity {
                                                     public void onSuccess(Boolean data) {
                                                         mCalendarView.rebuildView();
                                                         LibUtils.showToast(McActivity.this, position == 1 ? getString(R.string.add_mc_go_suc) : getString(R.string.add_mc_come_suc));
-                                                        PushManager.getInstance().pushAction(ActionConstant.UPDATE_MC);
                                                     }
 
                                                     @Override

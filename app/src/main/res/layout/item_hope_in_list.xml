@@ -31,7 +31,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                tool:src="@mipmap/ic_launcher"
+                tool:src="@mipmap/app_icon"
                 android:layout_centerVertical="true"
                 app:url="@{item.mUserHeadUrl}"
                 />

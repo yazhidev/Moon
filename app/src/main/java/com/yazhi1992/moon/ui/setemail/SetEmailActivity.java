@@ -1,26 +1,18 @@
 package com.yazhi1992.moon.ui.setemail;
 
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.GetCallback;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.data.CheckUserDataChain;
 import com.yazhi1992.moon.databinding.ActivitySetEmailBinding;
-import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.event.ChangeUserInfo;
 import com.yazhi1992.moon.ui.BaseActivity;
-import com.yazhi1992.moon.ui.forgetpwd.ForgetPwdActivity;
-import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.EventBus;

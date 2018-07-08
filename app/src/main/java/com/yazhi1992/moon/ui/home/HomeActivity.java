@@ -8,13 +8,17 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.tencent.android.tpush.XGIOperateCallback;
+import com.tencent.android.tpush.XGPushConfig;
+import com.tencent.android.tpush.XGPushManager;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
+import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.constant.CodeConstant;
@@ -151,6 +155,31 @@ public class HomeActivity extends AbsUpgrateActivity {
                 });
             }
         }
+
+        registerXG();
+    }
+
+    private void registerXG() {
+        XGPushConfig.setMiPushAppId(getApplicationContext(), "2882303761517834221");
+        XGPushConfig.setMiPushAppKey(getApplicationContext(), "5231783486221");
+        //打开第三方推送
+        XGPushConfig.enableOtherPush(getApplicationContext(), true);
+        XGPushConfig.enableDebug(this, true);
+        XGPushManager.registerPush(this, new XGIOperateCallback() {
+            @Override
+            public void onSuccess(Object data, int flag) {
+                //token在设备卸载重装的时候有可能会变
+                Log.d("TPush", "注册成功，设备token为：" + data);
+                mPresenter.updatePushToken(String.valueOf(data));
+            }
+
+            @Override
+            public void onFail(Object data, int errCode, String msg) {
+                Log.d("TPush", "注册失败，错误码：" + errCode + ",错误信息：" + msg);
+            }
+        });
+        //注意在3.2.2 版本信鸽对账号绑定和解绑接口进行了升级具体详情请参考API文档。
+        XGPushManager.bindAccount(getApplicationContext(), "ANDY");
     }
 
     class HomeAdapter extends FragmentPagerAdapter {

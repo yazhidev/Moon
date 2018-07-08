@@ -27,6 +27,7 @@ public class TableConstant {
         public static final String DEFAULT_MAN_HEAD = "default_man_head";
         public static final String DEFAULT_WOMAN_HEAD = "default_woman_head";
         public static final String EMAIL_VERIFIED = "emailVerified";
+        public static final String PUSH_TOKEN = "pushToken";
     }
 
     //纪念日表
@@ -49,6 +50,7 @@ public class TableConstant {
         public static final String USER = "user";
         public static final String COMMENT_LIST = "comment_list";
         public static final String MC = "menstrual_cycle";
+        public static final String LOVER = "lover";
     }
 
     //绑定表

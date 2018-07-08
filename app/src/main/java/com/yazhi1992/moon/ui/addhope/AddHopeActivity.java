@@ -18,7 +18,6 @@ import com.yazhi1992.moon.dialog.FinishHopeDialog;
 import com.yazhi1992.moon.event.AddDataEvent;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.util.EditDataHelper;
-import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -138,7 +137,6 @@ public class AddHopeActivity extends BaseActivity {
                         LibUtils.hideKeyboard(mBinding.etTitle);
                         mBinding.btnComfirm.setLoading(false);
                         finish();
-                        PushManager.getInstance().pushAction(ActionConstant.ADD_HOPE);
                     }
 
                     @Override

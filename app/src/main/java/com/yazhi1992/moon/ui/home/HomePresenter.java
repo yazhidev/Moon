@@ -15,4 +15,8 @@ public class HomePresenter {
     public void updateHeadImg(String filePath, DataCallback<String> callback) {
         Api.getInstance().updateHeadImg(filePath, callback);
     }
+
+    public void updatePushToken(String token) {
+        Api.getInstance().updatePushToken(token);
+    }
 }

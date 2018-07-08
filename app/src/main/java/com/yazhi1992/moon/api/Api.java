@@ -162,10 +162,7 @@ public class Api {
         memorialDayObj.put(TableConstant.MemorialDay.TIME, time);
         memorialDayObj.put(TableConstant.MemorialDay.USER_ID, currentUser.getObjectId());
 
-        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
-        loveHistoryObj.put(TableConstant.LoveHistory.MEMORIAL_DAY, memorialDayObj);
-        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_MEMORIAL_DAY);
-        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+        AVObject loveHistoryObj = buildHistoryObj(memorialDayObj, TableConstant.LoveHistory.MEMORIAL_DAY, TypeConstant.TYPE_MEMORIAL_DAY);
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
         loveHistoryObj.saveInBackground(new SaveCallback() {
@@ -715,10 +712,7 @@ public class Api {
         hopeObj.put(TableConstant.Hope.LINK, link);
         hopeObj.put(TableConstant.Hope.USER, getUserObj(currentUser.getObjectId()));
 
-        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
-        loveHistoryObj.put(TableConstant.LoveHistory.HOPE, hopeObj);
-        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_HOPE);
-        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+        AVObject loveHistoryObj = buildHistoryObj(hopeObj, TableConstant.LoveHistory.HOPE, TypeConstant.TYPE_HOPE);
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
         loveHistoryObj.saveInBackground(new SaveCallback() {
@@ -822,10 +816,7 @@ public class Api {
         });
 
         //首页历史列表插入一条心愿达成数据
-        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
-        loveHistoryObj.put(TableConstant.LoveHistory.HOPE, hopeObj);
-        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_HOPE_FINISHED);
-        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+        AVObject loveHistoryObj = buildHistoryObj(hopeObj, TableConstant.LoveHistory.HOPE, TypeConstant.TYPE_HOPE_FINISHED);
 
         ArrayList<AVObject> todos = new ArrayList<>();
         todos.add(hopeObj);
@@ -858,14 +849,11 @@ public class Api {
             AVUser currentUser = AVUser.getCurrentUser();
 
             //存到文本表 + 首页历史列表
-            AVObject hopeObj = new AVObject(TableConstant.Text.CLAZZ_NAME);
-            hopeObj.put(TableConstant.Text.CONTENT, content);
-            hopeObj.put(TableConstant.Text.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
+            AVObject textObj = new AVObject(TableConstant.Text.CLAZZ_NAME);
+            textObj.put(TableConstant.Text.CONTENT, content);
+            textObj.put(TableConstant.Text.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
 
-            AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
-            loveHistoryObj.put(TableConstant.LoveHistory.TEXT, hopeObj);
-            loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_TEXT);
-            loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+            AVObject loveHistoryObj = buildHistoryObj(textObj, TableConstant.LoveHistory.TEXT, TypeConstant.TYPE_TEXT);
 
             //保存关联对象的同时，被关联的对象也会随之被保存到云端。
             loveHistoryObj.saveInBackground(new SaveCallback() {
@@ -889,15 +877,12 @@ public class Api {
                             AVUser currentUser = AVUser.getCurrentUser();
 
                             //存到文本表 + 首页历史列表
-                            AVObject hopeObj = new AVObject(TableConstant.Text.CLAZZ_NAME);
-                            hopeObj.put(TableConstant.Text.CONTENT, content);
-                            hopeObj.put(TableConstant.Text.IMG_FILE, file);
-                            hopeObj.put(TableConstant.Text.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
+                            AVObject textObj = new AVObject(TableConstant.Text.CLAZZ_NAME);
+                            textObj.put(TableConstant.Text.CONTENT, content);
+                            textObj.put(TableConstant.Text.IMG_FILE, file);
+                            textObj.put(TableConstant.Text.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
 
-                            AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
-                            loveHistoryObj.put(TableConstant.LoveHistory.TEXT, hopeObj);
-                            loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_TEXT);
-                            loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+                            AVObject loveHistoryObj = buildHistoryObj(textObj, TableConstant.LoveHistory.TEXT, TypeConstant.TYPE_TEXT);
 
                             //保存关联对象的同时，被关联的对象也会随之被保存到云端。
                             loveHistoryObj.saveInBackground(new SaveCallback() {
@@ -936,6 +921,12 @@ public class Api {
                 handleResult(e, dataCallback, () -> dataCallback.onSuccess(commentBean));
             }
         });
+    }
+
+    public void updatePushToken(String token) {
+        AVUser currentUser = AVUser.getCurrentUser();
+        currentUser.put(TableConstant.AVUserClass.PUSH_TOKEN, token);
+        currentUser.saveInBackground();
     }
 
     public void replyComment(String content, String parentObjId, String peerId, final DataCallback<CommentBean> dataCallback) {
@@ -1481,6 +1472,18 @@ public class Api {
         });
     }
 
+    private AVObject buildHistoryObj(AVObject object, String objType, int type) {
+        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
+        loveHistoryObj.put(objType, object);
+        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, type);
+        User userDao = new UserDaoUtil().getUserDao();
+        if(userDao != null && userDao.getLoverId() != null) {
+            loveHistoryObj.put(TableConstant.LoveHistory.LOVER, getUserObj(userDao.getLoverId()));
+        }
+        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(AVUser.getCurrentUser().getObjectId()));
+        return loveHistoryObj;
+    }
+
     /**
      * 添加mc状态
      */
@@ -1496,10 +1499,7 @@ public class Api {
         mcObj.put(TableConstant.MC.MONTH, month);
         mcObj.put(TableConstant.MC.DAY, day);
 
-        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
-        loveHistoryObj.put(TableConstant.LoveHistory.MC, mcObj);
-        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_MC);
-        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+        AVObject loveHistoryObj = buildHistoryObj(mcObj, TableConstant.LoveHistory.MC, TypeConstant.TYPE_MC);
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
         loveHistoryObj.saveInBackground(new SaveCallback() {
@@ -1605,10 +1605,7 @@ public class Api {
         mcObj.put(TableConstant.MC.USER, getUserObj(currentUser.getObjectId()));
         mcObj.put(TableConstant.MC.TIME, time);
 
-        AVObject loveHistoryObj = new AVObject(TableConstant.LoveHistory.CLAZZ_NAME);
-        loveHistoryObj.put(TableConstant.LoveHistory.MC, mcObj);
-        loveHistoryObj.put(TableConstant.LoveHistory.TYPE, TypeConstant.TYPE_MC);
-        loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(currentUser.getObjectId()));
+        AVObject loveHistoryObj = buildHistoryObj(mcObj, TableConstant.LoveHistory.MC, TypeConstant.TYPE_MC);
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
         loveHistoryObj.saveInBackground(new SaveCallback() {

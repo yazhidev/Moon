@@ -10,11 +10,9 @@ import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.databinding.ActivityRegisterBinding;
-import com.yazhi1992.moon.sql.IDaoOperationListener;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.moon.ui.BaseActivity;
-import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.util.TipDialogHelper;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
@@ -71,7 +69,6 @@ public class RegisterActivity extends BaseActivity {
                                 user.setLoverId(avUser.getString(TableConstant.AVUserClass.LOVER_ID));
                             }
                             userDaoUtil.insert(user, null);
-                            PushManager.getInstance().register();
                             //前往验证邮箱
                             ActivityRouter.gotoSetEmail(true);
                             mBinding.btnComfirm.setLoading(false);

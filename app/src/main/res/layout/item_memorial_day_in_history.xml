@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/ig_user"
             style="@style/user_ig_in_history"
-            tool:src="@mipmap/ic_launcher"
+            tool:src="@mipmap/app_icon"
             app:url="@{item.mUserHeadUrl}"
             />
 

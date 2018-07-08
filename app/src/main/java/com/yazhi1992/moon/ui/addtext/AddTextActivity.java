@@ -14,17 +14,12 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.ActionConstant;
 import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.databinding.ActivityAddTextBinding;
-import com.yazhi1992.moon.dialog.LoadingHelper;
 import com.yazhi1992.moon.event.AddDataEvent;
-import com.yazhi1992.moon.event.AddHomeImg;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
-import com.yazhi1992.moon.ui.home.HomeActivity;
 import com.yazhi1992.moon.util.IUploader;
-import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.moon.util.StorageUtil;
 import com.yazhi1992.moon.util.UploadPhotoHelper;
-import com.yazhi1992.yazhilib.utils.LibFileUtils;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 import com.zhihu.matisse.Matisse;
@@ -34,19 +29,7 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.File;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 @Route(path = ActivityRouter.ADD_TEXT)
 public class AddTextActivity extends BaseActivity {
@@ -119,7 +102,6 @@ public class AddTextActivity extends BaseActivity {
                         EventBus.getDefault().post(new AddDataEvent(ActionConstant.ADD_TEXT));
                         LibUtils.hideKeyboard(mBinding.etTitle);
                         finish();
-                        PushManager.getInstance().pushAction(ActionConstant.ADD_TEXT);
                     }
 
                     @Override
@@ -136,7 +118,6 @@ public class AddTextActivity extends BaseActivity {
                         LibUtils.hideKeyboard(mBinding.etTitle);
                         mBinding.btnAdd.setLoading(false);
                         finish();
-                        PushManager.getInstance().pushAction(ActionConstant.ADD_TEXT);
                     }
 
                     @Override

@@ -14,14 +14,11 @@ import android.view.ViewGroup;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.DataCallback;
-import com.yazhi1992.moon.constant.CodeConstant;
 import com.yazhi1992.moon.data.CheckUserDataChain;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
 import com.yazhi1992.moon.event.ChangeUserInfo;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
-import com.yazhi1992.moon.util.UploadPhotoHelper;
-import com.yazhi1992.moon.util.PushManager;
 import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -85,7 +82,6 @@ public class SetFragment extends Fragment {
                             mPresenter.logout(new DataCallback<Boolean>() {
                                 @Override
                                 public void onSuccess(Boolean data) {
-                                    PushManager.getInstance().unregister();
                                     CheckUserDataChain.getInstance().resetChainIndex();
                                     ActivityRouter.gotoNewLogin();
                                     getActivity().finish();
