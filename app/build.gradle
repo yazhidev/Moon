@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -27,9 +30,9 @@ android {
         }
 
         manifestPlaceholders = [
-                XG_ACCESS_ID:"2100298761",
-                XG_ACCESS_KEY : "AB73DNT6B15K",
-                PACKAGE_NAME: "com.yazhi1992.moon",
+                XG_ACCESS_ID : "2100298761",
+                XG_ACCESS_KEY: "AB73DNT6B15K",
+                PACKAGE_NAME : "com.yazhi1992.moon",
         ]
     }
 
@@ -97,6 +100,10 @@ android {
             res.srcDirs = ['src/debug/res']
         }
     }
+
+    kapt {
+        generateStubs = true
+    }
 }
 
 //greendao配置
@@ -106,23 +113,24 @@ greendao {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation rootProject.ext.dependencies.constraintLayout
-    implementation rootProject.ext.dependencies.supportDesign
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation rootProject.ext.dependencies.constraintLayout
+    implementation rootProject.ext.dependencies.supportDesign
+    api rootProject.ext.dependencies.kotlin_jdk8
+
+    api project(":yazhilib")
+    api (project(":matisse")) {
+        exclude group: 'com.github.bumptech.glide', module: 'glide'
+    }
 
     //arouter
-    compile rootProject.ext.dependencies.arouter
-    annotationProcessor rootProject.ext.dependencies.arouterCompiler
+    api rootProject.ext.dependencies.arouter
+    kapt rootProject.ext.dependencies.arouterCompiler
 
     //robolectric
     testImplementation rootProject.ext.dependencies.robolectric
-
-    //dagger
-    annotationProcessor rootProject.ext.dependencies.dagger2Compiler
-    implementation rootProject.ext.dependencies.dagger2
 
     //logger
     implementation rootProject.ext.dependencies.logger
@@ -130,28 +138,20 @@ dependencies {
     //okhttp
     implementation rootProject.ext.dependencies.okhttp
 
-    compile(rootProject.ext.dependencies.permissionsDispatcher) {
+    api(rootProject.ext.dependencies.permissionsDispatcher) {
         // if you don't use android.app.Fragment you can exclude support for them
         exclude module: "support-v13"
     }
-    annotationProcessor rootProject.ext.dependencies.permissionsDispatcherProcessor
+    kapt rootProject.ext.dependencies.permissionsDispatcherProcessor
 
     //bugly
-    compile rootProject.ext.dependencies.buglyCrash
-    compile rootProject.ext.dependencies.buglyNativeCrash
+    api rootProject.ext.dependencies.buglyCrash
+    api rootProject.ext.dependencies.buglyNativeCrash
 
-    compile rootProject.ext.dependencies.eventbus
-
-    compile project(":yazhilib")
+    api rootProject.ext.dependencies.eventbus
 
     //LeanCould
-    compile rootProject.ext.dependencies.leancloudAvoscloudSdk
-    compile(rootProject.ext.dependencies.leancloudAvoscloudPush) {
-        transitive = true
-    } //IM、Push
-    // avoscloud-sns：LeanCloud 第三方登录包
-    compile(rootProject.ext.dependencies.leancloudAvoscloudSns)
-    compile(rootProject.ext.dependencies.leancloudAvoscloudQq)
+    api rootProject.ext.dependencies.leancloudAvoscloudSdk
 
     //recyclerview 多布局
     implementation(rootProject.ext.dependencies.multitype, {
@@ -159,37 +159,38 @@ dependencies {
     })
 
     implementation rootProject.ext.dependencies.glide
-    annotationProcessor rootProject.ext.dependencies.glideCompiler
+    kapt rootProject.ext.dependencies.glideCompiler
 
-    compile rootProject.ext.dependencies.multiDex
+    api rootProject.ext.dependencies.multiDex
 
     //下拉刷新
-    compile rootProject.ext.dependencies.smartRefresh
-    compile rootProject.ext.dependencies.smartRefreshHeader
+    api rootProject.ext.dependencies.smartRefresh
+    api rootProject.ext.dependencies.smartRefreshHeader
 
-    compile rootProject.ext.dependencies.dagger
-    annotationProcessor rootProject.ext.dependencies.daggerCompiler
-    compile rootProject.ext.dependencies.daggerAndroid
-//    compile rootProject.ext.daggerAndroidSupport
+    //dagger
+    api rootProject.ext.dependencies.dagger
+    kapt rootProject.ext.dependencies.daggerCompiler
+    api rootProject.ext.dependencies.daggerAndroid
+
+//    api rootProject.ext.daggerAndroidSupport
 //    annotationProcessor rootProject.ext.daggerAndroidProcessor
 
-    compile "org.greenrobot:greendao:$rootProject.green_dao_version"
-    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.2'
+    api rootProject.ext.dependencies.greenDao
+    api rootProject.ext.dependencies.greenDaoHepler
 
-    compile(project(":matisse")) {
-        exclude group: 'com.github.bumptech.glide', module: 'glide'
-    }
-
-    compile rootProject.ext.dependencies.luban
+    api rootProject.ext.dependencies.luban
 
     //信鸽jar
-    compile 'com.tencent.xinge:xinge:3.2.4-beta'
+    api rootProject.ext.dependencies.xinge
     //wup包
-    compile 'com.tencent.wup:wup:1.0.0.E-release'
+    api rootProject.ext.dependencies.xinge_wup
     //mid包
-    compile 'com.tencent.mid:mid:4.0.6-release'
+    api rootProject.ext.dependencies.xinge_mid
     //在集成信鸽的基础上新增小米push的jar包
-    compile 'com.tencent.xinge:mipush:3.2.4-beta'
+    api rootProject.ext.dependencies.xinge_mipush
+
+    api rootProject.ext.dependencies.lifeCycle
+    kapt rootProject.ext.dependencies.lifeCycleCompiler
 }
 
 //apply from: 'tinker-support.gradle'

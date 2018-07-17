@@ -4,7 +4,6 @@ import android.content.Intent;
 
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.yazhi1992.moon.constant.SPKeyConstant;
 
 /**
  * Created by zengyazhi on 2018/1/23.
@@ -19,8 +18,6 @@ public class ActivityRouter {
     public static final String MEMORIAL_LIST = "/app/memorial_list";
     //纪念日详情
     public static final String MEMORIAL_DAY_DETAIL = "/app/memorial_day_detail";
-    //登录
-    public static final String LOGIN = "/app/login";
     //绑定另一半
     public static final String BIND_LOVER = "/app/bind_lover";
     //关于我们
@@ -87,13 +84,6 @@ public class ActivityRouter {
     public static void gotoNewLogin() {
         ARouter.getInstance()
                 .build(NEW_LOGIN)
-                .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
-                .navigation();
-    }
-
-    public static void gotoLogin() {
-        ARouter.getInstance()
-                .build(LOGIN)
                 .withFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
                 .navigation();
     }

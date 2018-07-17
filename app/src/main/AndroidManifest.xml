@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.READ_LOGS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -18,8 +17,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
-
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
     <application
         android:name=".BaseApplication"
@@ -71,38 +68,6 @@
             android:name=".ui.home.HomeActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden">
-        </activity>
-
-        <!-- QQ SSO 登录 -->
-        <activity
-            android:name="com.tencent.tauth.AuthActivity"
-            android:launchMode="singleTask"
-            android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data android:scheme="1106624697"/>
-            </intent-filter>
-        </activity>
-        <!-- QQ SSO 登录 -->
-
-
-        <!-- 实时通信模块、推送（均需要加入以下声明） START -->
-        <!-- 实时通信模块、推送都要使用 PushService -->
-        <service android:name="com.avos.avoscloud.PushService"/>
-
-        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-        </receiver>
-        <!-- 实时通信模块、推送 END -->
-        <activity android:name=".ui.login.LoginActivity">
         </activity>
         <activity
             android:name=".ui.memorialdaylist.MemorialDayListActivity"
