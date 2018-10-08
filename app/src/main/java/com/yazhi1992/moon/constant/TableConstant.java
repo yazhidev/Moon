@@ -113,4 +113,11 @@ public class TableConstant {
         public static final String MC_GO_MAX_DAY = "mc_go_max_day"; //mc 没来结束预警天数
         public static final String MC_COME_MAX_DAY = "mc_come_max_day"; //mc 来了预警天数
     }
+
+    public static class TRAVEL_LIST {
+        public static final String CLAZZ_NAME = "travellist";
+        public static final String DES = "des";
+        public static final String COMPLETE = "complete";
+        public static final String USER = "user";
+    }
 }

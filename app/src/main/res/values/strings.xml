@@ -174,5 +174,11 @@
 
     <string name="travel_list">出行清单</string>
     <string name="travel_list_title">出行清单</string>
+    <string name="add_travel_list_hint">请填写事项名称</string>
+    <string name="add_travel_list_btn">添加</string>
+    <string name="travel_list_edit">编辑</string>
+    <string name="travel_list_delete">删除</string>
+    <string name="travel_menu_text1">新增事项</string>
+    <string name="travel_menu_text2">还原清单</string>
 
 </resources>

@@ -31,6 +31,7 @@ import com.yazhi1992.moon.viewmodel.ConfigBean;
 import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
+import com.yazhi1992.moon.viewmodel.TravelListItemDataBean;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibTimeUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -1279,6 +1280,7 @@ public class Api {
 
     /**
      * 获取某个月的mc数据列表
+     *
      * @param year
      * @param month
      * @param callback
@@ -1331,6 +1333,7 @@ public class Api {
 
     /**
      * 获取mc数据列表
+     *
      * @param callback
      */
     public void getAllMcRecord(DataCallback<List<McDataFromApi>> callback) {
@@ -1373,6 +1376,7 @@ public class Api {
 
     /**
      * 获取mc数据列表
+     *
      * @param lastTime 第一次传0
      * @param size
      * @param callback
@@ -1419,8 +1423,8 @@ public class Api {
     }
 
     // TODO: 2018/4/5 修改逻辑
+
     /**
-     *
      * 获取情侣中女性最近一条mc记录（用于心情预警，如果没来25天或刚来3天，则预警）
      *
      * @param callback
@@ -1447,7 +1451,7 @@ public class Api {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        if(avObject != null) {
+                        if (avObject != null) {
                             int status = avObject.getInt(TableConstant.MC.STATUS);
                             int gapBetweenTwoDay = Math.abs(LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(avObject.getLong(TableConstant.MC.TIME))));
 
@@ -1477,7 +1481,7 @@ public class Api {
         loveHistoryObj.put(objType, object);
         loveHistoryObj.put(TableConstant.LoveHistory.TYPE, type);
         User userDao = new UserDaoUtil().getUserDao();
-        if(userDao != null && userDao.getLoverId() != null) {
+        if (userDao != null && userDao.getLoverId() != null) {
             loveHistoryObj.put(TableConstant.LoveHistory.LOVER, getUserObj(userDao.getLoverId()));
         }
         loveHistoryObj.put(TableConstant.LoveHistory.USER, getUserObj(AVUser.getCurrentUser().getObjectId()));
@@ -1576,7 +1580,7 @@ public class Api {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        if(avObject != null) {
+                        if (avObject != null) {
                             int time = avObject.getInt(TableConstant.MC.TIME);
                             int year = avObject.getInt(TableConstant.MC.YEAR);
                             int month = avObject.getInt(TableConstant.MC.MONTH);
@@ -1870,6 +1874,91 @@ public class Api {
      */
     public void findPwd(String email, DataCallback<Boolean> callback) {
         AVUser.requestPasswordResetInBackground(email, new RequestPasswordResetCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(true);
+                    }
+                });
+            }
+        });
+    }
+
+    public void getTravelList(DataCallback<List<TravelListItemDataBean>> dataCallback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        //查询自己或另一半的
+        final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.TRAVEL_LIST.CLAZZ_NAME);
+        meQuery.whereEqualTo(TableConstant.TRAVEL_LIST.USER, getUserObj(currentUser.getObjectId()));
+
+        final AVQuery<AVObject> loverQuery = new AVQuery<>(TableConstant.TRAVEL_LIST.CLAZZ_NAME);
+        loverQuery.whereEqualTo(TableConstant.TRAVEL_LIST.USER, getUserObj(currentUser.getString(TableConstant.AVUserClass.LOVER_ID)));
+
+        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
+//        query.addAscendingOrder(TableConstant.Hope.STATUS); //已完成排在最下面
+//        query.addDescendingOrder(TableConstant.Hope.LEVEL); //等级优先级高于时间
+        query.addDescendingOrder(TableConstant.Common.CREATE_TIME);
+//        query.include(TableConstant.Hope.USER);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    List<TravelListItemDataBean> dataList = new ArrayList<>();
+                    for (AVObject object : list) {
+                        TravelListItemDataBean itemDataBean = new TravelListItemDataBean(object.getString(TableConstant.TRAVEL_LIST.DES), object.getBoolean(TableConstant.TRAVEL_LIST.COMPLETE), object.getObjectId());
+                        dataList.add(itemDataBean);
+                    }
+                    dataCallback.onSuccess(dataList);
+                } else {
+                    dataCallback.onFailed(e.getCode(), e.getMessage());
+                }
+            }
+        });
+    }
+
+    public void addTravelList(String des, DataCallback<String> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        AVObject travelListObj = new AVObject(TableConstant.TRAVEL_LIST.CLAZZ_NAME);
+        travelListObj.put(TableConstant.TRAVEL_LIST.DES, des);
+        travelListObj.put(TableConstant.TRAVEL_LIST.USER, getUserObj(currentUser.getObjectId()));
+
+        //保存关联对象的同时，被关联的对象也会随之被保存到云端。
+        travelListObj.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, () -> callback.onSuccess(travelListObj.getObjectId()));
+            }
+        });
+    }
+
+    public void deleteTravelListItemData(String objId, DataCallback<Boolean> callback) {
+        //删除travelList表数据
+        AVObject avQuery = AVObject.createWithoutData(TableConstant.TRAVEL_LIST.CLAZZ_NAME, objId);
+        avQuery.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(true);
+                    }
+                });
+            }
+        });
+    }
+
+    public void uploadAllItemStatus(List<TravelListItemDataBean> list, DataCallback<Boolean> callback) {
+        ArrayList<AVObject> todos = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            TravelListItemDataBean itemDataBean = list.get(i);
+            AVObject todo = AVObject.createWithoutData(TableConstant.TRAVEL_LIST.CLAZZ_NAME, itemDataBean.mObjectId);
+            todo.put(TableConstant.TRAVEL_LIST.COMPLETE, itemDataBean.mComplete.get());
+            todos.add(todo);
+        }
+        AVObject.saveAllInBackground(todos, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {

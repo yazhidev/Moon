@@ -38,5 +38,10 @@
     <color name="mc_green">#bae4ab</color>
     <color name="mc_red">#e5797e</color>
 
+    <color name="checkbox_normal">#abaeb1</color>
+    <color name="checkbox_normal_text">#232637</color>
+    <color name="checkbox_checked">#d7d7d7</color>
+    <color name="checkbox_checked_text">#c4c4c4</color>
+
 
 </resources>

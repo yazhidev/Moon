@@ -28,7 +28,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected boolean displayBackBtnInToolber() {
-        if(isTaskRoot()) {
+        if (isTaskRoot()) {
             return false;
         } else {
             return true;
@@ -43,17 +43,21 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void initToolBar(Toolbar toolbar) {
         setSupportActionBar(toolbar);
-        if(displayBackBtnInToolber()) {
+        if (displayBackBtnInToolber()) {
             //显示返回键
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Observable.timer(300, TimeUnit.MILLISECONDS)
-                            .subscribe(aLong -> finish());
+                    clickToolbarBack();
                 }
             });
         }
+    }
+
+    protected void clickToolbarBack() {
+        Observable.timer(300, TimeUnit.MILLISECONDS)
+                .subscribe(aLong -> finish());
     }
 
     private long mExitTime;

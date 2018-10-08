@@ -94,7 +94,7 @@
                 android:layout_height="@dimen/set_icon_size"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/set_margin"
-                android:src="@mipmap/icon_configuration"
+                android:src="@mipmap/todo_list"
                 />
 
             <TextView

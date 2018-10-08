@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="com.yazhi1992.moon.viewmodel.TravelListItemDataBean"></variable>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:id="@+id/root"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:theme="@style/CheckBoxWhite"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:checked="@={item.mComplete}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@{item.mDes}"
+            app:layout_constraintLeft_toRightOf="@+id/checkBox"
+            app:layout_constraintTop_toTopOf="@+id/checkBox"
+            app:layout_constraintBottom_toBottomOf="@+id/checkBox"
+            android:layout_marginLeft="15dp"
+            android:textColor="@{item.mComplete?@color/checkbox_checked_text:@color/checkbox_normal_text}"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

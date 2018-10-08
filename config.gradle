@@ -1,17 +1,14 @@
 ext {
     android = [
-            compileSdkVersion: 26,
-            buildToolsVersion: '26.0.2',
-            targetSdkVersion : 23,
-            minSdkVersion    : 21,
+            compileSdkVersion: 27,
+            buildToolsVersion: '27.0.3',
+            targetSdkVersion : 21,
+            minSdkVersion    : 20,
             versionCode      : 1,
             versionName      : "1.0.0"
     ]
     dependVersion = [
             support: "27.0.2"
-    ]
-    kotlin = [
-            kotlin_version: '1.2.41',
     ]
     dependencies = [
             kotlin_jdk8                   : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${rootProject.kotlin_version}",
@@ -29,8 +26,8 @@ ext {
 
             robolectric                   : 'org.robolectric:robolectric:3.6.1',
 
-            dagger2Compiler               : "com.google.dagger:dagger-compiler:2.9",
-            dagger2                       : 'com.google.dagger:dagger:2.9',
+            dagger2Compiler               : "com.google.dagger:dagger-compiler:2.14.1",
+            dagger2                       : 'com.google.dagger:dagger:2.14.1',
 
             logger                        : 'com.orhanobut:logger:2.1.1',
 
@@ -82,6 +79,7 @@ ext {
             ucrop                         : 'com.github.yalantis:ucrop:2.2.1',
 
             greenDaoHepler                : 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.2',
-            greenDao                      : "org.greenrobot:greendao:$rootProject.green_dao_version"
+            greenDao                      : "org.greenrobot:greendao:$rootProject.green_dao_version",
+
     ]
 }
