@@ -9,7 +9,7 @@ import com.yazhi1992.moon.api.DataCallback;
 
 public class HomePresenter {
     public void uploadHomeImg(String filePath, DataCallback<String> callback) {
-        Api.getInstance().uploadHomeImg(filePath, callback);
+        Api.getInstance().uploadImgAndPush2History(filePath, callback);
     }
 
     public void updateHeadImg(String filePath, DataCallback<String> callback) {

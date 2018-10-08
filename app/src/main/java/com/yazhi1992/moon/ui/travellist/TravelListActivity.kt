@@ -104,7 +104,7 @@ class TravelListActivity : BaseActivity() {
             //长按 编辑/删除
             mAddDialog.show(fragmentManager)
         }
-        mAdapter.register(TravelListItemDataBean::class.java!!, travelListViewBinder)
+        mAdapter.register(TravelListItemDataBean::class.java, travelListViewBinder)
         mAdapter.items = mItems
         //        mBinding.ryTravel.setPadding(0, (int) LibCalcUtil.dp2px(this, 20), 0, 0);
         mBinding.ryTravel.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
@@ -139,13 +139,13 @@ class TravelListActivity : BaseActivity() {
 
     //添加右上角加号按钮
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.add, menu)
+        menuInflater.inflate(R.menu.travel_list, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_add -> {
+            R.id.menu_travel -> {
                 mMenuDialog.show(fragmentManager)
             }
             else -> {

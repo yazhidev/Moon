@@ -5,6 +5,8 @@
     <data>
         <import type="android.view.View"></import>
 
+        <import type="android.text.TextUtils"></import>
+
         <variable
             name="item"
             type="com.yazhi1992.moon.viewmodel.TextBeanWrapper"></variable>
@@ -42,6 +44,7 @@
             android:layout_below="@+id/tv_name"
             android:layout_alignLeft="@+id/tv_name"
             style="@style/content_in_history"
+            android:visibility="@{TextUtils.isEmpty(item.mData.mContent) ? View.GONE : View.VISIBLE}"
             android:text="@{item.mData.mContent}"
             />
 

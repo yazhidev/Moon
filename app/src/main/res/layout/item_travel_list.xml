@@ -29,9 +29,10 @@
 
         <TextView
             android:text="@{item.mDes}"
+            tool:text="哈哈哈哈哈"
             app:layout_constraintLeft_toRightOf="@+id/checkBox"
-            app:layout_constraintTop_toTopOf="@+id/checkBox"
-            app:layout_constraintBottom_toBottomOf="@+id/checkBox"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginLeft="15dp"
             android:textColor="@{item.mComplete?@color/checkbox_checked_text:@color/checkbox_normal_text}"
             android:textSize="18sp"

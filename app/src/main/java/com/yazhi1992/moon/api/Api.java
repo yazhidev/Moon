@@ -516,11 +516,28 @@ public class Api {
                         public void onSuc() {
                             AVFile avFile = avObject.getAVFile(TableConstant.Text.IMG_FILE);
                             if (avFile != null) {
-                                //如果原来有图片文件，则先删除原来的头像图片，节约空间
-                                avFile.deleteInBackground(new DeleteCallback() {
+                                //如果图片是首页图片，则不删除
+                                AVQuery<AVObject> homeQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
+                                homeQuery.whereEqualTo(TableConstant.Home.HOME_IMG_FILE, avFile);
+                                homeQuery.findInBackground(new FindCallback<AVObject>() {
                                     @Override
-                                    public void done(AVException e) {
-                                        doRealDelete(type, dataObjId, callback, finalClazzName, finalClazzInhistoryName);
+                                    public void done(List<AVObject> list, AVException e) {
+                                        handleResult(e, callback, new onResultSuc() {
+                                            @Override
+                                            public void onSuc() {
+                                                if(list == null || list.size() == 0) {
+                                                    //如果原来有图片文件，则先删除原来的头像图片，节约空间
+                                                    avFile.deleteInBackground(new DeleteCallback() {
+                                                        @Override
+                                                        public void done(AVException e) {
+                                                            doRealDelete(type, dataObjId, callback, finalClazzName, finalClazzInhistoryName);
+                                                        }
+                                                    });
+                                                } else {
+                                                    doRealDelete(type, dataObjId, callback, finalClazzName, finalClazzInhistoryName);
+                                                }
+                                            }
+                                        });
                                     }
                                 });
                             } else {
@@ -1000,6 +1017,124 @@ public class Api {
         return AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, objId);
     }
 
+    /**
+     * 上传图片并发布到love history
+     * @param filePath
+     * @param callback
+     */
+    public void uploadImgAndPush2History(String filePath, DataCallback<String> callback) {
+        String name = "img.jpg";
+        if (filePath.contains("/")) {
+            name = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
+        }
+        try {
+            AVFile file = AVFile.withAbsoluteLocalPath(name, filePath);
+            file.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        //保存到home表
+                        User userDao = new UserDaoUtil().getUserDao();
+                        final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
+                        meQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(userDao.getObjectId()));
+                        final AVQuery<AVObject> loverQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
+                        loverQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(userDao.getLoverId()));
+                        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
+                        query.findInBackground(new FindCallback<AVObject>() {
+                            @Override
+                            public void done(List<AVObject> list, AVException e) {
+                                handleResult(e, callback, new onResultSuc() {
+                                    @Override
+                                    public void onSuc() {
+                                        AVObject object = null;
+                                        if (list == null || list.size() == 0) {
+                                            //没找到，添加
+                                            object = new AVObject(TableConstant.Home.CLAZZ_NAME);
+                                            object.put(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
+                                            object.put(TableConstant.Home.HOME_IMG_FILE, file);
+                                            object.saveInBackground(new SaveCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    handleResult(e, callback, new onResultSuc() {
+                                                        @Override
+                                                        public void onSuc() {
+                                                            callback.onSuccess(file.getUrl());
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        } else {
+                                            object = list.get(0);
+                                            AVFile avFile = object.getAVFile(TableConstant.Home.HOME_IMG_FILE);
+
+                                            //如果 singleText 表已经删除了该条，则替换掉首页图片时删除旧图片
+                                            AVQuery<AVObject> textQuery = new AVQuery<>(TableConstant.Text.CLAZZ_NAME);
+                                            textQuery.whereEqualTo(TableConstant.Text.IMG_FILE, avFile);
+                                            textQuery.findInBackground(new FindCallback<AVObject>() {
+                                                @Override
+                                                public void done(List<AVObject> list, AVException e) {
+                                                    handleResult(e, callback, new onResultSuc() {
+                                                        @Override
+                                                        public void onSuc() {
+                                                            if(list == null || list.size() == 0) {
+                                                                //可以删除旧数据，节约空间
+                                                                avFile.deleteInBackground();
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            });
+
+                                            object.put(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
+                                            object.put(TableConstant.Home.HOME_IMG_FILE, file);
+                                            object.saveInBackground(new SaveCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    //更新对应用户的 home 表的首页图片地址
+                                                    handleResult(e, callback, new onResultSuc() {
+                                                        @Override
+                                                        public void onSuc() {
+                                                            //存到文本表 + 首页历史列表
+                                                            AVUser currentUser = AVUser.getCurrentUser();
+                                                            AVObject textObj = new AVObject(TableConstant.Text.CLAZZ_NAME);
+                                                            textObj.put(TableConstant.Text.CONTENT, "");
+                                                            textObj.put(TableConstant.Text.IMG_FILE, file);
+                                                            textObj.put(TableConstant.Text.USER, AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, currentUser.getObjectId()));
+
+                                                            AVObject loveHistoryObj = buildHistoryObj(textObj, TableConstant.LoveHistory.TEXT, TypeConstant.TYPE_TEXT);
+
+                                                            //保存关联对象的同时，被关联的对象也会随之被保存到云端。
+                                                            loveHistoryObj.saveInBackground(new SaveCallback() {
+                                                                @Override
+                                                                public void done(AVException e) {
+                                                                    handleResult(e, callback, () -> callback.onSuccess(file.getUrl()));
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+
+                            }
+                        });
+
+                    }
+                }
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            callback.onFailed(-1, e.toString());
+        }
+    }
+
+    /**
+     * 上传图片并删除云端旧图片
+     * @param filePath
+     * @param callback
+     */
     public void uploadHomeImg(String filePath, DataCallback<String> callback) {
         String name = "img.jpg";
         if (filePath.contains("/")) {

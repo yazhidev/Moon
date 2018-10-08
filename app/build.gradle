@@ -27,12 +27,6 @@ android {
             //设置支持的SO库架构
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86'
         }
-
-        manifestPlaceholders = [
-                XG_ACCESS_ID : "2100298761",
-                XG_ACCESS_KEY: "AB73DNT6B15K",
-                PACKAGE_NAME : "com.yazhi1992.moon",
-        ]
     }
 
     Properties properties = new Properties()
@@ -193,15 +187,6 @@ dependencies {
     }
 
     compile rootProject.ext.dependencies.luban
-
-    //信鸽jar
-    compile 'com.tencent.xinge:xinge:3.2.4-beta'
-    //wup包
-    compile 'com.tencent.wup:wup:1.0.0.E-release'
-    //mid包
-    compile 'com.tencent.mid:mid:4.0.6-release'
-    //在集成信鸽的基础上新增小米push的jar包
-    compile 'com.tencent.xinge:mipush:3.2.4-beta'
 
     api rootProject.ext.dependencies.kotlin_jdk8
 }
