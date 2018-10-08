@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -18,7 +19,6 @@ import com.yazhi1992.moon.event.AddDataEvent;
 import com.yazhi1992.moon.ui.BaseActivity;
 import com.yazhi1992.moon.ui.ViewBindingUtils;
 import com.yazhi1992.moon.util.IUploader;
-import com.yazhi1992.moon.util.StorageUtil;
 import com.yazhi1992.moon.util.UploadPhotoHelper;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -59,7 +59,7 @@ public class AddTextActivity extends BaseActivity {
                     .captureStrategy(new CaptureStrategy(true, BuildConfig.DEBUG ? "com.yazhi1992.moon.debug.provider" : "com.yazhi1992.moon.provider"))
                     .countable(true)
                     .maxSelectable(1)
-                    .setForceRatio(1, 1, StorageUtil.getPath(StorageUtil.DirectoryName.IMAGE_DIRECTORY_NAME))
+//                    .setForceRatio(1, 1, StorageUtil.getPath(StorageUtil.DirectoryName.IMAGE_DIRECTORY_NAME))
                     .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
                     .thumbnailScale(0.85f)
                     .imageEngine(new GlideEngine())
@@ -68,7 +68,7 @@ public class AddTextActivity extends BaseActivity {
 
         mBinding.btnAdd.setOnClickListener(v -> {
             String title = mBinding.etTitle.getText().toString();
-            if (title.isEmpty()) {
+            if (title.isEmpty() && TextUtils.isEmpty(imgPath)) {
                 LibUtils.showToast(this, getString(R.string.add_text_empty));
                 return;
             }

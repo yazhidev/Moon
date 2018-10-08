@@ -33,6 +33,7 @@ class TravelListActivity : BaseActivity() {
     lateinit var mBinding: ActivityTravelListBinding
     private var mAdapter = CustomMultitypeAdapter()
     private var mItems = Items()
+    private var mOriginalItems = Items()
     private val mAddTravelListDialog by lazy {
         AddTravelListDialog().apply {
             setOnFinishListener { content, id ->
@@ -65,14 +66,24 @@ class TravelListActivity : BaseActivity() {
             }
         }
     }
-    private val mAddDialog by lazy {
+    private val mEditDialog by lazy {
         val items = ArrayList<String>()
         items.add(getString(R.string.travel_list_edit))
         items.add(getString(R.string.travel_list_delete))
         ItemsDialog.getInstance(items) { position ->
             if (position == 0) {
                 //编辑
-
+                val chooseItem = mItems[mChoosedPosition] as TravelListItemDataBean
+                AddTravelListDialog.getInstance(chooseItem.mDes.get(), chooseItem.mObjectId)
+                        .apply {
+                            setOnFinishListener { content, id ->
+                                chooseItem.mDes.set(content)
+                                mItems[mChoosedPosition] = chooseItem
+                                mAdapter.notifyItemChanged(mChoosedPosition)
+                                LibUtils.showToast("修改成功！")
+                            }
+                            showDialog(this@TravelListActivity.fragmentManager)
+                        }
             } else if (position == 1) {
                 //删除
                 val showMsg = "是否删除该事项？"
@@ -102,7 +113,7 @@ class TravelListActivity : BaseActivity() {
         travelListViewBinder.setOnItemLongClickListener { position ->
             mChoosedPosition = position
             //长按 编辑/删除
-            mAddDialog.show(fragmentManager)
+            mEditDialog.show(fragmentManager)
         }
         mAdapter.register(TravelListItemDataBean::class.java, travelListViewBinder)
         mAdapter.items = mItems
@@ -123,6 +134,7 @@ class TravelListActivity : BaseActivity() {
                 } else {
                     mItems.clear()
                     mItems.addAll(data)
+                    mOriginalItems = mItems;
                     mAdapter.notifyDataSetChanged()
                 }
                 Observable.timer(1, TimeUnit.SECONDS)
@@ -173,6 +185,11 @@ class TravelListActivity : BaseActivity() {
     }
 
     private fun saveAllStatus(callback: (Boolean) -> Unit) {
+        if(mOriginalItems == mItems) {
+            //没有修改
+            callback(true)
+            return
+        }
         LoadingHelper.getInstance().showLoading(this)
         var datas = mItems as ArrayList<TravelListItemDataBean>
         Api.getInstance().uploadAllItemStatus(datas, object : DataCallback<Boolean> {

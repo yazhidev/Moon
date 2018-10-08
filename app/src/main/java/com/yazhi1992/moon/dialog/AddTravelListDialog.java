@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,15 @@ public class AddTravelListDialog extends DialogFragment {
 
     DialogAddTravelListBinding mBinding;
     private OnFinishListener mOnFinishListener;
+    private String mText;
+    private String mObjId;
+
+    public static AddTravelListDialog getInstance(String text, String objId) {
+        AddTravelListDialog addTravelListDialog = new AddTravelListDialog();
+        addTravelListDialog.setText(text);
+        addTravelListDialog.setObjId(objId);
+        return addTravelListDialog;
+    }
 
     @Nullable
     @Override
@@ -43,6 +53,11 @@ public class AddTravelListDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if(!TextUtils.isEmpty(mText)) {
+            mBinding.etInput.setText(mText);
+            mBinding.btnFinish.setText("提交修改");
+        }
+
         //显示软键盘
         LibUtils.showKeyoard(view.getContext(), mBinding.etInput);
 
@@ -54,22 +69,49 @@ public class AddTravelListDialog extends DialogFragment {
                     LibUtils.showToast(view.getContext(), getString(R.string.finish_hope_hint_empty));
                     return;
                 }
-                mBinding.btnFinish.setLoading(true);
-                Api.getInstance().addTravelList(content, new DataCallback<String>() {
-                    @Override
-                    public void onSuccess(String id) {
-                        mBinding.btnFinish.setLoading(false);
-                        if(mOnFinishListener != null) {
-                            mOnFinishListener.onFinish(content, id);
+                if(content.equals(mText)) {
+                    dismiss();
+                    return;
+                }
+                if(TextUtils.isEmpty(mObjId)) {
+                    //新增
+                    mBinding.btnFinish.setLoading(true);
+                    Api.getInstance().addTravelList(content, new DataCallback<String>() {
+                        @Override
+                        public void onSuccess(String id) {
+                            mBinding.btnFinish.setLoading(false);
+                            if(mOnFinishListener != null) {
+                                mOnFinishListener.onFinish(content, id);
+                            }
+                            dismiss();
                         }
-                        dismiss();
-                    }
 
-                    @Override
-                    public void onFailed(int code, String msg) {
-                        mBinding.btnFinish.setLoading(false);
-                    }
-                });
+                        @Override
+                        public void onFailed(int code, String msg) {
+                            LibUtils.showToast(msg);
+                            mBinding.btnFinish.setLoading(false);
+                        }
+                    });
+                } else{
+                    //修改
+                    mBinding.btnFinish.setLoading(true);
+                    Api.getInstance().editTravelList(content, mObjId, new DataCallback<String>() {
+                        @Override
+                        public void onSuccess(String newContent) {
+                            mBinding.btnFinish.setLoading(false);
+                            if(mOnFinishListener != null) {
+                                mOnFinishListener.onFinish(newContent, mObjId);
+                            }
+                            dismiss();
+                        }
+
+                        @Override
+                        public void onFailed(int code, String msg) {
+                            LibUtils.showToast(msg);
+                            mBinding.btnFinish.setLoading(false);
+                        }
+                    });
+                }
             }
         });
     }
@@ -80,6 +122,14 @@ public class AddTravelListDialog extends DialogFragment {
         //设置 dialog 的背景为 null
         getDialog().getWindow().setBackgroundDrawable(null);
         getDialog().setCanceledOnTouchOutside(false);
+    }
+
+    public void setText(String text) {
+        mText = text;
+    }
+
+    public void setObjId(String objId) {
+        mObjId = objId;
     }
 
     public interface OnFinishListener {

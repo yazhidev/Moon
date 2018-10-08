@@ -1588,7 +1588,8 @@ public class Api {
                     public void onSuc() {
                         if (avObject != null) {
                             int status = avObject.getInt(TableConstant.MC.STATUS);
-                            int gapBetweenTwoDay = Math.abs(LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(avObject.getLong(TableConstant.MC.TIME))));
+                            long millSecondTime = avObject.getLong(TableConstant.MC.TIME) * 1000;
+                            int gapBetweenTwoDay = Math.abs(LibTimeUtils.getGapBetweenTwoDay(new Date(), new Date(millSecondTime)));
 
                             if (status == 0
                                     && LibSPUtils.getInt(SPKeyConstant.MC_GO_MIN_DAY, 25) < gapBetweenTwoDay
@@ -2065,6 +2066,17 @@ public class Api {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, () -> callback.onSuccess(travelListObj.getObjectId()));
+            }
+        });
+    }
+
+    public void editTravelList(String des, String id, DataCallback<String> callback) {
+        AVObject avQuery = AVObject.createWithoutData(TableConstant.TRAVEL_LIST.CLAZZ_NAME, id);
+        avQuery.put(TableConstant.TRAVEL_LIST.DES, des);
+        avQuery.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, () -> callback.onSuccess(des));
             }
         });
     }
