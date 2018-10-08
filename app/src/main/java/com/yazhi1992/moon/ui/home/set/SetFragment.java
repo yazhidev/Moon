@@ -112,6 +112,8 @@ public class SetFragment extends Fragment {
         });
 
         mBinding.igLover.setOnClickListener(v -> ActivityRouter.gotoImgPreview(mViewModel.loverHeadUrl.get()));
+
+        mBinding.rlTravelList.setOnClickListener(v -> ActivityRouter.gotoTravelList());
     }
 
     @Override

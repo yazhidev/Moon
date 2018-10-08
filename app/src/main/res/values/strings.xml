@@ -172,4 +172,7 @@
     <string name="mc_enable_title">是否启用小姨妈功能</string>
     <string name="mc_enable_des">记录经期时间</string>
 
+    <string name="travel_list">出行清单</string>
+    <string name="travel_list_title">出行清单</string>
+
 </resources>

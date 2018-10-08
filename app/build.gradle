@@ -27,9 +27,9 @@ android {
         }
 
         manifestPlaceholders = [
-                XG_ACCESS_ID:"2100298761",
-                XG_ACCESS_KEY : "AB73DNT6B15K",
-                PACKAGE_NAME: "com.yazhi1992.moon",
+                XG_ACCESS_ID : "2100298761",
+                XG_ACCESS_KEY: "AB73DNT6B15K",
+                PACKAGE_NAME : "com.yazhi1992.moon",
         ]
     }
 

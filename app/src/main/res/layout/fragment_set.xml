@@ -78,6 +78,38 @@
             app:layout_constraintRight_toRightOf="@+id/ig_lover"
             app:layout_constraintTop_toTopOf="@+id/tv_name"/>
 
+
+        <RelativeLayout
+            android:id="@+id/rl_travel_list"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/theme_white_press_selector"
+            app:layout_constraintBottom_toTopOf="@+id/rl_configuration"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <ImageView
+                android:id="@+id/ig_travel"
+                android:layout_width="@dimen/set_icon_size"
+                android:layout_height="@dimen/set_icon_size"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/set_margin"
+                android:src="@mipmap/icon_configuration"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@+id/ig_travel"
+                android:text="@string/travel_list_title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/set_text_size"
+                />
+
+        </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/rl_configuration"
             android:layout_width="0dp"
@@ -145,6 +177,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginBottom="20dp"
+            android:elevation="0dp"
             android:background="@drawable/theme_white_press_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
