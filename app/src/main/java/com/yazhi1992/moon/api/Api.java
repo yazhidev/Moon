@@ -17,6 +17,7 @@ import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
+import com.yazhi1992.moon.constant.IDConstant;
 import com.yazhi1992.moon.constant.SPKeyConstant;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.constant.TypeConstant;
@@ -41,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -56,6 +58,14 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by zengyazhi on 2018/1/25.
@@ -169,7 +179,10 @@ public class Api {
         loveHistoryObj.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+                handleResult(e, dataCallback, () -> {
+                    updateHistory();
+                    dataCallback.onSuccess(true);
+                });
             }
         });
     }
@@ -525,7 +538,7 @@ public class Api {
                                         handleResult(e, callback, new onResultSuc() {
                                             @Override
                                             public void onSuc() {
-                                                if(list == null || list.size() == 0) {
+                                                if (list == null || list.size() == 0) {
                                                     //如果原来有图片文件，则先删除原来的头像图片，节约空间
                                                     avFile.deleteInBackground(new DeleteCallback() {
                                                         @Override
@@ -736,7 +749,11 @@ public class Api {
         loveHistoryObj.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+                handleResult(e, dataCallback, () ->
+                {
+                    updateHistory();
+                    dataCallback.onSuccess(true);
+                });
             }
         });
     }
@@ -847,7 +864,10 @@ public class Api {
                         .subscribe(new Consumer<Integer>() {
                             @Override
                             public void accept(Integer integer) throws Exception {
-                                handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
+                                handleResult(e, dataCallback, () -> {
+                                    updateHistory();
+                                    dataCallback.onSuccess(true);
+                                });
                             }
                         });
             }
@@ -877,7 +897,10 @@ public class Api {
             loveHistoryObj.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(AVException e) {
-                    handleResult(e, dataCallback, () -> dataCallback.onSuccess(null));
+                    handleResult(e, dataCallback, () -> {
+                        updateHistory();
+                        dataCallback.onSuccess(null);
+                    });
                 }
             });
         } else {
@@ -906,7 +929,10 @@ public class Api {
                             loveHistoryObj.saveInBackground(new SaveCallback() {
                                 @Override
                                 public void done(AVException e) {
-                                    handleResult(e, dataCallback, () -> dataCallback.onSuccess(file.getUrl()));
+                                    handleResult(e, dataCallback, () -> {
+                                        updateHistory();
+                                        dataCallback.onSuccess(file.getUrl());
+                                    });
                                 }
                             });
                         }
@@ -936,7 +962,10 @@ public class Api {
         commentItemData.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                handleResult(e, dataCallback, () -> dataCallback.onSuccess(commentBean));
+                handleResult(e, dataCallback, () -> {
+                    updateHistory();
+                    dataCallback.onSuccess(commentBean);
+                });
             }
         });
     }
@@ -962,7 +991,10 @@ public class Api {
         commentItemData.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                handleResult(e, dataCallback, () -> dataCallback.onSuccess(commentBean));
+                handleResult(e, dataCallback, () -> {
+                    updateHistory();
+                    dataCallback.onSuccess(commentBean);
+                });
             }
         });
     }
@@ -1019,6 +1051,7 @@ public class Api {
 
     /**
      * 上传图片并发布到love history
+     *
      * @param filePath
      * @param callback
      */
@@ -1076,7 +1109,7 @@ public class Api {
                                                     handleResult(e, callback, new onResultSuc() {
                                                         @Override
                                                         public void onSuc() {
-                                                            if(list == null || list.size() == 0) {
+                                                            if (list == null || list.size() == 0) {
                                                                 //可以删除旧数据，节约空间
                                                                 avFile.deleteInBackground();
                                                             }
@@ -1107,7 +1140,10 @@ public class Api {
                                                             loveHistoryObj.saveInBackground(new SaveCallback() {
                                                                 @Override
                                                                 public void done(AVException e) {
-                                                                    handleResult(e, callback, () -> callback.onSuccess(file.getUrl()));
+                                                                    handleResult(e, callback, () -> {
+                                                                        updateHistory();
+                                                                        callback.onSuccess(file.getUrl());
+                                                                    });
                                                                 }
                                                             });
                                                         }
@@ -1132,6 +1168,7 @@ public class Api {
 
     /**
      * 上传图片并删除云端旧图片
+     *
      * @param filePath
      * @param callback
      */
@@ -1646,6 +1683,7 @@ public class Api {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () -> {
+                    updateHistory();
                     McDataFromApi mcDataFromApi = new McDataFromApi(time, year, month, day, action);
                     dataCallback.onSuccess(mcDataFromApi);
                 });
@@ -1778,6 +1816,22 @@ public class Api {
         });
     }
 
+    public void getMyInfo(DataCallback<LoverInfo> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+        currentUser.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        callback.onSuccess(new LoverInfo(avObject.getString(TableConstant.AVUserClass.NICK_NAME)
+                                , avObject.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE).getUrl()));
+                    }
+                });
+            }
+        });
+    }
+
     /**
      * 获取另一半的最新名字和头像
      *
@@ -1892,6 +1946,7 @@ public class Api {
                         configBean.setMcComeMaxDay(avObject.getInt(TableConstant.CONFIGURATION.MC_COME_MAX_DAY));
                         configBean.setMcGoMaxDay(avObject.getInt(TableConstant.CONFIGURATION.MC_GO_MAX_DAY));
                         configBean.setMcGoMinDay(avObject.getInt(TableConstant.CONFIGURATION.MC_GO_MIN_DAY));
+                        configBean.setNotifyDingDing(avObject.getBoolean(TableConstant.CONFIGURATION.NOTIFY_DINGDING));
                         callback.onSuccess(configBean);
                     }
                 });
@@ -2033,10 +2088,8 @@ public class Api {
         loverQuery.whereEqualTo(TableConstant.TRAVEL_LIST.USER, getUserObj(currentUser.getString(TableConstant.AVUserClass.LOVER_ID)));
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
-//        query.addAscendingOrder(TableConstant.Hope.STATUS); //已完成排在最下面
+        query.addAscendingOrder(TableConstant.Common.CREATE_TIME);
 //        query.addDescendingOrder(TableConstant.Hope.LEVEL); //等级优先级高于时间
-        query.addDescendingOrder(TableConstant.Common.CREATE_TIME);
-//        query.include(TableConstant.Hope.USER);
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
@@ -2116,5 +2169,42 @@ public class Api {
                 });
             }
         });
+    }
+
+    public void updateHistory() {
+        boolean notify = false;
+        AVUser currentUser = AVUser.getCurrentUser();
+        if (currentUser.getObjectId().equals(IDConstant.NANA) && LibSPUtils.getBoolean(SPKeyConstant.NOTIFY_DINGDING, true)) {
+            notify = true;
+        }
+        if (currentUser.getObjectId().equals(IDConstant.DD) && LibSPUtils.getBoolean(SPKeyConstant.NOTIFY_DD, false)) {
+            notify = true;
+        }
+        if (!notify) return;
+        OkHttpClient okHttpClient = new OkHttpClient();
+        String json = "{\"at\":{\"isAtAll\":true},\"msgtype\":\"text\",\"text\":{\"content\":\"小本本更新啦~\"}}";
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8")
+                , json);
+        Request request = new Request.Builder()
+                .url("https://oapi.dingtalk.com/robot/send?access_token=4055ede326381822f57623b996fcc05b20f0552cbb4bf00093eb8be73933af90")//请求的url
+                .post(requestBody)
+                .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+            }
+        });
+    }
+
+    public void enterApp() {
+        AVUser currentUser = AVUser.getCurrentUser();
+        if (currentUser.getObjectId().equals(IDConstant.NANA)) {
+            AVObject todoFolder = new AVObject(TableConstant.ENTER_APP.CLAZZ_NAME);// 构建对象
+            todoFolder.saveInBackground();// 保存到服务端
+        }
     }
 }

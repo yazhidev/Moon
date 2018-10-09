@@ -112,6 +112,8 @@ public class TableConstant {
         public static final String MC_GO_MIN_DAY = "mc_go_min_day"; //mc 没来开始预警天数
         public static final String MC_GO_MAX_DAY = "mc_go_max_day"; //mc 没来结束预警天数
         public static final String MC_COME_MAX_DAY = "mc_come_max_day"; //mc 来了预警天数
+        public static final String NOTIFY_DINGDING = "notifyDingDing"; //钉钉通知
+        public static final String NOTIFY_DD = "notifyDD"; //我发动态也钉钉通知
     }
 
     public static class TRAVEL_LIST {
@@ -119,5 +121,9 @@ public class TableConstant {
         public static final String DES = "des";
         public static final String COMPLETE = "complete";
         public static final String USER = "user";
+    }
+
+    public static class ENTER_APP {
+        public static final String CLAZZ_NAME = "enterApp";
     }
 }

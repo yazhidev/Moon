@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+       <android.support.constraint.ConstraintLayout
+           android:id="@+id/content"
+           android:background="@color/white"
+           android:layout_gravity="bottom"
+           android:layout_width="match_parent"
+           android:visibility="visible"
+           android:layout_height="250dp">
+
+           <com.yazhi1992.yazhilib.widget.HookIcon
+               android:id="@+id/hookIcon"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintBottom_toTopOf="@+id/complete_text"
+               app:layout_constraintVertical_chainStyle="packed"
+               android:layout_width="100dp"
+               android:layout_height="100dp"/>
+
+           <TextView
+               android:id="@+id/complete_text"
+               android:text="都准备好啦~放心出发吧~"
+               android:textColor="@color/color_3"
+               android:layout_marginTop="20dp"
+               android:textSize="17sp"
+               android:gravity="center"
+               app:layout_constraintLeft_toLeftOf="parent"
+               app:layout_constraintRight_toRightOf="parent"
+               app:layout_constraintBottom_toBottomOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/hookIcon"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+       </android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
+</layout>

@@ -57,7 +57,7 @@ class TravelListActivity : BaseActivity() {
                 //删除
                 val showMsg = "是否清空所有事项的准备状态？"
                 TipDialogHelper.getInstance().showDialog(this@TravelListActivity, showMsg) {
-                    mItems.forEachIndexed { index, value->
+                    mItems.forEachIndexed { index, value ->
                         var temp = value as TravelListItemDataBean
                         temp.mComplete.set(false)
                         mItems[index] = temp
@@ -134,7 +134,10 @@ class TravelListActivity : BaseActivity() {
                 } else {
                     mItems.clear()
                     mItems.addAll(data)
-                    mOriginalItems = mItems;
+                    mItems.forEach {
+                        val temp = it as TravelListItemDataBean
+                        mOriginalItems.add(temp.deepClone())
+                    }
                     mAdapter.notifyDataSetChanged()
                 }
                 Observable.timer(1, TimeUnit.SECONDS)
@@ -185,14 +188,33 @@ class TravelListActivity : BaseActivity() {
     }
 
     private fun saveAllStatus(callback: (Boolean) -> Unit) {
-        if(mOriginalItems == mItems) {
-            //没有修改
+        val tempList = mItems as ArrayList<TravelListItemDataBean>
+        if (!mOriginalItems.isEmpty() && !tempList.isEmpty()) {
+            //比较是否修改了
+            mOriginalItems.forEachIndexed { originindex, originvalue ->
+                val original = originvalue as TravelListItemDataBean
+                var equalIndex = -1
+                run temp@ {
+                    tempList.forEachIndexed {index, value ->
+                        //剔除状态没有改变的item
+                        if ((value.mObjectId == original.mObjectId)
+                                && value.mComplete.get() == original.mComplete.get()) {
+                            equalIndex = index
+                            return@temp
+                        }
+                    }
+                }
+                if(equalIndex >= 0) {
+                    tempList.removeAt(equalIndex)
+                }
+            }
+        }
+        if(tempList.isEmpty()) {
             callback(true)
             return
         }
         LoadingHelper.getInstance().showLoading(this)
-        var datas = mItems as ArrayList<TravelListItemDataBean>
-        Api.getInstance().uploadAllItemStatus(datas, object : DataCallback<Boolean> {
+        Api.getInstance().uploadAllItemStatus(tempList, object : DataCallback<Boolean> {
             override fun onFailed(code: Int, msg: String?) {
                 Observable.just(0)
                         .observeOn(AndroidSchedulers.mainThread())

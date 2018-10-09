@@ -21,6 +21,27 @@ public class SetPresenter {
         return false;
     }
 
+    public void getMyInfo(DataCallback<LoverInfo> callback) {
+        UserDaoUtil userDaoUtil = new UserDaoUtil();
+        User userDao = userDaoUtil.getUserDao();
+        Api.getInstance().getMyInfo(new DataCallback<LoverInfo>() {
+            @Override
+            public void onSuccess(LoverInfo data) {
+                if(data != null) {
+                    userDaoUtil.updateUserName(data.name);
+                    userDaoUtil.updateUserHeadUrl(data.imgurl);
+                    callback.onSuccess(data);
+                } else {
+                    callback.onSuccess(new LoverInfo(userDao.getName(), userDao.getHeadUrl()));
+                }
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+                callback.onSuccess(new LoverInfo(userDao.getName(), userDao.getHeadUrl()));
+            }
+        });
+    }
 
     public void getLoverInfo(DataCallback<LoverInfo> callback) {
         UserDaoUtil userDaoUtil = new UserDaoUtil();

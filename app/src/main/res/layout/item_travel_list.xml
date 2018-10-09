@@ -16,6 +16,7 @@
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:id="@+id/root"
+        android:background="@drawable/theme_white_press_selector"
         android:layout_height="wrap_content">
 
         <CheckBox
@@ -23,7 +24,7 @@
             android:theme="@style/CheckBoxWhite"
             android:layout_marginLeft="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:checked="@={item.mComplete}"
+            android:checked="@{item.mComplete}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

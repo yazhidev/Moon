@@ -2,6 +2,7 @@ package com.yazhi1992.moon.dialog;
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -114,6 +115,12 @@ public class AddTravelListDialog extends DialogFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        mBinding.etInput.setText("");
     }
 
     @Override
