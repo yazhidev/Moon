@@ -115,4 +115,11 @@
         <item name="colorControlActivated">@color/theme_color</item>
     </style>
 
+    <style name="CheckBoxWhite" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <!-- 正常颜色 -->
+        <item name="colorControlNormal">@color/checkbox_normal</item>
+        <!-- 选中时颜色 -->
+        <item name="colorControlActivated">@color/checkbox_checked</item>
+    </style>
+
 </resources>

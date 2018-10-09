@@ -1,5 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -9,28 +12,21 @@ android {
         applicationId "com.yazhi1992.moon"
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode 8
-        versionName "0.0.8"
+        versionCode 9
+        versionName "0.0.9"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [moduleName: project.getName()]
-            }
-        }
-
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                arguments = [moduleName: project.getName()]
+//            }
+//        }
         //bugly 升级
         ndk {
             //设置支持的SO库架构
             abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86'
         }
-
-        manifestPlaceholders = [
-                XG_ACCESS_ID:"2100298761",
-                XG_ACCESS_KEY : "AB73DNT6B15K",
-                PACKAGE_NAME: "com.yazhi1992.moon",
-        ]
     }
 
     Properties properties = new Properties()
@@ -43,6 +39,16 @@ android {
             keyAlias "lina"
             keyPassword properties.getProperty("pwd")
             v2SigningEnabled true
+        }
+    }
+
+//    kapt {
+//        generateStubs = true
+//    }
+
+    kapt {
+        arguments {
+            arg("moduleName", project.getName())
         }
     }
 
@@ -115,13 +121,13 @@ dependencies {
 
     //arouter
     compile rootProject.ext.dependencies.arouter
-    annotationProcessor rootProject.ext.dependencies.arouterCompiler
+    kapt rootProject.ext.dependencies.arouterCompiler
 
     //robolectric
     testImplementation rootProject.ext.dependencies.robolectric
 
     //dagger
-    annotationProcessor rootProject.ext.dependencies.dagger2Compiler
+    kapt rootProject.ext.dependencies.dagger2Compiler
     implementation rootProject.ext.dependencies.dagger2
 
     //logger
@@ -182,14 +188,7 @@ dependencies {
 
     compile rootProject.ext.dependencies.luban
 
-    //信鸽jar
-    compile 'com.tencent.xinge:xinge:3.2.4-beta'
-    //wup包
-    compile 'com.tencent.wup:wup:1.0.0.E-release'
-    //mid包
-    compile 'com.tencent.mid:mid:4.0.6-release'
-    //在集成信鸽的基础上新增小米push的jar包
-    compile 'com.tencent.xinge:mipush:3.2.4-beta'
+    api rootProject.ext.dependencies.kotlin_jdk8
 }
 
 //apply from: 'tinker-support.gradle'

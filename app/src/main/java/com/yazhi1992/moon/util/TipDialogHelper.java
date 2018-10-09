@@ -41,6 +41,28 @@ public class TipDialogHelper {
                 .show();
     }
 
+    public void showDialog(Context context, String msg, String negativeMsg, OnComfirmListener negativeListener, OnComfirmListener listener) {
+        new AlertDialog.Builder(context)
+                .setMessage(msg)
+                .setNegativeButton(negativeMsg, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(negativeListener != null) {
+                            negativeListener.comfirm();
+                        }
+                    }
+                })
+                .setPositiveButton(context.getString(R.string.comfirm), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(listener != null) {
+                            listener.comfirm();
+                        }
+                    }
+                })
+                .show();
+    }
+
     public void showOneBtnDialog(Context context, String msg, OnComfirmListener listener) {
         new AlertDialog.Builder(context)
                 .setMessage(msg)

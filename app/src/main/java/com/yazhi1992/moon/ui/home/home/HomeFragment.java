@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
+import com.yazhi1992.moon.api.Api;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.constant.CodeConstant;
 import com.yazhi1992.moon.constant.SPKeyConstant;
@@ -101,8 +102,8 @@ public class HomeFragment extends Fragment {
 
         mBinding.rlMemorialDayList.setOnClickListener(v -> ActivityRouter.gotoMemorialList());
 
-        mBinding.rlMcComming.setOnClickListener(v -> ActivityRouter.gotoMcDetail());
-
+//        mBinding.rlMcComming.setOnClickListener(v -> ActivityRouter.gotoMcDetail());
+                mBinding.rlMcComming.setOnClickListener(v -> Api.getInstance().updateHistory());
     }
 
     private void initLoadingView() {

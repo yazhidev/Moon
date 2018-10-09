@@ -9,6 +9,16 @@ public class ConfigBean {
     private int mcGoMinDay= 25;
     private int mcGoMaxDay= 37;
     private int mcComeMaxDay = 3;
+    private boolean notifyDingDing = true;
+    private boolean notifyDD = false;
+
+    public boolean isNotifyDD() {
+        return notifyDD;
+    }
+
+    public void setNotifyDD(boolean notifyDD) {
+        this.notifyDD = notifyDD;
+    }
 
     public int getMcGoMinDay() {
         return mcGoMinDay;
@@ -40,5 +50,13 @@ public class ConfigBean {
 
     public void setCanPushImg(boolean canPushImg) {
         this.canPushImg = canPushImg;
+    }
+
+    public boolean isNotifyDingDing() {
+        return notifyDingDing;
+    }
+
+    public void setNotifyDingDing(boolean notifyDingDing) {
+        this.notifyDingDing = notifyDingDing;
     }
 }

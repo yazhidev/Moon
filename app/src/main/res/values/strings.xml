@@ -96,7 +96,7 @@
     <string name="notification_add_memorial_content">快去瞅瞅吧~</string>
     <string name="pushmanager_init_failed">推送初始化失败</string>
 
-    <string name="about_us_developer">Designed by D &#038; Lina in Hangzhou\nPowered by Love</string>
+    <string name="about_us_developer">Designed by DD &#038; Nana in Hangzhou\nPowered by Love</string>
 
     <string name="create_text_time">%s月%s日</string>
 
@@ -171,5 +171,14 @@
     <string name="mc_tip_enable_des">在经期来临的附近几天提醒自己要心平气和（或多多包容她）</string>
     <string name="mc_enable_title">是否启用小姨妈功能</string>
     <string name="mc_enable_des">记录经期时间</string>
+
+    <string name="travel_list">出行清单</string>
+    <string name="travel_list_title">出行清单</string>
+    <string name="add_travel_list_hint">请填写事项名称</string>
+    <string name="add_travel_list_btn">添加</string>
+    <string name="travel_list_edit">编辑</string>
+    <string name="travel_list_delete">删除</string>
+    <string name="travel_menu_text1">新增事项</string>
+    <string name="travel_menu_text2">还原清单</string>
 
 </resources>

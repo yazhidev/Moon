@@ -14,6 +14,8 @@ public class SPKeyConstant {
 
     //云参数
     public static final String PUSH_IMG_ENABLE = "push_img_enable"; //说说是否可以传图
+    public static final String NOTIFY_DINGDING = TableConstant.CONFIGURATION.NOTIFY_DINGDING; //娜娜发动态时通知我
+    public static final String NOTIFY_DD = TableConstant.CONFIGURATION.NOTIFY_DD; //我发动态时通知钉钉
     public static final String MC_GO_MIN_DAY = TableConstant.CONFIGURATION.MC_GO_MIN_DAY; //mc 没来开始预警天数
     public static final String MC_GO_MAX_DAY = TableConstant.CONFIGURATION.MC_GO_MAX_DAY; //mc 没来结束预警天数
     public static final String MC_COME_MAX_DAY = TableConstant.CONFIGURATION.MC_COME_MAX_DAY; //mc 来了预警天数

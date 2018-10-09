@@ -17,7 +17,6 @@ import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.data.CheckUserDataChain;
 import com.yazhi1992.moon.databinding.FragmentSetBinding;
 import com.yazhi1992.moon.event.ChangeUserInfo;
-import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.yazhilib.utils.LibStatusBarUtils;
 
@@ -52,11 +51,18 @@ public class SetFragment extends Fragment {
 
         mUserDaoUtil = new UserDaoUtil();
 
-        User user = mUserDaoUtil.getUserDao();
-        if (user != null) {
-            mViewModel.myName.set(user.getName());
-            mViewModel.myHeadUrl.set(user.getHeadUrl());
-        }
+        mPresenter.getMyInfo(new DataCallback<LoverInfo>() {
+            @Override
+            public void onSuccess(LoverInfo data) {
+                mViewModel.myName.set(data.name);
+                mViewModel.myHeadUrl.set(data.imgurl);
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+
+            }
+        });
 
         //同步另一半最新的昵称与头像
         mPresenter.getLoverInfo(new DataCallback<LoverInfo>() {
@@ -112,6 +118,8 @@ public class SetFragment extends Fragment {
         });
 
         mBinding.igLover.setOnClickListener(v -> ActivityRouter.gotoImgPreview(mViewModel.loverHeadUrl.get()));
+
+        mBinding.rlTravelList.setOnClickListener(v -> ActivityRouter.gotoTravelList());
     }
 
     @Override
