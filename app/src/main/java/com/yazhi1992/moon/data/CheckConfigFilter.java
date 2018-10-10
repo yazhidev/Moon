@@ -22,7 +22,7 @@ public class CheckConfigFilter implements ICheckDataFilter {
             public void onSuccess(ConfigBean data) {
                 LibSPUtils.setBoolean(SPKeyConstant.PUSH_IMG_ENABLE, data.isCanPushImg());
                 LibSPUtils.setBoolean(SPKeyConstant.NOTIFY_DINGDING, data.isNotifyDingDing());
-                LibSPUtils.setBoolean(SPKeyConstant.NOTIFY_DD, data.isNotifyDingDing());
+                LibSPUtils.setBoolean(SPKeyConstant.NOTIFY_DD, data.isNotifyDD());
                 LibSPUtils.setInt(SPKeyConstant.MC_GO_MAX_DAY, data.getMcGoMaxDay());
                 LibSPUtils.setInt(SPKeyConstant.MC_GO_MIN_DAY, data.getMcGoMinDay());
                 LibSPUtils.setInt(SPKeyConstant.MC_COME_MAX_DAY, data.getMcComeMaxDay());

@@ -1947,6 +1947,7 @@ public class Api {
                         configBean.setMcGoMaxDay(avObject.getInt(TableConstant.CONFIGURATION.MC_GO_MAX_DAY));
                         configBean.setMcGoMinDay(avObject.getInt(TableConstant.CONFIGURATION.MC_GO_MIN_DAY));
                         configBean.setNotifyDingDing(avObject.getBoolean(TableConstant.CONFIGURATION.NOTIFY_DINGDING));
+                        configBean.setNotifyDD(avObject.getBoolean(TableConstant.CONFIGURATION.NOTIFY_DD));
                         callback.onSuccess(configBean);
                     }
                 });
