@@ -121,6 +121,14 @@ public class TableConstant {
         public static final String DES = "des";
         public static final String COMPLETE = "complete";
         public static final String USER = "user";
+        public static final String TABLE = "table";
+    }
+
+    public static class TRAVEL_LIST_TABLE {
+        public static final String CLAZZ_NAME = "travellisttable";
+        public static final String NAME = "name";
+        public static final String USER = "user";
+        public static final String UPDATE = "update";
     }
 
     public static class ENTER_APP {

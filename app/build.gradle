@@ -189,6 +189,8 @@ dependencies {
     compile rootProject.ext.dependencies.luban
 
     api rootProject.ext.dependencies.kotlin_jdk8
+
+    compile rootProject.ext.dependencies.cardview
 }
 
 //apply from: 'tinker-support.gradle'

@@ -113,6 +113,7 @@ public class HomeFragment extends Fragment {
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+                mBinding.igLoading.setVisibility(View.VISIBLE);
                 mBinding.igLoading.setPivotX(mBinding.igLoading.getWidth() / 2);
                 mBinding.igLoading.setPivotY(mBinding.igLoading.getHeight() / 2);
                 mBinding.igLoading.setRotation((Float) animation.getAnimatedValue());

@@ -42,4 +42,8 @@ public class MultiStatusView extends RelativeLayout{
         mViewModel.status.set(MultiStatusViewModel.NET_ERR);
     }
 
+    public void showNormal() {
+        setVisibility(GONE);
+    }
+
 }
