@@ -430,7 +430,7 @@ class TravelListActivity : BaseActivity() {
     }
 
     private fun editTableName() {
-        AddTravelListDialog.editName(mShowTableData.mName.get(), mShowTableData.mObjectId, false)
+        AddTravelListDialog.editName(mShowTableData.mName.get(), mShowTableData.mObjectId, true)
                 .apply {
                     setOnFinishListener { content, id ->
                         mShowTableData.mName.set(content)

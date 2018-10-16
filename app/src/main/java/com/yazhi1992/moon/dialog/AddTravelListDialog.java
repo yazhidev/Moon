@@ -161,7 +161,7 @@ public class AddTravelListDialog extends DialogFragment {
                     } else{
                         //修改
                         mBinding.btnFinish.setLoading(true);
-                        Api.getInstance().editTravelListTableName(content, mItemId, new DataCallback<String>() {
+                        Api.getInstance().editTravelList(content, mItemId, new DataCallback<String>() {
                             @Override
                             public void onSuccess(String newContent) {
                                 mBinding.btnFinish.setLoading(false);
