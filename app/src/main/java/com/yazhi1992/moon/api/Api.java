@@ -33,6 +33,7 @@ import com.yazhi1992.moon.viewmodel.HistoryItemDataFromApi;
 import com.yazhi1992.moon.viewmodel.HopeItemDataBean;
 import com.yazhi1992.moon.viewmodel.MemorialDayBean;
 import com.yazhi1992.moon.viewmodel.TravelListItemDataBean;
+import com.yazhi1992.moon.viewmodel.TravelListTableDataBean;
 import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibTimeUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
@@ -1049,6 +1050,10 @@ public class Api {
         return AVObject.createWithoutData(TableConstant.AVUserClass.CLAZZ_NAME, objId);
     }
 
+    private AVObject getObj(String className, String objId) {
+        return AVObject.createWithoutData(className, objId);
+    }
+
     /**
      * 上传图片并发布到love history
      *
@@ -1947,6 +1952,7 @@ public class Api {
                         configBean.setMcGoMaxDay(avObject.getInt(TableConstant.CONFIGURATION.MC_GO_MAX_DAY));
                         configBean.setMcGoMinDay(avObject.getInt(TableConstant.CONFIGURATION.MC_GO_MIN_DAY));
                         configBean.setNotifyDingDing(avObject.getBoolean(TableConstant.CONFIGURATION.NOTIFY_DINGDING));
+                        configBean.setNotifyDD(avObject.getBoolean(TableConstant.CONFIGURATION.NOTIFY_DD));
                         callback.onSuccess(configBean);
                     }
                 });
@@ -2077,19 +2083,20 @@ public class Api {
         });
     }
 
-    public void getTravelList(DataCallback<List<TravelListItemDataBean>> dataCallback) {
+    public void getTravelList(String tableId, DataCallback<List<TravelListItemDataBean>> dataCallback) {
         AVUser currentUser = AVUser.getCurrentUser();
 
         //查询自己或另一半的
         final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.TRAVEL_LIST.CLAZZ_NAME);
         meQuery.whereEqualTo(TableConstant.TRAVEL_LIST.USER, getUserObj(currentUser.getObjectId()));
+        meQuery.whereEqualTo(TableConstant.TRAVEL_LIST.TABLE, AVObject.createWithoutData(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, tableId));
 
         final AVQuery<AVObject> loverQuery = new AVQuery<>(TableConstant.TRAVEL_LIST.CLAZZ_NAME);
         loverQuery.whereEqualTo(TableConstant.TRAVEL_LIST.USER, getUserObj(currentUser.getString(TableConstant.AVUserClass.LOVER_ID)));
+        loverQuery.whereEqualTo(TableConstant.TRAVEL_LIST.TABLE, AVObject.createWithoutData(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, tableId));
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
         query.addAscendingOrder(TableConstant.Common.CREATE_TIME);
-//        query.addDescendingOrder(TableConstant.Hope.LEVEL); //等级优先级高于时间
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
@@ -2107,11 +2114,12 @@ public class Api {
         });
     }
 
-    public void addTravelList(String des, DataCallback<String> callback) {
+    public void addTravelList(String tableId, String des, DataCallback<String> callback) {
         AVUser currentUser = AVUser.getCurrentUser();
 
         AVObject travelListObj = new AVObject(TableConstant.TRAVEL_LIST.CLAZZ_NAME);
         travelListObj.put(TableConstant.TRAVEL_LIST.DES, des);
+        travelListObj.put(TableConstant.TRAVEL_LIST.TABLE, getObj(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, tableId));
         travelListObj.put(TableConstant.TRAVEL_LIST.USER, getUserObj(currentUser.getObjectId()));
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
@@ -2123,6 +2131,28 @@ public class Api {
         });
     }
 
+    public void addTravelListTable(String name, DataCallback<String> callback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        AVObject travelListObj = new AVObject(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME);
+        travelListObj.put(TableConstant.TRAVEL_LIST_TABLE.NAME, name);
+        travelListObj.put(TableConstant.TRAVEL_LIST_TABLE.USER, getUserObj(currentUser.getObjectId()));
+
+        //保存关联对象的同时，被关联的对象也会随之被保存到云端。
+        travelListObj.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, () -> callback.onSuccess(travelListObj.getObjectId()));
+            }
+        });
+    }
+
+    public void updateTable(String id) {
+        AVObject obj = getObj(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, id);
+        obj.put(TableConstant.TRAVEL_LIST_TABLE.UPDATE, "");
+        obj.saveInBackground();
+    }
+
     public void editTravelList(String des, String id, DataCallback<String> callback) {
         AVObject avQuery = AVObject.createWithoutData(TableConstant.TRAVEL_LIST.CLAZZ_NAME, id);
         avQuery.put(TableConstant.TRAVEL_LIST.DES, des);
@@ -2130,6 +2160,17 @@ public class Api {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, () -> callback.onSuccess(des));
+            }
+        });
+    }
+
+    public void editTravelListTableName(String name, String id, DataCallback<String> callback) {
+        AVObject avQuery = AVObject.createWithoutData(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, id);
+        avQuery.put(TableConstant.TRAVEL_LIST_TABLE.NAME, name);
+        avQuery.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, () -> callback.onSuccess(name));
             }
         });
     }
@@ -2144,6 +2185,35 @@ public class Api {
                     @Override
                     public void onSuc() {
                         callback.onSuccess(true);
+                    }
+                });
+            }
+        });
+    }
+
+    public void deleteAllItemOfTable(String tableId, DataCallback<Boolean> callback) {
+        //删除table
+        AVObject avQuery = getObj(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, tableId);
+        avQuery.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(AVException e) {
+                handleResult(e, callback, new onResultSuc() {
+                    @Override
+                    public void onSuc() {
+                        //删除该table所有ite
+                        AVQuery<AVObject> listQuery = new AVQuery<>(TableConstant.TRAVEL_LIST.CLAZZ_NAME);
+                        listQuery.whereEqualTo(TableConstant.TRAVEL_LIST.TABLE, getObj(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, tableId));
+                        listQuery.deleteAllInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(AVException e) {
+                                handleResult(e, callback, new onResultSuc() {
+                                    @Override
+                                    public void onSuc() {
+                                        callback.onSuccess(true);
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
@@ -2206,5 +2276,35 @@ public class Api {
             AVObject todoFolder = new AVObject(TableConstant.ENTER_APP.CLAZZ_NAME);// 构建对象
             todoFolder.saveInBackground();// 保存到服务端
         }
+    }
+
+    //获取清单列表
+    public void getTravelListTable(DataCallback<List<TravelListTableDataBean>> dataCallback) {
+        AVUser currentUser = AVUser.getCurrentUser();
+
+        //查询自己或另一半的
+        final AVQuery<AVObject> meQuery = new AVQuery<>(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME);
+        meQuery.whereEqualTo(TableConstant.TRAVEL_LIST_TABLE.USER, getUserObj(currentUser.getObjectId()));
+
+        final AVQuery<AVObject> loverQuery = new AVQuery<>(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME);
+        loverQuery.whereEqualTo(TableConstant.TRAVEL_LIST_TABLE.USER, getUserObj(currentUser.getString(TableConstant.AVUserClass.LOVER_ID)));
+
+        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
+        query.addDescendingOrder(TableConstant.Common.UPDATE_TIME);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    List<TravelListTableDataBean> dataList = new ArrayList<>();
+                    for (AVObject object : list) {
+                        TravelListTableDataBean itemDataBean = new TravelListTableDataBean(object.getString(TableConstant.TRAVEL_LIST_TABLE.NAME), object.getObjectId());
+                        dataList.add(itemDataBean);
+                    }
+                    dataCallback.onSuccess(dataList);
+                } else {
+                    dataCallback.onFailed(e.getCode(), e.getMessage());
+                }
+            }
+        });
     }
 }

@@ -29,12 +29,31 @@ public class AddTravelListDialog extends DialogFragment {
     DialogAddTravelListBinding mBinding;
     private OnFinishListener mOnFinishListener;
     private String mText;
-    private String mObjId;
+    private String mItemId;
+    private String mTableId;
+    private boolean mEditTable = false; //true 则为新增清单
 
-    public static AddTravelListDialog getInstance(String text, String objId) {
+    public static AddTravelListDialog newItem(String tableId) {
+        AddTravelListDialog addTravelListDialog = new AddTravelListDialog();
+        addTravelListDialog.setTableId(tableId);
+        return addTravelListDialog;
+    }
+
+    public static AddTravelListDialog newTable() {
+        AddTravelListDialog addTravelListDialog = new AddTravelListDialog();
+        addTravelListDialog.setEditTable(true);
+        return addTravelListDialog;
+    }
+
+    public static AddTravelListDialog editName(String text, String objId, boolean editTable) {
         AddTravelListDialog addTravelListDialog = new AddTravelListDialog();
         addTravelListDialog.setText(text);
-        addTravelListDialog.setObjId(objId);
+        if(editTable) {
+            addTravelListDialog.setTableId(objId);
+        } else {
+            addTravelListDialog.setItemId(objId);
+        }
+        addTravelListDialog.setEditTable(editTable);
         return addTravelListDialog;
     }
 
@@ -57,6 +76,11 @@ public class AddTravelListDialog extends DialogFragment {
         if(!TextUtils.isEmpty(mText)) {
             mBinding.etInput.setText(mText);
             mBinding.btnFinish.setText("提交修改");
+        } else {
+            if(mEditTable) {
+                mBinding.etInput.setHint("请填写清单名称");
+                mBinding.btnFinish.setText("新增");
+            }
         }
 
         //显示软键盘
@@ -74,44 +98,86 @@ public class AddTravelListDialog extends DialogFragment {
                     dismiss();
                     return;
                 }
-                if(TextUtils.isEmpty(mObjId)) {
-                    //新增
-                    mBinding.btnFinish.setLoading(true);
-                    Api.getInstance().addTravelList(content, new DataCallback<String>() {
-                        @Override
-                        public void onSuccess(String id) {
-                            mBinding.btnFinish.setLoading(false);
-                            if(mOnFinishListener != null) {
-                                mOnFinishListener.onFinish(content, id);
+                if(mEditTable) {
+                    if(TextUtils.isEmpty(mTableId)) {
+                        //新增清单
+                        mBinding.btnFinish.setLoading(true);
+                        Api.getInstance().addTravelListTable(content, new DataCallback<String>() {
+                            @Override
+                            public void onSuccess(String id) {
+                                mBinding.btnFinish.setLoading(false);
+                                if(mOnFinishListener != null) {
+                                    mOnFinishListener.onFinish(content, id);
+                                }
+                                dismiss();
                             }
-                            dismiss();
-                        }
 
-                        @Override
-                        public void onFailed(int code, String msg) {
-                            LibUtils.showToast(msg);
-                            mBinding.btnFinish.setLoading(false);
-                        }
-                    });
-                } else{
-                    //修改
-                    mBinding.btnFinish.setLoading(true);
-                    Api.getInstance().editTravelList(content, mObjId, new DataCallback<String>() {
-                        @Override
-                        public void onSuccess(String newContent) {
-                            mBinding.btnFinish.setLoading(false);
-                            if(mOnFinishListener != null) {
-                                mOnFinishListener.onFinish(newContent, mObjId);
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                LibUtils.showToast(msg);
+                                mBinding.btnFinish.setLoading(false);
                             }
-                            dismiss();
-                        }
+                        });
+                    } else {
+                        //修改清单名字
+                        mBinding.btnFinish.setLoading(true);
+                        Api.getInstance().editTravelListTableName(content, mTableId, new DataCallback<String>() {
+                            @Override
+                            public void onSuccess(String newContent) {
+                                mBinding.btnFinish.setLoading(false);
+                                if(mOnFinishListener != null) {
+                                    mOnFinishListener.onFinish(newContent, mTableId);
+                                }
+                                dismiss();
+                            }
 
-                        @Override
-                        public void onFailed(int code, String msg) {
-                            LibUtils.showToast(msg);
-                            mBinding.btnFinish.setLoading(false);
-                        }
-                    });
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                LibUtils.showToast(msg);
+                                mBinding.btnFinish.setLoading(false);
+                            }
+                        });
+                    }
+                } else {
+                    if(TextUtils.isEmpty(mItemId)) {
+                        //新增
+                        mBinding.btnFinish.setLoading(true);
+                        Api.getInstance().addTravelList(mTableId, content, new DataCallback<String>() {
+                            @Override
+                            public void onSuccess(String id) {
+                                mBinding.btnFinish.setLoading(false);
+                                if(mOnFinishListener != null) {
+                                    mOnFinishListener.onFinish(content, id);
+                                }
+                                dismiss();
+                            }
+
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                LibUtils.showToast(msg);
+                                mBinding.btnFinish.setLoading(false);
+                            }
+                        });
+                    } else{
+                        //修改
+                        mBinding.btnFinish.setLoading(true);
+                        Api.getInstance().editTravelList(content, mItemId, new DataCallback<String>() {
+                            @Override
+                            public void onSuccess(String newContent) {
+                                mBinding.btnFinish.setLoading(false);
+                                if(mOnFinishListener != null) {
+                                    mOnFinishListener.onFinish(newContent, mItemId);
+                                }
+                                dismiss();
+                            }
+
+                            @Override
+                            public void onFailed(int code, String msg) {
+                                LibUtils.showToast(msg);
+                                mBinding.btnFinish.setLoading(false);
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -135,8 +201,12 @@ public class AddTravelListDialog extends DialogFragment {
         mText = text;
     }
 
-    public void setObjId(String objId) {
-        mObjId = objId;
+    public void setEditTable(boolean editTable) {
+        mEditTable = editTable;
+    }
+
+    public void setItemId(String itemId) {
+        mItemId = itemId;
     }
 
     public interface OnFinishListener {
@@ -152,5 +222,9 @@ public class AddTravelListDialog extends DialogFragment {
         if (!isAdded()) {
             show(manager, AddTravelListDialog.class.getName());
         }
+    }
+
+    public void setTableId(String tableId) {
+        mTableId = tableId;
     }
 }

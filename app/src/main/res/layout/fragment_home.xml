@@ -33,6 +33,7 @@
             app:layout_constraintTop_toTopOf="@+id/ig_home"
             app:layout_constraintBottom_toBottomOf="@+id/ig_home"
             android:src="@mipmap/ig_loading"
+            android:visibility="gone"
             android:layout_width="60dp"
             android:layout_height="60dp"/>
 

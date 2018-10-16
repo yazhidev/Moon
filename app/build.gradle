@@ -12,8 +12,8 @@ android {
         applicationId "com.yazhi1992.moon"
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode 9
-        versionName "0.0.9"
+        versionCode 10
+        versionName "0.0.10"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -189,6 +189,8 @@ dependencies {
     compile rootProject.ext.dependencies.luban
 
     api rootProject.ext.dependencies.kotlin_jdk8
+
+    compile rootProject.ext.dependencies.cardview
 }
 
 //apply from: 'tinker-support.gradle'
