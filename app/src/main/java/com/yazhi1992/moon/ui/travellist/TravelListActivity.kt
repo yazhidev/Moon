@@ -178,7 +178,7 @@ class TravelListActivity : BaseActivity() {
         mOriginalItems.clear()
         mAdapter.notifyDataSetChanged()
         //获取数据
-        mBinding.smartRefresh.isEnableRefresh = true
+        mBinding.smartRefresh.setEnableRefresh(true)
         mBinding.smartRefresh.autoRefresh()
     }
 
@@ -212,7 +212,7 @@ class TravelListActivity : BaseActivity() {
                 }
                 Observable.timer(1, TimeUnit.SECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { mBinding.smartRefresh.isEnableRefresh = false }
+                        .subscribe { mBinding.smartRefresh.setEnableRefresh(false) }
             }
 
             override fun onFailed(code: Int, msg: String) {

@@ -26,10 +26,10 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url "https://jitpack.io" } //greenDao升级helper
         google()
         jcenter()
         maven { url "http://mvn.leancloud.cn/nexus/content/repositories/public" } // LeanCloud 的包仓库
-        maven { url "https://jitpack.io" }
     }
 }
 

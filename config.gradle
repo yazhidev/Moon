@@ -60,8 +60,8 @@ ext {
 
             multiDex                      : 'com.android.support:multidex:1.0.1',
 
-            smartRefresh                  : 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-7',
-            smartRefreshHeader            : 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.4-7',
+            smartRefresh                  : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14',
+            smartRefreshHeader            : 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14',
 
             dagger                        : 'com.google.dagger:dagger:2.14.1',
             daggerCompiler                : 'com.google.dagger:dagger-compiler:2.14.1',

@@ -206,7 +206,7 @@ public class HistoryFragment extends Fragment {
         }
 
         mBinding.smartRefresh.setOnRefreshListener(refreshlayout -> getDatas(false));
-        mBinding.smartRefresh.setOnLoadmoreListener(refreshlayout -> getDatas(true));
+        mBinding.smartRefresh.setOnLoadMoreListener(refreshlayout -> getDatas(true));
 
         mItems = new Items();
         mMultiTypeAdapter.setItems(mItems);
@@ -400,7 +400,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onSuccess(List<HistoryItemDataFromApi> data) {
                 if (loadMore) {
-                    mBinding.smartRefresh.finishLoadmore();
+                    mBinding.smartRefresh.finishLoadMore();
                 } else {
                     mItems.clear();
                     mBinding.smartRefresh.finishRefresh();
@@ -417,13 +417,13 @@ public class HistoryFragment extends Fragment {
                     }
                     mMultiTypeAdapter.notifyDataSetChanged();
                 }
-                mBinding.smartRefresh.setEnableLoadmore(data != null && data.size() == SIZE);
+                mBinding.smartRefresh.setEnableLoadMore(data != null && data.size() == SIZE);
             }
 
             @Override
             public void onFailed(int code, String msg) {
                 if (loadMore) {
-                    mBinding.smartRefresh.finishLoadmore();
+                    mBinding.smartRefresh.finishLoadMore();
                 } else {
                     mBinding.smartRefresh.finishRefresh();
 

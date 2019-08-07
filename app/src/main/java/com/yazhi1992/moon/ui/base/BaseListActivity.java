@@ -61,7 +61,7 @@ public abstract class BaseListActivity<T> extends BaseActivity{
         mBinding.ry.setLayoutManager(new LinearLayoutManager(this));
 
         mBinding.smartRefresh.setOnRefreshListener(refreshlayout -> getDatas(false));
-        mBinding.smartRefresh.setOnLoadmoreListener(refreshlayout -> getDatas(true));
+        mBinding.smartRefresh.setOnLoadMoreListener(refreshlayout -> getDatas(true));
 
         mBinding.smartRefresh.autoRefresh();
     }
@@ -101,7 +101,7 @@ public abstract class BaseListActivity<T> extends BaseActivity{
             @Override
             public void onSuccess(List<T> data) {
                 if(loadMore) {
-                    mBinding.smartRefresh.finishLoadmore();
+                    mBinding.smartRefresh.finishLoadMore();
                 } else {
                     mItems.clear();
                     mBinding.smartRefresh.finishRefresh();
@@ -114,13 +114,13 @@ public abstract class BaseListActivity<T> extends BaseActivity{
                     mItems.addAll(data);
                     mAdapter.notifyDataSetChanged();
                 }
-                mBinding.smartRefresh.setEnableLoadmore(data.size() == SIZE);
+                mBinding.smartRefresh.setEnableLoadMore(data.size() == SIZE);
             }
 
             @Override
             public void onFailed(int code, String msg) {
                 if(loadMore) {
-                    mBinding.smartRefresh.finishLoadmore();
+                    mBinding.smartRefresh.finishLoadMore();
                 } else {
                     mBinding.smartRefresh.finishRefresh();
 
