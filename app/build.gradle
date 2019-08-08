@@ -141,12 +141,6 @@ dependencies {
     //okhttp
     implementation rootProject.ext.dependencies.okhttp
 
-    compile(rootProject.ext.dependencies.permissionsDispatcher) {
-        // if you don't use android.app.Fragment you can exclude support for them
-        exclude module: "support-v13"
-    }
-    annotationProcessor rootProject.ext.dependencies.permissionsDispatcherProcessor
-
     //bugly
     compile rootProject.ext.dependencies.buglyCrash
     compile rootProject.ext.dependencies.buglyNativeCrash

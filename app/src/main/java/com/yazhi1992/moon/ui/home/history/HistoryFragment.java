@@ -244,7 +244,6 @@ public class HistoryFragment extends Fragment {
         });
 
         mBinding.fab.setOnClickListener(v -> showAddDialog());
-        mBinding.smartRefresh.autoRefresh();
 
         KeyBoardHeightUtil.getKeyBoardHeight(mBinding.root, new KeyBoardHeightUtil.KeyBoardHeightListener() {
             @Override
@@ -354,7 +353,7 @@ public class HistoryFragment extends Fragment {
                                     mBinding.smartRefresh.autoRefresh();
                                 } else {
                                     mMultiTypeAdapter.remove(mDeletePosition);
-                                    if(mMultiTypeAdapter.getItems().isEmpty()) {
+                                    if (mMultiTypeAdapter.getItems().isEmpty()) {
                                         mBinding.multiView.showEmpty();
                                     }
                                 }
@@ -399,12 +398,8 @@ public class HistoryFragment extends Fragment {
         mPresenter.getLoveHistory(lastItemId, SIZE, new DataCallback<List<HistoryItemDataFromApi>>() {
             @Override
             public void onSuccess(List<HistoryItemDataFromApi> data) {
-                if (loadMore) {
-                    mBinding.smartRefresh.finishLoadMore();
-                } else {
+                if (!loadMore) {
                     mItems.clear();
-                    mBinding.smartRefresh.finishRefresh();
-
                     if (data.size() == 0) {
                         mBinding.multiView.showEmpty();
                     } else {
@@ -412,12 +407,22 @@ public class HistoryFragment extends Fragment {
                     }
                 }
                 if (data.size() > 0) {
+                    int from = mItems.size();
                     for (HistoryItemDataFromApi loveHistoryItemData : data) {
                         mItems.add(transformData(loveHistoryItemData.getType(), loveHistoryItemData));
                     }
-                    mMultiTypeAdapter.notifyDataSetChanged();
+                    if(loadMore) {
+                        mMultiTypeAdapter.notifyItemRangeInserted(from, data.size());
+                    } else {
+                        mMultiTypeAdapter.notifyDataSetChanged();
+                    }
                 }
                 mBinding.smartRefresh.setEnableLoadMore(data != null && data.size() == SIZE);
+                if (loadMore) {
+                    mBinding.smartRefresh.finishLoadMore();
+                } else {
+                    mBinding.smartRefresh.finishRefresh();
+                }
             }
 
             @Override
@@ -445,6 +450,17 @@ public class HistoryFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    private boolean mInit;
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!mInit && isVisibleToUser) {
+            mBinding.smartRefresh.autoRefresh();
+            mInit = true;
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -106,6 +106,7 @@ class TravelListActivity : BaseActivity() {
         mBinding.ryTravel.adapter = mAdapter
         mBinding.ryTravel.layoutManager = LinearLayoutManager(this)
         mBinding.smartRefresh.setOnRefreshListener { refreshlayout -> getDatas() }
+        mBinding.smartRefresh.setEnableLoadMore(false)
         refresh()
 
         mBinding.ryTravel.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -156,10 +157,10 @@ class TravelListActivity : BaseActivity() {
             }
 
             override fun onSuccess(data: List<TravelListTableDataBean>) {
-                mBinding.smartRefresh.finishRefresh()
                 if (data.isEmpty()) {
                     mBinding.toolbar.title = "暂无清单"
                     mBinding.multiView.showEmpty()
+                    mBinding.smartRefresh.finishRefresh()
                 } else {
                     mTables.addAll(data)
                     setShowTable(data[0])
@@ -197,12 +198,11 @@ class TravelListActivity : BaseActivity() {
     private fun getTableItems() {
         Api.getInstance().getTravelList(mShowTableData.mObjectId, object : DataCallback<List<TravelListItemDataBean>> {
             override fun onSuccess(data: List<TravelListItemDataBean>) {
-                mBinding.smartRefresh.finishRefresh()
                 if (data.isEmpty()) {
                     mBinding.multiView.showEmpty()
                 } else {
-                    mBinding.multiView.showNormal()
                     mItems.clear()
+                    mBinding.multiView.showNormal()
                     mItems.addAll(data)
                     mItems.forEach {
                         val temp = it as TravelListItemDataBean
@@ -210,9 +210,12 @@ class TravelListActivity : BaseActivity() {
                     }
                     mAdapter.notifyDataSetChanged()
                 }
-                Observable.timer(1, TimeUnit.SECONDS)
+                Observable.timer(600, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { mBinding.smartRefresh.setEnableRefresh(false) }
+                        .subscribe {
+                            mBinding.smartRefresh.setEnableRefresh(false)
+                            mBinding.smartRefresh.finishRefresh()
+                        }
             }
 
             override fun onFailed(code: Int, msg: String) {
