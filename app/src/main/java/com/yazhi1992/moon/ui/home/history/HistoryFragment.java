@@ -421,7 +421,7 @@ public class HistoryFragment extends Fragment {
                 if (loadMore) {
                     mBinding.smartRefresh.finishLoadMore();
                 } else {
-                    mBinding.smartRefresh.finishRefresh();
+                    finishRefesh();
                 }
             }
 
@@ -430,14 +430,17 @@ public class HistoryFragment extends Fragment {
                 if (loadMore) {
                     mBinding.smartRefresh.finishLoadMore();
                 } else {
-                    mBinding.smartRefresh.finishRefresh();
-
+                    finishRefesh();
                     if (mItems.size() == 0) {
                         mBinding.multiView.showNetErr();
                     }
                 }
             }
         });
+    }
+
+    private void finishRefesh() {
+        Observable.timer(600, TimeUnit.MILLISECONDS).subscribe(v -> mBinding.smartRefresh.finishRefresh());
     }
 
     @Override
