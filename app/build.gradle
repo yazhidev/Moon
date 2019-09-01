@@ -191,6 +191,8 @@ dependencies {
     api rootProject.ext.dependencies.kotlin_jdk8
 
     compile rootProject.ext.dependencies.cardview
+
+    compile 'com.yan:pullrefreshlayout:2.2.6'
 }
 
 //apply from: 'tinker-support.gradle'

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.yan.pullrefreshlayout.PullRefreshLayout;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
@@ -205,8 +206,17 @@ public class HistoryFragment extends Fragment {
             itemViewBinder.setOnItemClickCommentListener(onItemClickCommentListener);
         }
 
-        mBinding.smartRefresh.setOnRefreshListener(refreshlayout -> getDatas(false));
-        mBinding.smartRefresh.setOnLoadmoreListener(refreshlayout -> getDatas(true));
+        mBinding.smartRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDatas(false);
+            }
+
+            @Override
+            public void onLoading() {
+                getDatas(true);
+            }
+        });
 
         mItems = new Items();
         mMultiTypeAdapter.setItems(mItems);
@@ -244,6 +254,15 @@ public class HistoryFragment extends Fragment {
         });
 
         mBinding.fab.setOnClickListener(v -> showAddDialog());
+        mBinding.smartRefresh.setAutoLoadingEnable(true);
+
+        mBinding.smartRefresh.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBinding.smartRefresh.autoRefresh();
+            }
+        },150);
+
         mBinding.smartRefresh.autoRefresh();
 
         KeyBoardHeightUtil.getKeyBoardHeight(mBinding.root, new KeyBoardHeightUtil.KeyBoardHeightListener() {
@@ -351,10 +370,10 @@ public class HistoryFragment extends Fragment {
                             @Override
                             public void onSuccess(Boolean needAutoRefresh) {
                                 if (needAutoRefresh) {
-                                    mBinding.smartRefresh.autoRefresh();
+                                    mBinding.smartRefresh.autoRefresh(true);
                                 } else {
                                     mMultiTypeAdapter.remove(mDeletePosition);
-                                    if(mMultiTypeAdapter.getItems().isEmpty()) {
+                                    if (mMultiTypeAdapter.getItems().isEmpty()) {
                                         mBinding.multiView.showEmpty();
                                     }
                                 }
@@ -400,10 +419,10 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onSuccess(List<HistoryItemDataFromApi> data) {
                 if (loadMore) {
-                    mBinding.smartRefresh.finishLoadmore();
+                    mBinding.smartRefresh.loadMoreComplete();
                 } else {
                     mItems.clear();
-                    mBinding.smartRefresh.finishRefresh();
+                    mBinding.smartRefresh.refreshComplete();
 
                     if (data.size() == 0) {
                         mBinding.multiView.showEmpty();
@@ -417,15 +436,15 @@ public class HistoryFragment extends Fragment {
                     }
                     mMultiTypeAdapter.notifyDataSetChanged();
                 }
-                mBinding.smartRefresh.setEnableLoadmore(data != null && data.size() == SIZE);
+                mBinding.smartRefresh.setLoadMoreEnable(data != null && data.size() == SIZE);
             }
 
             @Override
             public void onFailed(int code, String msg) {
                 if (loadMore) {
-                    mBinding.smartRefresh.finishLoadmore();
+                    mBinding.smartRefresh.loadMoreComplete();
                 } else {
-                    mBinding.smartRefresh.finishRefresh();
+                    mBinding.smartRefresh.refreshComplete();
 
                     if (mItems.size() == 0) {
                         mBinding.multiView.showNetErr();
@@ -449,11 +468,11 @@ public class HistoryFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void addMemorial(AddDataEvent bean) {
-        mBinding.smartRefresh.autoRefresh();
+        mBinding.smartRefresh.autoRefresh(true);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeUserName(ChangeUserInfo bean) {
-        mBinding.smartRefresh.autoRefresh();
+        mBinding.smartRefresh.autoRefresh(true);
     }
 }
