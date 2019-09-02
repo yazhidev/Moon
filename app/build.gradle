@@ -120,7 +120,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     //arouter
-    compile rootProject.ext.dependencies.arouter
+    implementation rootProject.ext.dependencies.arouter
     kapt rootProject.ext.dependencies.arouterCompiler
 
     //robolectric
@@ -143,15 +143,15 @@ dependencies {
     annotationProcessor rootProject.ext.dependencies.permissionsDispatcherProcessor
 
     //bugly
-    compile rootProject.ext.dependencies.buglyCrash
-    compile rootProject.ext.dependencies.buglyNativeCrash
+    implementation rootProject.ext.dependencies.buglyCrash
+    implementation rootProject.ext.dependencies.buglyNativeCrash
 
-    compile rootProject.ext.dependencies.eventbus
+    implementation rootProject.ext.dependencies.eventbus
 
-    compile project(":yazhilib")
+    implementation project(":yazhilib")
 
     //LeanCould
-    compile rootProject.ext.dependencies.leancloudAvoscloudSdk
+    implementation rootProject.ext.dependencies.leancloudAvoscloudSdk
     compile(rootProject.ext.dependencies.leancloudAvoscloudPush) {
         transitive = true
     } //IM、Push
@@ -167,32 +167,32 @@ dependencies {
     implementation rootProject.ext.dependencies.glide
     annotationProcessor rootProject.ext.dependencies.glideCompiler
 
-    compile rootProject.ext.dependencies.multiDex
+    implementation rootProject.ext.dependencies.multiDex
 
     //下拉刷新
-    compile rootProject.ext.dependencies.smartRefresh
-    compile rootProject.ext.dependencies.smartRefreshHeader
+    implementation rootProject.ext.dependencies.smartRefresh
+    implementation rootProject.ext.dependencies.smartRefreshHeader
 
-    compile rootProject.ext.dependencies.dagger
+    implementation rootProject.ext.dependencies.dagger
     annotationProcessor rootProject.ext.dependencies.daggerCompiler
-    compile rootProject.ext.dependencies.daggerAndroid
-//    compile rootProject.ext.daggerAndroidSupport
+    implementation rootProject.ext.dependencies.daggerAndroid
+//    implementation rootProject.ext.daggerAndroidSupport
 //    annotationProcessor rootProject.ext.daggerAndroidProcessor
 
-    compile "org.greenrobot:greendao:$rootProject.green_dao_version"
-    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.2'
+    implementation "org.greenrobot:greendao:$rootProject.green_dao_version"
+    implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.2'
 
     compile(project(":matisse")) {
         exclude group: 'com.github.bumptech.glide', module: 'glide'
     }
 
-    compile rootProject.ext.dependencies.luban
+    implementation rootProject.ext.dependencies.luban
 
     api rootProject.ext.dependencies.kotlin_jdk8
 
-    compile rootProject.ext.dependencies.cardview
+    implementation rootProject.ext.dependencies.cardview
 
-    compile 'com.yan:pullrefreshlayout:2.2.6'
+    implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
 }
 
 //apply from: 'tinker-support.gradle'

@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"></com.yazhi1992.moon.widget.MultiStatusView>
 
-        <com.yan.pullrefreshlayout.PullRefreshLayout
+        <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
             android:id="@+id/smartRefresh"
             android:layout_below="@+id/rl_top"
             android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
-        </com.yan.pullrefreshlayout.PullRefreshLayout>
+        </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

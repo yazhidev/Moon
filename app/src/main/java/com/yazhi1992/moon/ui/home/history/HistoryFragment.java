@@ -13,7 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.yan.pullrefreshlayout.PullRefreshLayout;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.adapter.base.CustomMultitypeAdapter;
@@ -82,6 +83,8 @@ public class HistoryFragment extends Fragment {
     private String mReplyCommentInput; //缓存已输入的回复内容
     private String mReplyCommentPeerId;
     private int mRecyclerViewState;
+    private TwinklingRefreshLayout mRefreshLayout;
+    private boolean mInit;
 
     @Nullable
     @Override
@@ -95,6 +98,8 @@ public class HistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mBinding.rlTop.setPadding(0, LibStatusBarUtils.getStatusBarHeight(getActivity()), 0, 0);
+
+        mRefreshLayout = mBinding.smartRefresh;
 
         mMultiTypeAdapter = new CustomMultitypeAdapter();
         //纪念日
@@ -206,18 +211,19 @@ public class HistoryFragment extends Fragment {
             itemViewBinder.setOnItemClickCommentListener(onItemClickCommentListener);
         }
 
-        mBinding.smartRefresh.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+        mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
                 getDatas(false);
             }
 
             @Override
-            public void onLoading() {
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
                 getDatas(true);
             }
         });
-
         mItems = new Items();
         mMultiTypeAdapter.setItems(mItems);
         mBinding.ryHistory.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
@@ -254,16 +260,10 @@ public class HistoryFragment extends Fragment {
         });
 
         mBinding.fab.setOnClickListener(v -> showAddDialog());
-        mBinding.smartRefresh.setAutoLoadingEnable(true);
 
-        mBinding.smartRefresh.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mBinding.smartRefresh.autoRefresh();
-            }
-        },150);
-
-        mBinding.smartRefresh.autoRefresh();
+        mRefreshLayout.setAutoLoadMore(true);
+        mRefreshLayout.setEnableLoadmore(true);
+        mRefreshLayout.setEnableRefresh(true);
 
         KeyBoardHeightUtil.getKeyBoardHeight(mBinding.root, new KeyBoardHeightUtil.KeyBoardHeightListener() {
             @Override
@@ -336,6 +336,15 @@ public class HistoryFragment extends Fragment {
         });
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && !mInit) {
+            mInit = true;
+            mRefreshLayout.startRefresh();
+        }
+    }
+
     private Object transformData(@TypeConstant.DataTypeInHistory int type, HistoryItemDataFromApi itemData) {
         Object data = null;
         switch (type) {
@@ -370,7 +379,7 @@ public class HistoryFragment extends Fragment {
                             @Override
                             public void onSuccess(Boolean needAutoRefresh) {
                                 if (needAutoRefresh) {
-                                    mBinding.smartRefresh.autoRefresh(true);
+                                    mRefreshLayout.startRefresh();
                                 } else {
                                     mMultiTypeAdapter.remove(mDeletePosition);
                                     if (mMultiTypeAdapter.getItems().isEmpty()) {
@@ -418,11 +427,13 @@ public class HistoryFragment extends Fragment {
         mPresenter.getLoveHistory(lastItemId, SIZE, new DataCallback<List<HistoryItemDataFromApi>>() {
             @Override
             public void onSuccess(List<HistoryItemDataFromApi> data) {
+                int oldSize = mItems.size();
+
                 if (loadMore) {
-                    mBinding.smartRefresh.loadMoreComplete();
+                    mRefreshLayout.finishLoadmore();
                 } else {
                     mItems.clear();
-                    mBinding.smartRefresh.refreshComplete();
+                    mRefreshLayout.finishRefreshing();
 
                     if (data.size() == 0) {
                         mBinding.multiView.showEmpty();
@@ -434,17 +445,21 @@ public class HistoryFragment extends Fragment {
                     for (HistoryItemDataFromApi loveHistoryItemData : data) {
                         mItems.add(transformData(loveHistoryItemData.getType(), loveHistoryItemData));
                     }
+                }
+                if(loadMore) {
+                    mMultiTypeAdapter.notifyItemRangeInserted(oldSize, data.size());
+                } else {
                     mMultiTypeAdapter.notifyDataSetChanged();
                 }
-                mBinding.smartRefresh.setLoadMoreEnable(data != null && data.size() == SIZE);
+                mRefreshLayout.setEnableLoadmore(data != null && data.size() == SIZE);
             }
 
             @Override
             public void onFailed(int code, String msg) {
                 if (loadMore) {
-                    mBinding.smartRefresh.loadMoreComplete();
+                    mRefreshLayout.finishLoadmore();
                 } else {
-                    mBinding.smartRefresh.refreshComplete();
+                    mRefreshLayout.finishRefreshing();
 
                     if (mItems.size() == 0) {
                         mBinding.multiView.showNetErr();
@@ -468,11 +483,11 @@ public class HistoryFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void addMemorial(AddDataEvent bean) {
-        mBinding.smartRefresh.autoRefresh(true);
+        mRefreshLayout.startRefresh();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void changeUserName(ChangeUserInfo bean) {
-        mBinding.smartRefresh.autoRefresh(true);
+        mRefreshLayout.startRefresh();
     }
 }
