@@ -1,18 +1,6 @@
 package com.yazhi1992.moon.api;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.DeleteCallback;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetCallback;
-import com.avos.avoscloud.LogInCallback;
-import com.avos.avoscloud.RequestEmailVerifyCallback;
-import com.avos.avoscloud.RequestPasswordResetCallback;
-import com.avos.avoscloud.SaveCallback;
-import com.avos.avoscloud.SignUpCallback;
+import com.alibaba.fastjson.JSONArray;
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
@@ -38,9 +26,8 @@ import com.yazhi1992.yazhilib.utils.LibSPUtils;
 import com.yazhi1992.yazhilib.utils.LibTimeUtils;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -49,6 +36,19 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import cn.leancloud.AVException;
+import cn.leancloud.AVFile;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVQuery;
+import cn.leancloud.AVUser;
+import cn.leancloud.callback.DeleteCallback;
+import cn.leancloud.callback.FindCallback;
+import cn.leancloud.callback.GetCallback;
+import cn.leancloud.callback.LogInCallback;
+import cn.leancloud.callback.RequestEmailVerifyCallback;
+import cn.leancloud.callback.RequestPasswordResetCallback;
+import cn.leancloud.callback.SaveCallback;
+import cn.leancloud.callback.SignUpCallback;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -138,7 +138,7 @@ public class Api {
         if (lastItemId != -1) {
             query.whereLessThan(TableConstant.LoveHistory.ID, lastItemId);
         }
-        query.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 handleResult(e, dataCallback, () -> {
@@ -177,7 +177,7 @@ public class Api {
         AVObject loveHistoryObj = buildHistoryObj(memorialDayObj, TableConstant.LoveHistory.MEMORIAL_DAY, TypeConstant.TYPE_MEMORIAL_DAY);
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-        loveHistoryObj.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(loveHistoryObj, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () -> {
@@ -199,7 +199,7 @@ public class Api {
         AVObject memorialDayData = AVObject.createWithoutData(TableConstant.MemorialDay.CLAZZ_NAME, id);
         memorialDayData.put(TableConstant.MemorialDay.TITLE, title);
         memorialDayData.put(TableConstant.MemorialDay.TIME, time);
-        memorialDayData.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(memorialDayData, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
@@ -286,7 +286,7 @@ public class Api {
                 query.whereEqualTo(TableConstant.BindLover.INVITE_NUMBER, inviteNum);
                 query.include(TableConstant.BindLover.USER);
                 query.include(TableConstant.BindLover.LOVER);
-                query.findInBackground(new FindCallback<AVObject>() {
+                ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
                     @Override
                     public void done(List<AVObject> list, AVException exc) {
                         if (exc == null) {
@@ -324,7 +324,7 @@ public class Api {
                 query.whereEqualTo(TableConstant.BindLover.USER, getUserObj(userObjId));
                 AVObject account = query.getFirst();
                 account.put(TableConstant.BindLover.LOVER, getUserObj(loverId));
-                account.saveInBackground(new SaveCallback() {
+                ApiWrapper.saveInBackground(account, new SaveCallback() {
                     @Override
                     public void done(AVException exc) {
                         if (exc == null) {
@@ -349,30 +349,25 @@ public class Api {
             @Override
             public void subscribe(ObservableEmitter<BindLoverBean> e) throws Exception {
                 AVQuery<AVObject> query = new AVQuery<>(TableConstant.AVUserClass.CLAZZ_NAME);
-                try {
-                    AVObject peerUser = query.get(peerId);
-                    AVUser currentUser = AVUser.getCurrentUser();
-                    currentUser.put(TableConstant.AVUserClass.HAVE_LOVER, true);
-                    currentUser.put(TableConstant.AVUserClass.LOVER_ID, peerUser.getObjectId());
-                    currentUser.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(AVException exc) {
-                            if (exc == null) {
-                                BindLoverBean bindLoverBean = new BindLoverBean();
-                                bindLoverBean.setBindComplete(true);
-                                bindLoverBean.setLoverHeadUrl(peerUser.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE).getUrl());
-                                bindLoverBean.setLoverId(peerUser.getObjectId());
-                                bindLoverBean.setLoverName(peerUser.getString(TableConstant.AVUserClass.NICK_NAME));
-                                e.onNext(bindLoverBean);
-                            } else {
-                                e.onError(new Throwable(exc.getCode() + exc.getMessage()));
-                            }
+                AVObject peerUser = query.get(peerId);
+                AVUser currentUser = AVUser.getCurrentUser();
+                currentUser.put(TableConstant.AVUserClass.HAVE_LOVER, true);
+                currentUser.put(TableConstant.AVUserClass.LOVER_ID, peerUser.getObjectId());
+                ApiWrapper.saveInBackground(currentUser, new SaveCallback() {
+                    @Override
+                    public void done(AVException exc) {
+                        if (exc == null) {
+                            BindLoverBean bindLoverBean = new BindLoverBean();
+                            bindLoverBean.setBindComplete(true);
+                            bindLoverBean.setLoverHeadUrl(peerUser.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE).getUrl());
+                            bindLoverBean.setLoverId(peerUser.getObjectId());
+                            bindLoverBean.setLoverName(peerUser.getString(TableConstant.AVUserClass.NICK_NAME));
+                            e.onNext(bindLoverBean);
+                        } else {
+                            e.onError(new Throwable(exc.getCode() + exc.getMessage()));
                         }
-                    });
-                } catch (AVException exc) {
-                    exc.printStackTrace();
-                    e.onError(new Throwable(exc.getCode() + exc.getMessage()));
-                }
+                    }
+                });
             }
         });
     }
@@ -409,7 +404,7 @@ public class Api {
      * @param callback
      */
     public void checkBindState(String userId, DataCallback<CheckBindStateBean> callback) {
-        AVUser.getCurrentUser().fetchInBackground(new GetCallback<AVObject>() {
+        ApiWrapper.fetchInBackground(AVUser.getCurrentUser(), new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 if (e == null) {
@@ -423,7 +418,7 @@ public class Api {
                         query.whereEqualTo(TableConstant.BindLover.USER, getUserObj(userId));
                         query.include(TableConstant.BindLover.USER);
                         query.include(TableConstant.BindLover.LOVER);
-                        query.findInBackground(new FindCallback<AVObject>() {
+                        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
                             @Override
                             public void done(List<AVObject> list, AVException e) {
                                 if (e == null) {
@@ -442,7 +437,7 @@ public class Api {
                                             query.whereEqualTo(TableConstant.BindLover.USER, getUserObj(loverId));
                                             query.include(TableConstant.BindLover.USER);
                                             query.include(TableConstant.BindLover.LOVER);
-                                            query.findInBackground(new FindCallback<AVObject>() {
+                                            ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
                                                 @Override
                                                 public void done(List<AVObject> list, AVException e) {
                                                     if (e == null) {
@@ -522,7 +517,7 @@ public class Api {
             AVObject data = AVObject.createWithoutData(clazzName, dataObjId);
             String finalClazzName = clazzName;
             String finalClazzInhistoryName = clazzInhistoryName;
-            data.fetchInBackground(new GetCallback<AVObject>() {
+            ApiWrapper.fetchInBackground(data, new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject avObject, AVException e) {
                     handleResult(e, callback, new onResultSuc() {
@@ -533,7 +528,7 @@ public class Api {
                                 //如果图片是首页图片，则不删除
                                 AVQuery<AVObject> homeQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
                                 homeQuery.whereEqualTo(TableConstant.Home.HOME_IMG_FILE, avFile);
-                                homeQuery.findInBackground(new FindCallback<AVObject>() {
+                                ApiWrapper.findInBackground(homeQuery, new FindCallback<AVObject>() {
                                     @Override
                                     public void done(List<AVObject> list, AVException e) {
                                         handleResult(e, callback, new onResultSuc() {
@@ -541,7 +536,7 @@ public class Api {
                                             public void onSuc() {
                                                 if (list == null || list.size() == 0) {
                                                     //如果原来有图片文件，则先删除原来的头像图片，节约空间
-                                                    avFile.deleteInBackground(new DeleteCallback() {
+                                                    ApiWrapper.deleteInBackground(avFile, new DeleteCallback() {
                                                         @Override
                                                         public void done(AVException e) {
                                                             doRealDelete(type, dataObjId, callback, finalClazzName, finalClazzInhistoryName);
@@ -574,7 +569,7 @@ public class Api {
             deleteHistoryItemData(finalClazzInhistoryName, data, callback, type);
         } else {
             //先删除关联的表数据，再删除history表数据
-            data.deleteInBackground(new DeleteCallback() {
+            ApiWrapper.deleteInBackground(data, new DeleteCallback() {
                 @Override
                 public void done(AVException e) {
                     handleResult(e, callback, new onResultSuc() {
@@ -600,7 +595,7 @@ public class Api {
         //删除history表数据
         final AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
         loveHistoryQuery.whereEqualTo(finalClazzInhistoryName, data);
-        loveHistoryQuery.deleteAllInBackground(new DeleteCallback() {
+        ApiWrapper.deleteAllInBackground(loveHistoryQuery, new DeleteCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -626,16 +621,16 @@ public class Api {
         //先查该纪念日在history表中的对应数据
         AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
         AVObject memorialDay = AVObject.createWithoutData(TableConstant.MemorialDay.CLAZZ_NAME, memorialDayId);
-        memorialDay.deleteInBackground();
+        ApiWrapper.deleteInBackground(memorialDay);
         loveHistoryQuery.whereEqualTo(TableConstant.LoveHistory.MEMORIAL_DAY, memorialDay);
-        loveHistoryQuery.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(loveHistoryQuery, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
                         //开始删除
-                        AVObject.deleteAllInBackground(list, new DeleteCallback() {
+                        ApiWrapper.deleteAllInBackground(list, new DeleteCallback() {
                             @Override
                             public void done(AVException e) {
                                 handleResult(e, callback, new onResultSuc() {
@@ -661,16 +656,16 @@ public class Api {
         //先查在history表中的对应数据
         AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
         AVObject hope = AVObject.createWithoutData(TableConstant.Hope.CLAZZ_NAME, hopeId);
-        hope.deleteInBackground();
+        ApiWrapper.deleteInBackground(hope);
         loveHistoryQuery.whereEqualTo(TableConstant.LoveHistory.HOPE, hope);
-        loveHistoryQuery.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(loveHistoryQuery, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
                         //开始删除
-                        AVObject.deleteAllInBackground(list, new DeleteCallback() {
+                        ApiWrapper.deleteAllInBackground(list, new DeleteCallback() {
                             @Override
                             public void done(AVException e) {
                                 handleResult(e, callback, new onResultSuc() {
@@ -708,7 +703,7 @@ public class Api {
         if (lastItemId != -1) {
             query.whereLessThan(TableConstant.LoveHistory.ID, lastItemId);
         }
-        query.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
@@ -747,7 +742,7 @@ public class Api {
         AVObject loveHistoryObj = buildHistoryObj(hopeObj, TableConstant.LoveHistory.HOPE, TypeConstant.TYPE_HOPE);
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-        loveHistoryObj.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(loveHistoryObj, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () ->
@@ -767,7 +762,7 @@ public class Api {
         hopeData.put(TableConstant.Hope.TITLE, title);
         hopeData.put(TableConstant.Hope.LEVEL, level);
         hopeData.put(TableConstant.Hope.LINK, link);
-        hopeData.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(hopeData, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
@@ -801,7 +796,7 @@ public class Api {
         if (lastItemId != -1) {
             query.whereLessThan(TableConstant.Hope.ID, lastItemId);
         }
-        query.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
@@ -844,7 +839,7 @@ public class Api {
         hopeObj.put(TableConstant.Hope.STATUS, TypeConstant.HOPE_DONE);
         hopeObj.put(TableConstant.Hope.FINISH_WORD, content);
 
-        hopeObj.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(hopeObj, new SaveCallback() {
             @Override
             public void done(AVException e) {
 
@@ -857,7 +852,7 @@ public class Api {
         ArrayList<AVObject> todos = new ArrayList<>();
         todos.add(hopeObj);
         todos.add(loveHistoryObj);
-        AVObject.saveAllInBackground(todos, new SaveCallback() {
+        ApiWrapper.saveAllInBackground(todos, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 Observable.just(0)
@@ -895,7 +890,7 @@ public class Api {
             AVObject loveHistoryObj = buildHistoryObj(textObj, TableConstant.LoveHistory.TEXT, TypeConstant.TYPE_TEXT);
 
             //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-            loveHistoryObj.saveInBackground(new SaveCallback() {
+            ApiWrapper.saveInBackground(loveHistoryObj, new SaveCallback() {
                 @Override
                 public void done(AVException e) {
                     handleResult(e, dataCallback, () -> {
@@ -911,7 +906,7 @@ public class Api {
             }
             try {
                 AVFile file = AVFile.withAbsoluteLocalPath(name, filePath);
-                file.saveInBackground(new SaveCallback() {
+                ApiWrapper.saveInBackground(file, new SaveCallback() {
                     @Override
                     public void done(AVException e) {
                         if (e == null) {
@@ -927,7 +922,7 @@ public class Api {
                             AVObject loveHistoryObj = buildHistoryObj(textObj, TableConstant.LoveHistory.TEXT, TypeConstant.TYPE_TEXT);
 
                             //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-                            loveHistoryObj.saveInBackground(new SaveCallback() {
+                            ApiWrapper.saveInBackground(loveHistoryObj, new SaveCallback() {
                                 @Override
                                 public void done(AVException e) {
                                     handleResult(e, dataCallback, () -> {
@@ -960,7 +955,7 @@ public class Api {
 
         commentItemData.add(TableConstant.LoveHistory.COMMENT_LIST, commentBean);
 
-        commentItemData.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(commentItemData, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () -> {
@@ -974,7 +969,7 @@ public class Api {
     public void updatePushToken(String token) {
         AVUser currentUser = AVUser.getCurrentUser();
         currentUser.put(TableConstant.AVUserClass.PUSH_TOKEN, token);
-        currentUser.saveInBackground();
+        ApiWrapper.saveInBackground(currentUser);
     }
 
     public void replyComment(String content, String parentObjId, String peerId, final DataCallback<CommentBean> dataCallback) {
@@ -989,7 +984,7 @@ public class Api {
 
         commentItemData.add(TableConstant.LoveHistory.COMMENT_LIST, commentBean);
 
-        commentItemData.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(commentItemData, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () -> {
@@ -1002,7 +997,7 @@ public class Api {
 
     public void deleteComment(String parentObjId, long commentId, DataCallback<Boolean> callback) {
         AVObject object = AVObject.createWithoutData(TableConstant.LoveHistory.CLAZZ_NAME, parentObjId);
-        object.fetchInBackground(new GetCallback<AVObject>() {
+        ApiWrapper.fetchInBackground(object, new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException exc) {
                 handleResult(exc, callback, new onResultSuc() {
@@ -1010,10 +1005,10 @@ public class Api {
                     public void onSuc() {
                         //先更新数据再删除
                         JSONArray jsonArray = avObject.getJSONArray(TableConstant.LoveHistory.COMMENT_LIST);
-                        if (jsonArray != null && jsonArray.length() > 0) {
+                        if (jsonArray != null && jsonArray.size() > 0) {
                             //评论有数据
                             List<CommentBean> list = new ArrayList<>();
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.size(); i++) {
                                 try {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     if (jsonObject.getLong(CommentBean.ID) == commentId) {
@@ -1030,7 +1025,7 @@ public class Api {
                                 }
                             }
                             object.put(TableConstant.LoveHistory.COMMENT_LIST, list);
-                            object.saveInBackground(new SaveCallback() {
+                            ApiWrapper.saveInBackground(object, new SaveCallback() {
                                 @Override
                                 public void done(AVException e) {
                                     handleResult(e, callback, () -> callback.onSuccess(true));
@@ -1067,7 +1062,7 @@ public class Api {
         }
         try {
             AVFile file = AVFile.withAbsoluteLocalPath(name, filePath);
-            file.saveInBackground(new SaveCallback() {
+            ApiWrapper.saveInBackground(file, new SaveCallback() {
                 @Override
                 public void done(AVException e) {
                     if (e == null) {
@@ -1078,7 +1073,7 @@ public class Api {
                         final AVQuery<AVObject> loverQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
                         loverQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(userDao.getLoverId()));
                         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
-                        query.findInBackground(new FindCallback<AVObject>() {
+                        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
                             @Override
                             public void done(List<AVObject> list, AVException e) {
                                 handleResult(e, callback, new onResultSuc() {
@@ -1090,7 +1085,7 @@ public class Api {
                                             object = new AVObject(TableConstant.Home.CLAZZ_NAME);
                                             object.put(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
                                             object.put(TableConstant.Home.HOME_IMG_FILE, file);
-                                            object.saveInBackground(new SaveCallback() {
+                                            ApiWrapper.saveInBackground(object, new SaveCallback() {
                                                 @Override
                                                 public void done(AVException e) {
                                                     handleResult(e, callback, new onResultSuc() {
@@ -1108,7 +1103,7 @@ public class Api {
                                             //如果 singleText 表已经删除了该条，则替换掉首页图片时删除旧图片
                                             AVQuery<AVObject> textQuery = new AVQuery<>(TableConstant.Text.CLAZZ_NAME);
                                             textQuery.whereEqualTo(TableConstant.Text.IMG_FILE, avFile);
-                                            textQuery.findInBackground(new FindCallback<AVObject>() {
+                                            ApiWrapper.findInBackground(textQuery, new FindCallback<AVObject>() {
                                                 @Override
                                                 public void done(List<AVObject> list, AVException e) {
                                                     handleResult(e, callback, new onResultSuc() {
@@ -1116,7 +1111,7 @@ public class Api {
                                                         public void onSuc() {
                                                             if (list == null || list.size() == 0) {
                                                                 //可以删除旧数据，节约空间
-                                                                avFile.deleteInBackground();
+                                                                ApiWrapper.deleteInBackground(avFile);
                                                             }
                                                         }
                                                     });
@@ -1125,7 +1120,7 @@ public class Api {
 
                                             object.put(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
                                             object.put(TableConstant.Home.HOME_IMG_FILE, file);
-                                            object.saveInBackground(new SaveCallback() {
+                                            ApiWrapper.saveInBackground(object, new SaveCallback() {
                                                 @Override
                                                 public void done(AVException e) {
                                                     //更新对应用户的 home 表的首页图片地址
@@ -1142,7 +1137,7 @@ public class Api {
                                                             AVObject loveHistoryObj = buildHistoryObj(textObj, TableConstant.LoveHistory.TEXT, TypeConstant.TYPE_TEXT);
 
                                                             //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-                                                            loveHistoryObj.saveInBackground(new SaveCallback() {
+                                                            ApiWrapper.saveInBackground(loveHistoryObj, new SaveCallback() {
                                                                 @Override
                                                                 public void done(AVException e) {
                                                                     handleResult(e, callback, () -> {
@@ -1184,7 +1179,7 @@ public class Api {
         }
         try {
             AVFile file = AVFile.withAbsoluteLocalPath(name, filePath);
-            file.saveInBackground(new SaveCallback() {
+            ApiWrapper.saveInBackground(file, new SaveCallback() {
                 @Override
                 public void done(AVException e) {
                     if (e == null) {
@@ -1195,7 +1190,7 @@ public class Api {
                         final AVQuery<AVObject> loverQuery = new AVQuery<>(TableConstant.Home.CLAZZ_NAME);
                         loverQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(userDao.getLoverId()));
                         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
-                        query.findInBackground(new FindCallback<AVObject>() {
+                        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
                             @Override
                             public void done(List<AVObject> list, AVException e) {
                                 handleResult(e, callback, new onResultSuc() {
@@ -1207,7 +1202,7 @@ public class Api {
                                             object = new AVObject(TableConstant.Home.CLAZZ_NAME);
                                             object.put(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
                                             object.put(TableConstant.Home.HOME_IMG_FILE, file);
-                                            object.saveInBackground(new SaveCallback() {
+                                            ApiWrapper.saveInBackground(object, new SaveCallback() {
                                                 @Override
                                                 public void done(AVException e) {
                                                     handleResult(e, callback, new onResultSuc() {
@@ -1223,13 +1218,13 @@ public class Api {
                                             //先删除旧数据，节约空间
                                             AVFile avFile = object.getAVFile(TableConstant.Home.HOME_IMG_FILE);
                                             AVObject finalObject = object;
-                                            avFile.deleteInBackground(new DeleteCallback() {
+                                            ApiWrapper.deleteInBackground(avFile, new DeleteCallback() {
                                                 @Override
                                                 public void done(AVException e) {
                                                     //再存储
                                                     finalObject.put(TableConstant.Home.UPLOADER, getUserObj(AVUser.getCurrentUser().getObjectId()));
                                                     finalObject.put(TableConstant.Home.HOME_IMG_FILE, file);
-                                                    finalObject.saveInBackground(new SaveCallback() {
+                                                    ApiWrapper.saveInBackground(finalObject, new SaveCallback() {
                                                         @Override
                                                         public void done(AVException e) {
                                                             handleResult(e, callback, new onResultSuc() {
@@ -1273,7 +1268,7 @@ public class Api {
         loverQuery.whereEqualTo(TableConstant.Home.UPLOADER, getUserObj(userDao.getLoverId()));
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
-        query.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -1311,7 +1306,7 @@ public class Api {
                     : currentUser.getAVFile(TableConstant.AVUserClass.DEFAULT_WOMAN_HEAD));
         }
         currentUser.put(TableConstant.AVUserClass.GENDER, gender);
-        currentUser.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(currentUser, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -1356,7 +1351,7 @@ public class Api {
                                 mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
                                 mcQuery.addDescendingOrder(TableConstant.MC.TIME); //先按照更新状态的时间排序
                                 mcQuery.addDescendingOrder(TableConstant.Common.CREATE_TIME);
-                                mcQuery.getFirstInBackground(new GetCallback<AVObject>() {
+                                ApiWrapper.getFirstInBackground(mcQuery, new GetCallback<AVObject>() {
                                     @Override
                                     public void done(AVObject avObject, AVException e) {
                                         //获取最新一条
@@ -1413,7 +1408,7 @@ public class Api {
 
                                 query.addDescendingOrder(TableConstant.MC.TIME); //先按照更新状态的时间排序
                                 query.addDescendingOrder(TableConstant.Common.CREATE_TIME);
-                                query.getFirstInBackground(new GetCallback<AVObject>() {
+                                ApiWrapper.getFirstInBackground(query, new GetCallback<AVObject>() {
                                     @Override
                                     public void done(AVObject avObject, AVException e) {
                                         //获取最新一条
@@ -1485,7 +1480,7 @@ public class Api {
         AVQuery<AVObject> query = AVQuery.and(Arrays.asList(mcQuery, mcQueryYear, mcQueryMonth));
 
         query.addAscendingOrder(TableConstant.MC.TIME); //按照时间排序
-        query.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -1527,7 +1522,7 @@ public class Api {
         AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
         mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
         mcQuery.addAscendingOrder(TableConstant.MC.TIME); //按照时间排序
-        mcQuery.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(mcQuery, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -1576,7 +1571,7 @@ public class Api {
             mcQuery.whereLessThan(TableConstant.MC.TIME, lastTime);
         }
         mcQuery.limit(size);
-        mcQuery.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(mcQuery, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -1621,7 +1616,7 @@ public class Api {
         mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
         mcQuery.addDescendingOrder(TableConstant.MC.TIME); //先按照更新状态的时间排序
         mcQuery.addDescendingOrder(TableConstant.Common.CREATE_TIME);
-        mcQuery.getFirstInBackground(new GetCallback<AVObject>() {
+        ApiWrapper.getFirstInBackground(mcQuery, new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 //获取最新一条
@@ -1684,7 +1679,7 @@ public class Api {
         AVObject loveHistoryObj = buildHistoryObj(mcObj, TableConstant.LoveHistory.MC, TypeConstant.TYPE_MC);
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-        loveHistoryObj.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(loveHistoryObj, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () -> {
@@ -1711,17 +1706,17 @@ public class Api {
         mcQueryDay.whereEqualTo(TableConstant.MC.DAY, day);
 
         AVQuery<AVObject> query = AVQuery.and(Arrays.asList(mcQuery, mcQueryYear, mcQueryMonth, mcQueryDay));
-        query.getFirstInBackground(new GetCallback<AVObject>() {
+        ApiWrapper.getFirstInBackground(query, new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
                     @Override
                     public void onSuc() {
-                        avObject.deleteInBackground();
+                        ApiWrapper.deleteInBackground(avObject);
                         //先查在history表中的对应数据
                         AVQuery<AVObject> loveHistoryQuery = new AVQuery<>(TableConstant.LoveHistory.CLAZZ_NAME);
                         loveHistoryQuery.whereEqualTo(TableConstant.LoveHistory.MC, avObject);
-                        loveHistoryQuery.deleteAllInBackground(new DeleteCallback() {
+                        ApiWrapper.deleteAllInBackground(loveHistoryQuery, new DeleteCallback() {
                             @Override
                             public void done(AVException e) {
                                 callback.onSuccess(true);
@@ -1752,7 +1747,7 @@ public class Api {
         AVQuery<AVObject> mcQuery = new AVQuery<>(TableConstant.MC.CLAZZ_NAME);
         mcQuery.whereEqualTo(TableConstant.MC.USER, userObj);
         mcQuery.addDescendingOrder(TableConstant.MC.TIME); //先按照更新状态的时间排序
-        mcQuery.getFirstInBackground(new GetCallback<AVObject>() {
+        ApiWrapper.getFirstInBackground(mcQuery, new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 //获取最新一条
@@ -1791,7 +1786,7 @@ public class Api {
         AVObject loveHistoryObj = buildHistoryObj(mcObj, TableConstant.LoveHistory.MC, TypeConstant.TYPE_MC);
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-        loveHistoryObj.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(loveHistoryObj, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, dataCallback, () -> dataCallback.onSuccess(true));
@@ -1808,7 +1803,7 @@ public class Api {
     public void setUserName(String userName, DataCallback<String> callback) {
         AVUser currentUser = AVUser.getCurrentUser();
         currentUser.put(TableConstant.AVUserClass.NICK_NAME, userName);
-        currentUser.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(currentUser, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -1823,7 +1818,7 @@ public class Api {
 
     public void getMyInfo(DataCallback<LoverInfo> callback) {
         AVUser currentUser = AVUser.getCurrentUser();
-        currentUser.fetchInBackground(new GetCallback<AVObject>() {
+        ApiWrapper.fetchInBackground(currentUser, new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -1848,7 +1843,7 @@ public class Api {
         query.whereEqualTo(TableConstant.BindLover.USER, getUserObj(currentUser.getObjectId()));
         query.include(TableConstant.BindLover.USER);
         query.include(TableConstant.BindLover.LOVER);
-        query.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException exc) {
                 handleResult(exc, callback, new onResultSuc() {
@@ -1885,18 +1880,18 @@ public class Api {
         }
         try {
             AVFile file = AVFile.withAbsoluteLocalPath(name, filePath);
-            file.saveInBackground(new SaveCallback() {
+            ApiWrapper.saveInBackground(file, new SaveCallback() {
                 @Override
                 public void done(AVException e) {
                     if (e == null) {
                         AVUser currentUser = AVUser.getCurrentUser();
-                        currentUser.fetchInBackground(new GetCallback<AVObject>() {
+                        ApiWrapper.fetchInBackground(currentUser, new GetCallback<AVObject>() {
                             @Override
                             public void done(AVObject avObject, AVException e) {
                                 AVFile avFile = avObject.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE);
                                 if (avFile == null) {
                                     currentUser.put(TableConstant.AVUserClass.HEAD_IMG_FILE, file);
-                                    currentUser.saveInBackground(new SaveCallback() {
+                                    ApiWrapper.saveInBackground(currentUser, new SaveCallback() {
                                         @Override
                                         public void done(AVException e) {
                                             handleResult(e, dataCallback, () -> dataCallback.onSuccess(file.getUrl()));
@@ -1905,12 +1900,12 @@ public class Api {
                                     });
                                 } else {
                                     //如果原来有图片文件，则先删除原来的头像图片，节约空间
-                                    avFile.deleteInBackground(new DeleteCallback() {
+                                    ApiWrapper.deleteInBackground(avFile, new DeleteCallback() {
                                         @Override
                                         public void done(AVException e) {
                                             //再存储到user表
                                             currentUser.put(TableConstant.AVUserClass.HEAD_IMG_FILE, file);
-                                            currentUser.saveInBackground(new SaveCallback() {
+                                            ApiWrapper.saveInBackground(currentUser, new SaveCallback() {
                                                 @Override
                                                 public void done(AVException e) {
                                                     handleResult(e, dataCallback, () -> dataCallback.onSuccess(file.getUrl()));
@@ -1940,7 +1935,7 @@ public class Api {
      */
     public void getConfig(DataCallback<ConfigBean> callback) {
         AVQuery<AVObject> query = new AVQuery<>(TableConstant.CONFIGURATION.CLAZZ_NAME);
-        query.getFirstInBackground(new GetCallback<AVObject>() {
+        ApiWrapper.getFirstInBackground(query, new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -1973,7 +1968,7 @@ public class Api {
         user.setEmail(email);
         user.setPassword(pwd);// 设置密码
         user.put(TableConstant.AVUserClass.NICK_NAME, nickname);// 设置昵称
-        user.signUpInBackground(new SignUpCallback() {
+        ApiWrapper.signUpInBackground(user, new SignUpCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -1995,7 +1990,7 @@ public class Api {
      * @param callback
      */
     public void login(String email, String pwd, DataCallback<Boolean> callback) {
-        AVUser.logInInBackground(email, pwd, new LogInCallback<AVUser>() {
+        ApiWrapper.logInInBackground(email, pwd, new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -2018,7 +2013,7 @@ public class Api {
         AVUser currentUser = AVUser.getCurrentUser();
         if (LibUtils.isNullOrEmpty(currentUser.getEmail())) {
             currentUser.setEmail(email);
-            currentUser.saveInBackground(new SaveCallback() {
+            ApiWrapper.saveInBackground(currentUser, new SaveCallback() {
                 @Override
                 public void done(AVException e) {
                     sendCheckEmail(email, callback);
@@ -2036,7 +2031,7 @@ public class Api {
      */
     public void checkEmailStatus(DataCallback<Boolean> callback) {
         AVUser currentUser = AVUser.getCurrentUser();
-        currentUser.fetchInBackground(new GetCallback<AVObject>() {
+        ApiWrapper.fetchInBackground(currentUser, new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -2050,7 +2045,7 @@ public class Api {
     }
 
     private void sendCheckEmail(String email, DataCallback<Boolean> callback) {
-        AVUser.requestEmailVerifyInBackground(email, new RequestEmailVerifyCallback() {
+        ApiWrapper.requestEmailVerifyInBackground(email, new RequestEmailVerifyCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -2070,7 +2065,7 @@ public class Api {
      * @param callback
      */
     public void findPwd(String email, DataCallback<Boolean> callback) {
-        AVUser.requestPasswordResetInBackground(email, new RequestPasswordResetCallback() {
+        ApiWrapper.requestPasswordResetInBackground(email, new RequestPasswordResetCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -2097,7 +2092,7 @@ public class Api {
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
         query.addAscendingOrder(TableConstant.Common.CREATE_TIME);
-        query.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {
@@ -2123,7 +2118,7 @@ public class Api {
         travelListObj.put(TableConstant.TRAVEL_LIST.USER, getUserObj(currentUser.getObjectId()));
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-        travelListObj.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(travelListObj, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, () -> callback.onSuccess(travelListObj.getObjectId()));
@@ -2139,7 +2134,7 @@ public class Api {
         travelListObj.put(TableConstant.TRAVEL_LIST_TABLE.USER, getUserObj(currentUser.getObjectId()));
 
         //保存关联对象的同时，被关联的对象也会随之被保存到云端。
-        travelListObj.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(travelListObj, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, () -> callback.onSuccess(travelListObj.getObjectId()));
@@ -2150,13 +2145,13 @@ public class Api {
     public void updateTable(String id) {
         AVObject obj = getObj(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, id);
         obj.put(TableConstant.TRAVEL_LIST_TABLE.UPDATE, "");
-        obj.saveInBackground();
+        ApiWrapper.saveInBackground(obj);
     }
 
     public void editTravelList(String des, String id, DataCallback<String> callback) {
         AVObject avQuery = AVObject.createWithoutData(TableConstant.TRAVEL_LIST.CLAZZ_NAME, id);
         avQuery.put(TableConstant.TRAVEL_LIST.DES, des);
-        avQuery.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(avQuery, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, () -> callback.onSuccess(des));
@@ -2167,7 +2162,7 @@ public class Api {
     public void editTravelListTableName(String name, String id, DataCallback<String> callback) {
         AVObject avQuery = AVObject.createWithoutData(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, id);
         avQuery.put(TableConstant.TRAVEL_LIST_TABLE.NAME, name);
-        avQuery.saveInBackground(new SaveCallback() {
+        ApiWrapper.saveInBackground(avQuery, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, () -> callback.onSuccess(name));
@@ -2178,7 +2173,7 @@ public class Api {
     public void deleteTravelListItemData(String objId, DataCallback<Boolean> callback) {
         //删除travelList表数据
         AVObject avQuery = AVObject.createWithoutData(TableConstant.TRAVEL_LIST.CLAZZ_NAME, objId);
-        avQuery.deleteInBackground(new DeleteCallback() {
+        ApiWrapper.deleteInBackground(avQuery, new DeleteCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -2194,7 +2189,7 @@ public class Api {
     public void deleteAllItemOfTable(String tableId, DataCallback<Boolean> callback) {
         //删除table
         AVObject avQuery = getObj(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, tableId);
-        avQuery.deleteInBackground(new DeleteCallback() {
+        ApiWrapper.deleteInBackground(avQuery, new DeleteCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -2203,7 +2198,7 @@ public class Api {
                         //删除该table所有ite
                         AVQuery<AVObject> listQuery = new AVQuery<>(TableConstant.TRAVEL_LIST.CLAZZ_NAME);
                         listQuery.whereEqualTo(TableConstant.TRAVEL_LIST.TABLE, getObj(TableConstant.TRAVEL_LIST_TABLE.CLAZZ_NAME, tableId));
-                        listQuery.deleteAllInBackground(new DeleteCallback() {
+                        ApiWrapper.deleteAllInBackground(listQuery, new DeleteCallback() {
                             @Override
                             public void done(AVException e) {
                                 handleResult(e, callback, new onResultSuc() {
@@ -2228,7 +2223,7 @@ public class Api {
             todo.put(TableConstant.TRAVEL_LIST.COMPLETE, itemDataBean.mComplete.get());
             todos.add(todo);
         }
-        AVObject.saveAllInBackground(todos, new SaveCallback() {
+        ApiWrapper.saveAllInBackground(todos, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 handleResult(e, callback, new onResultSuc() {
@@ -2274,7 +2269,7 @@ public class Api {
         AVUser currentUser = AVUser.getCurrentUser();
         if (currentUser.getObjectId().equals(IDConstant.NANA)) {
             AVObject todoFolder = new AVObject(TableConstant.ENTER_APP.CLAZZ_NAME);// 构建对象
-            todoFolder.saveInBackground();// 保存到服务端
+            ApiWrapper.saveInBackground(todoFolder);// 保存到服务端
         }
     }
 
@@ -2291,7 +2286,7 @@ public class Api {
 
         AVQuery<AVObject> query = AVQuery.or(Arrays.asList(meQuery, loverQuery));
         query.addDescendingOrder(TableConstant.Common.UPDATE_TIME);
-        query.findInBackground(new FindCallback<AVObject>() {
+        ApiWrapper.findInBackground(query, new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
                 if (e == null) {

@@ -1,7 +1,7 @@
 package com.yazhi1992.moon.viewmodel;
 
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVObject;
+import cn.leancloud.AVFile;
+import cn.leancloud.AVObject;
 import com.yazhi1992.moon.BaseApplication;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.constant.TableConstant;

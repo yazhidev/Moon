@@ -2,15 +2,15 @@ package com.yazhi1992.moon.viewmodel;
 
 import android.databinding.ObservableField;
 
-import com.avos.avoscloud.AVObject;
+import cn.leancloud.AVObject;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.sql.User;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +42,11 @@ public abstract class IHistoryBean<T extends IDataBean> extends IDataBean {
             setUserHeadUrl(user.getAVFile(TableConstant.AVUserClass.HEAD_IMG_FILE).getUrl());
         }
         JSONArray jsonArray = avObj.getJSONArray(TableConstant.LoveHistory.COMMENT_LIST);
-        if (jsonArray != null && jsonArray.length() > 0) {
+        if (jsonArray != null && jsonArray.size() > 0) {
             //评论有数据
             mCommentDatas = new ArrayList<>();
             User userDao = new UserDaoUtil().getUserDao();
-            for (int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.size(); i++) {
                 try {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     CommentBean commentBean = new CommentBean(jsonObject.getString(CommentBean.CONTENT));

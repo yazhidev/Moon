@@ -1,6 +1,6 @@
 package com.yazhi1992.moon.viewmodel;
 
-import com.avos.avoscloud.AVObject;
+import cn.leancloud.AVObject;
 
 /**
  * Created by zengyazhi on 2018/2/6.

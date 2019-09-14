@@ -150,14 +150,14 @@ dependencies {
 
     implementation project(":yazhilib")
 
-    //LeanCould
-    implementation rootProject.ext.dependencies.leancloudAvoscloudSdk
-    compile(rootProject.ext.dependencies.leancloudAvoscloudPush) {
-        transitive = true
-    } //IM、Push
-    // avoscloud-sns：LeanCloud 第三方登录包
-    compile(rootProject.ext.dependencies.leancloudAvoscloudSns)
-    compile(rootProject.ext.dependencies.leancloudAvoscloudQq)
+    //leancloud
+    implementation ('cn.leancloud:storage-android:5.0.26'){
+        exclude group: 'com.alibaba', module: 'fastjson'
+        exclude group: 'org.ligboy.retrofit2', module: 'converter-fastjson'
+    }
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'com.alibaba:fastjson:1.1.70.android'
+    implementation 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
 
     //recyclerview 多布局
     implementation(rootProject.ext.dependencies.multitype, {

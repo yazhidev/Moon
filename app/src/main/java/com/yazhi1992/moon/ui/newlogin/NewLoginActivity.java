@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.widget.CompoundButton;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.avos.avoscloud.AVFile;
-import com.avos.avoscloud.AVUser;
 import com.yazhi1992.moon.ActivityRouter;
 import com.yazhi1992.moon.R;
 import com.yazhi1992.moon.activity.AbsUpgrateActivity;
@@ -23,6 +21,9 @@ import com.yazhi1992.yazhilib.utils.LibUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import cn.leancloud.AVFile;
+import cn.leancloud.AVUser;
 
 @Route(path = ActivityRouter.NEW_LOGIN)
 public class NewLoginActivity extends AbsUpgrateActivity {

@@ -88,8 +88,6 @@
         </activity>
         <!-- QQ SSO 登录 -->
 
-        <activity android:name=".ui.login.LoginActivity">
-        </activity>
         <activity
             android:name=".ui.memorialdaylist.MemorialDayListActivity"
             android:label="纪念日">

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.avos.avoscloud.AVOSCloud;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.tencent.bugly.Bugly;
@@ -17,6 +16,9 @@ import com.tencent.bugly.beta.upgrade.UpgradeListener;
 import com.yazhi1992.moon.event.BuglyUpgrate;
 import com.yazhi1992.yazhilib.utils.LibUtils;
 import org.greenrobot.eventbus.EventBus;
+
+import cn.leancloud.AVLogger;
+import cn.leancloud.AVOSCloud;
 
 /**
  * Created by zengyazhi on 2018/1/24.
@@ -55,9 +57,8 @@ public class BaseApplication extends Application {
         Bugly.init(getApplicationContext(), BuildConfig.BUGLY_ID, false);
 
         //leancloud
+        AVOSCloud.setLogLevel(AVLogger.Level.DEBUG);
         AVOSCloud.initialize(this, BuildConfig.LEAN_CLOUD_ID, BuildConfig.LEAN_CLOUD_KEY);
-        // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
-        AVOSCloud.setDebugLogEnabled(BuildConfig.DEBUG);
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override

@@ -1,10 +1,11 @@
 package com.yazhi1992.moon.ui.bindlover;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.GetCallback;
+import cn.leancloud.AVException;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVUser;
+import cn.leancloud.callback.GetCallback;
 import com.yazhi1992.moon.api.Api;
+import com.yazhi1992.moon.api.ApiWrapper;
 import com.yazhi1992.moon.api.DataCallback;
 import com.yazhi1992.moon.api.bean.BindLoverBean;
 import com.yazhi1992.moon.api.bean.CheckBindStateBean;
@@ -32,7 +33,7 @@ public class BindLoverPresenter {
         if(LibUtils.isNullOrEmpty(inviteNum)) {
             //查询云端是否已有邀请码
             AVUser currentUser = AVUser.getCurrentUser();
-            currentUser.fetchInBackground(new GetCallback<AVObject>() {
+            ApiWrapper.fetchInBackground(currentUser, new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject avObject, AVException e) {
                     String number = currentUser.getString(TableConstant.AVUserClass.INVITE_NUMBER);

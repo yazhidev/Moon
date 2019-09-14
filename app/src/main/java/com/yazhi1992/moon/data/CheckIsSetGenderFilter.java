@@ -1,10 +1,11 @@
 package com.yazhi1992.moon.data;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.GetCallback;
+import cn.leancloud.AVException;
+import cn.leancloud.AVObject;
+import cn.leancloud.AVUser;
+import cn.leancloud.callback.GetCallback;
 import com.yazhi1992.moon.ActivityRouter;
+import com.yazhi1992.moon.api.ApiWrapper;
 import com.yazhi1992.moon.constant.TableConstant;
 import com.yazhi1992.moon.sql.UserDaoUtil;
 
@@ -25,7 +26,7 @@ public class CheckIsSetGenderFilter implements ICheckDataFilter {
         } else {
             //本地没有数据，同步远端，查看是否未拉取过数据
             // TODO: 2018/2/14 数据层设计：本地没有想要的数据，则查看是否远端数据未更新到本地
-            AVUser.getCurrentUser().fetchInBackground(new GetCallback<AVObject>() {
+            ApiWrapper.fetchInBackground(AVUser.getCurrentUser(), new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject object, AVException e) {
                     if(e == null) {
